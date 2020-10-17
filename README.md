@@ -1,20 +1,15 @@
 # e16-3yp-smart-meeting-automaton
 
-SMART MEETING AUTOMATON
 
 Computer Engineering Project - Semester 5 -Third year project
 
-
-
- 
-
 Group 12
 
-E/16/022 – Chamath Amarasinghe
+E/16/022 – Chamath Amarasinghe e16022@gng.pdn.ac.lk
 
-E/16/025 – Diwanga Amasith
+E/16/025 – Diwanga Amasith    e16025@gng.pdn.ac.lk
 
-E/16/222 – Wishwa Madushanka
+E/16/222 – Wishwa Madushanka   e16222@gng.pdn.ac.lk
 
  
 
@@ -90,9 +85,20 @@ There are 3 main hardware components in our control system. Most important one i
 
 And other component of hardware is WiFi and IR module which use for sending IR signals to devises which cannot covered by main control unit.The temperature and humidity sensors are use here to detect AC machines work properly.
 
+ # Advisers
  
+Dr Isuru Nawinna
 
- 
+Dr Ziyan Marrikkar
+
+# Links :
+https://www.pdn.ac.lk/student/resources/residence.php
+
+https://eng.pdn.ac.lk/
+
+http://www.ce.pdn.ac.lk/
+
+
 
   
 
