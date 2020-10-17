@@ -92,7 +92,7 @@ Dr Isuru Nawinna
 Dr Ziyan Marrikkar
 
 # Links :
-https://www.pdn.ac.lk/student/resources/residence.php
+https://www.pdn.ac.lk/
 
 https://eng.pdn.ac.lk/
 
