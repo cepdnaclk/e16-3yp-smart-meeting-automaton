@@ -5,11 +5,11 @@ Computer Engineering Project - Semester 5 -Third year project
 
 Group 12
 
-E/16/022 – Chamath Amarasinghe e16022@gng.pdn.ac.lk
+E/16/022 – Chamath Amarasinghe e16022@eng.pdn.ac.lk
 
-E/16/025 – Diwanga Amasith    e16025@gng.pdn.ac.lk
+E/16/025 – Diwanga Amasith    e16025@eng.pdn.ac.lk
 
-E/16/222 – Wishwa Madushanka   e16222@gng.pdn.ac.lk
+E/16/222 – Wishwa Madushanka   e16222@eng.pdn.ac.lk
 
  
 
