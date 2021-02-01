@@ -158,6 +158,71 @@ router.post('/addroom', autheratazation.authAdmin, roomValidation, async (req, r
 
 });
 
+router.get('/room:id', autheratazation.authAdmin, async(req, res)=>{
+    roomschema.findOne({roomId: req.params.id}, (err, data)=>{
+        if(err)
+        {
+            console.log('Error in get room')
+            req.status(401).send('Cannot find');
+
+        }
+        else{
+            if(data){
+                res.send(data);
+            }else{
+                res.status(400).send('No room for id');
+            }
+        }
+    });
+});
+
+router.delete('/deleteroom/:id', autheratazation.authAdmin, async(req,res)=>{
+    // console.log(req.params.id);
+    roomschema.findOneAndDelete({roomId: req.params.id},(err,data)=>{
+        if(err)
+        {
+            console.log('No room with requested id')
+            req.status(401).send('Cannot find');
+
+        }
+        else{
+            if(data){
+                res.send(data);
+                console.log(data);
+            }else{
+                console.log('no room id', data);
+                res.status(400).send('No room for id');
+            }
+        }
+    });
+
+});
+
+router.delete('/removeuser/:id', autheratazation.authAdmin, async(req,res)=>{
+    userSchema.findOneAndDelete({email: req.params.id},(err,data)=>{
+        if(err)
+        {
+            console.log('No user with requested id')
+            req.status(401).send('Cannot find');
+
+        }
+        else{
+            if(data){
+                res.send(data);
+            }else{
+                res.status(400).send('No user for id');
+            }
+        }
+    });
+
+});
+
+//404
+router.use((req, res)=>{
+    res.status(404).send('404');
+    console.log('4040');
+});
+
 
 
 module.exports = router;
