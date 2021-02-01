@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Grayscale - Start Bootstrap Theme</title>
+        <title>Smart Meeting Automaton</title>
         <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
         <!-- Font Awesome icons (free version)-->
         <script src="https://use.fontawesome.com/releases/v5.15.1/js/all.js" crossorigin="anonymous"></script>
@@ -14,6 +14,9 @@
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="css/styles.css" rel="stylesheet" />
+
+        <link rel="stylesheet" href="mobirise-gallery/style.css">
+
     </head>
     <body id="page-top">
         <!-- Navigation-->
@@ -27,7 +30,9 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#about">About</a></li>
-                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#projects">Projects</a></li>
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#overview">Overview</a></li>
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#solution">Solution</a></li>
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#design">Design</a></li>
                         <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#signup">Contact</a></li>
                     </ul>
                 </div>
@@ -64,15 +69,17 @@
                 <!--<img class="img-fluid" src="assets/img/ipad.jpg" alt="" />-->
             </div>
         </section>
-        <!-- Projects-->
-        <section class="projects-section bg-light" id="projects">
+        <!-- overview-->
+        <section class="projects-section bg-light" id="overview">
+            <h1 class="text-black mb-4 text-center">System Overview</h1>
+            
             <div class="container">
                 <!-- Featured Project Row-->
                 <div class="row align-items-center no-gutters mb-4 mb-lg-5">
-                    <div class="col-xl-8 col-lg-7"><img class="img-fluid mb-3 mb-lg-0" src="assets/img/ipad.jpg" alt="" /></div>
+                    
+                    <div class="col-xl-8 col-lg-7"><img class="img-fluid mb-3 mb-lg-0" src="assets/img/system_overview.jpg" alt="" /></div>
                     <div class="col-xl-4 col-lg-5">
                         <div class="featured-text text-center text-lg-left">
-                            <h4>Overview</h4>
                             <p class="text-black-100 mb-0">SMART MEETING AUTOMATON consists of two major streams.
                                 <li>Client Application</li>
                                 <li>Control Unit</li>
@@ -81,15 +88,29 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- Solution-->
+        <section class="projects-section bg-light" id="solution">
+            <h1 class="text-black mb-4 text-center">Solution Architecture</h1>
+            
+            <div class="container">
                 <!-- Project One Row-->
                 <div class="row justify-content-center no-gutters mb-5 mb-lg-0">
-                    <div class="col-lg-6"><img class="img-fluid" src="assets/img/demo-image-01.jpg" alt="" /></div>
+                    <div class="col-lg-6"><img class="img-fluid" src="assets/img/Main_Control_Unit.jpg" alt="" /></div>
                     <div class="col-lg-6">
                         <div class="bg-black text-center h-100 project">
                             <div class="d-flex h-100">
                                 <div class="project-text w-100 my-auto text-center text-lg-left">
-                                    <h4 class="text-white">Flow of Control</h4>
-                                    <p class="mb-0 text-white-50">Add description - 1</p>
+                                    <h4 class="text-white">Role of Main Control Unit</h4>
+                                    <p class="mb-0 text-white-100">
+                                        <ul>
+                                            <li class="mb-0 text-white-50">Local server on Raspberry Pi is updated automatically for every 10 minutes according to data on remote AWS server.</li>
+                                            <li class="mb-0 text-white-50">In case of Wi-Fi is disconnected, the Raspberry Pi storage can manage the operations.</li>
+                                            <li class="mb-0 text-white-50">Based on direction data of AC machines, projectors, server motors rotates.</li>
+                                        </ul>
+                                    </p>
                                     <hr class="d-none d-lg-block mb-0 ml-0" />
                                 </div>
                             </div>
@@ -98,21 +119,142 @@
                 </div>
                 <!-- Project Two Row-->
                 <div class="row justify-content-center no-gutters">
-                    <div class="col-lg-6"><img class="img-fluid" src="assets/img/demo-image-02.jpg" alt="" /></div>
+                    <div class="col-lg-6"><img class="img-fluid" src="assets/img/Sub_Control_Units.jpg" alt="" /></div>
                     <div class="col-lg-6 order-lg-first">
                         <div class="bg-black text-center h-100 project">
                             <div class="d-flex h-100">
-                                <div class="project-text w-100 my-auto text-center text-lg-right">
-                                    <h4 class="text-white">Initial Hardware Design</h4>
-                                    <p class="mb-0 text-white-50">Add description - 2</p>
-                                    <hr class="d-none d-lg-block mb-0 mr-0" />
+                                <div class="project-text w-100 my-auto text-center text-lg-left">
+                                    <h4 class="text-white">Role of Extending Unit</h4>
+                                    <p class="mb-0 text-white-50">
+                                        <ul>
+                                            <li class="mb-0 text-white-50">Receive signals from Main Control Unit as Wi-Fi signals.</li>
+                                            <li class="mb-0 text-white-50">Give signals to AC machines, projectors as IR signals.</li>
+                                        </ul>
+                                    </p>
+
+                                    <h4 class="text-white">Role of Feedback Sending Unit</h4>
+                                    <p class="mb-0 text-white-50">
+                                        <ul>
+                                            <li class="mb-0 text-white-50">Monitors temperature and humidity.</li>
+                                            <li class="mb-0 text-white-50">Send data to the Main Control Unit via Wi-Fi.</li>
+                                        </ul>
+                                    </p>
+                                    <hr class="d-none d-lg-block mb-0 ml-0" />
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </section>    
+
+
+        <!-- Design-->
+        <section class="projects-section bg-light" id="design">
+            <div class="container">
+                <h1 class="text-black mb-4 text-center">Circuit Diagrams</h1>
+                <!-- Project One Row-->
+                <div class="row justify-content-center no-gutters mb-5 mb-lg-0">
+                    <div class="col-lg-6"><img class="img-fluid" src="assets/img/main_unit_circuit.jpg" alt="" /></div>
+                    <div class="col-lg-6"><img class="img-fluid" src="assets/img/sub_units_circuit.jpg" alt="" /></div>
+                </div>
+            </div>
+            
+            <div id="UIimage">
+                <div class="container-fluid p-0">
+                    <h1 class="text-center mt-5">UI Wireframe Designs</h1>
+                    <hr class="divider my-4" />
+                    <div class="row no-gutters">
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/UI-1.jpg">
+                                <img class="img-fluid" src="assets/img/UI-1.jpg" alt="" />
+                                
+                                <div class="UIimage-box-caption">
+                                    
+                                   <div class="project-name"></div>
+                                </div>
+                                
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/UI-2.jpg">
+                                <img class="img-fluid" src="assets/img/UI-2.jpg" alt="" />
+                                     
+                                <div class="UIimage-box-caption">
+                                   
+                                    <div class="project-name"></div>
+                                </div>
+                             
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/UI-3.jpg">
+                                <img class="img-fluid" src="assets/img/UI-3.jpg" alt="" />
+                                 
+                                <div class="UIimage-box-caption">
+                                   
+                                    <div class="project-name"></div>
+                                </div>
+                           
+                            </a>
+                        </div>
+                    
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/UI-3.jpg">
+                                <img class="img-fluid" src="assets/img/UI-3.jpg" alt="" />
+                                <div class="UIimage-box-caption">
+                                   
+                                    <div class="project-name"></div>
+                                </div>
+                            </a>
+                        </div>                    
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/UI-5.jpg">
+                                <img class="img-fluid" src="assets/img/UI-5.jpg" alt="" />
+                                <div class="UIimage-box-caption">
+                                    
+                                    <div class="project-name"></div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/UI-4.jpg">
+                                <img class="img-fluid" src="assets/img/UI-4.jpg" alt="" />
+                                <div class="UIimage-box-caption p-3">
+                                    
+                                    <div class="project-name"></div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        
+
+            <div class="container">
+                <h1 class="text-black mb-4 text-center">Entity Relationship Diagram</h1>
+                <!-- Featured Project Row-->
+                <div class="row align-items-center no-gutters mb-4 mb-lg-5">
+                    
+                    <div class="col-xl-8 col-lg-7"><img class="img-fluid mb-3 mb-lg-0" src="assets/img/ER_Diagram.jpg" alt="" /></div>
+                    <div class="col-xl-4 col-lg-5">
+                        <div class="featured-text text-center text-lg-left">
+                            <p class="text-black-100 mb-0">
+                                <!--
+                                <li>Client Application</li>
+                                <li>Control Unit</li>
+                                These two streams are connected via AWS cloud.
+                                -->
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>    
+        
+              
+
         <!-- Signup-->
         <section class="signup-section" id="signup">
             <div class="container">
@@ -120,7 +262,7 @@
                     <div class="col-md-10 col-lg-8 mx-auto text-center">
                         <i class="far fa-paper-plane fa-2x mb-2 text-white"></i>
                         <h2 class="text-white mb-5">Find more details from our github project repository</h2>
-                        <button class="btn btn-primary mx-auto" onclick="window.location.href='https://github.com/cepdnaclk/e16-3yp-smart-meeting-automaton';">Visit Now</button>
+                        <button class="btn btn-primary mx-auto" onclick="location.href='https://github.com/cepdnaclk/e16-3yp-smart-meeting-automaton';" target="_blank">Visit Now</button>
                     </div>
                 </div>
             </div>
@@ -136,9 +278,9 @@
                                 <h3 class="text-uppercase m-0">Team Members</h3>
                                 <h4 class="text-uppercase m-0">Visit Our github Accounts</h4>
                                 <hr class="my-4" />
-                                <div class="medium text-black-100"><a href="https://github.com/chamathamarasinghe96">Chamath Amarasinghe</a></div>
-                                <div class="medium text-black-100"><a href="https://github.com/chamathamarasinghe96">Diwanga Amasith</a></div>
-                                <div class="medium text-black-100"><a href="https://github.com/chamathamarasinghe96">Wishwa Madusanka</a></div>
+                                <div class="medium text-black-100"><a href="https://github.com/chamathamarasinghe96" target="_blank" rel="noopener noreferrer">Chamath Amarasinghe</a></div>
+                                <div class="medium text-black-100"><a href="https://github.com/Diwanga" target="_blank" rel="noopener noreferrer">Diwanga Amasith</a></div>
+                                <div class="medium text-black-100"><a href="https://github.com/wishvamadushanka" target="_blank" rel="noopener noreferrer">Wishwa Madusanka</a></div>
                             </div>
                         </div>
                     </div>
@@ -148,9 +290,9 @@
                                 <i class="fas fa-envelope text-primary mb-2"></i>
                                 <h4 class="text-uppercase m-0">Email</h4>
                                 <hr class="my-4" />
-                                <div class="medium text-black-100"><a href="#!">e16022@eng.pdn.ac.com</a></div>
-                                <div class="medium text-black-100"><a href="#!">e16025@eng.pdn.ac.com</a></div>
-                                <div class="medium text-black-100"><a href="#!">e16222@eng.pdn.ac.com</a></div>
+                                <div class="medium text-black-100"><a href="#!">e16022@eng.pdn.ac.lk</a></div>
+                                <div class="medium text-black-100"><a href="#!">e16025@eng.pdn.ac.lk</a></div>
+                                <div class="medium text-black-100"><a href="#!">e16222@eng.pdn.ac.lk</a></div>
                             </div>
                         </div>
                     </div>
@@ -166,21 +308,15 @@
                         </div>
                     </div>
                 </div>
-                
-                <div class="text-center">
-                    <!--
-                    <a class="mx-2" href="#!"><i class="fab fa-twitter"></i></a>
-                    <a class="mx-2" href="#!"><i class="fab fa-facebook-f"></i></a>
-                    <a class="mx-2" href="#!"><i class="fab fa-github"></i></a>
-                    -->
-                </div>
+               
             </div>
         </section>
 
-        <footer class="footer bg-black small text-center text-white-50">
-            <h4 class="m-0"><a href="http://www.ce.pdn.ac.lk/">Department of Computer Engineering</a></h4>
-            <h4 class="m-0"><a href="http://eng.pdn.ac.lk/">Faculty of Engineering</a></h4>
-            <h4 class="m-0"><a href="https://www.pdn.ac.lk/">University of Peradeniya</a></h4>
+        <footer class="footer bg-black small text-center ext-white-50">
+            <h4 class="text-white mb-4">Essential Links</h4>
+            <h5 class="m-0"><a href="http://www.ce.pdn.ac.lk/" target="_blank" rel="noopener noreferrer">Department of Computer Engineering</a></h5>
+            <h5 class="m-0"><a href="http://eng.pdn.ac.lk/" target="_blank" rel="noopener noreferrer">Faculty of Engineering</a></h5>
+            <h5 class="m-0"><a href="https://www.pdn.ac.lk/" target="_blank" rel="noopener noreferrer">University of Peradeniya</a></h5>
         </footer>
 
         <!-- Footer-->
