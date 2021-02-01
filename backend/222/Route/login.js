@@ -64,24 +64,30 @@ router.post('/admin', userValidation, auth.adminAuth, (req, res) => {
 
 });
 
-// router.post('/user', async(req, res) => {
-//     const loginvalidate = uservalidation(req.body);
-//     console.log(loginvalidate);
-//     if(loginvalidate.error){
-//         console.log('Error in validation...',loginvalidate);
-//         res.status('400').send(loginvalidate);
-//     }
+//user
+router.post('/user', userValidation, auth.userAuth, async(req, res) => {
+    // const loginvalidate = uservalidation(req.body);
+    // console.log(loginvalidate);
+    // if(loginvalidate.error){
+    //     console.log('Error in validation...',loginvalidate);
+    //     res.status('400').send(loginvalidate);
+    // }
 
-//     //check exist
-//     const userAuth = await auth(req.body);
+    // //check exist
+    // const userAuth = await auth(req.body);
 
-//     if(!userAuth) return res.status('400').send('Email or password wrong');
+    // if(!userAuth) return res.status('400').send('Email or password wrong');
 
-//     const accessToken = autheratazation.getToken(req.body);
+    // const accessToken = autheratazation.getToken(req.body);
     
-//     res.send({ accessToken : accessToken});
+    // res.send({ accessToken : accessToken});
         
-// });
+});
+
+//404
+router.use((req, res)=>{
+    res.status(404).send('404');
+});
 
 
 
