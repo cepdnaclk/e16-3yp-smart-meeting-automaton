@@ -1,6 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 const express = require('express');
+const cron = require('node-cron');
 
 //configer env veriable
 const dotenv = require('dotenv').config();
@@ -25,6 +26,10 @@ const app = express();
 const ser = http.createServer(app).listen(3000, 'localhost',function(){
     console.log("server is listning");
     //console.log(__dirname);
+});
+
+cron.schedule('* * /2 * *', ()=>{
+    //run background task
 });
 
 //middleware
