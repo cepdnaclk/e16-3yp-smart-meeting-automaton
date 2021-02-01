@@ -40,8 +40,13 @@ const admin = require('./Route/admin');
 app.use('/admin', admin);
 
 //route middleware admin
-// const user = require('./Route/user');
-// app.use('/user', user);
+const user = require('./Route/user');
+app.use('/user', user);
+
+// 404
+app.use((req, res)=>{
+    res.status(404).send('404');
+});
 
 
 // app.get('/', function(req, res)
