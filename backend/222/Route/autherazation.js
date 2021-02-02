@@ -34,28 +34,33 @@ function authToken(token) {
 }
 
 async function authAdmin(req, res, next) {
-    const authHeader = req.headers['auth'];
-    const token = authHeader && authHeader.split(' ')[1];
-    if(token == null) res.status('400').send('does not have token');
-    jwt.verify(token, process.env.LOGIN_TOKEN, (err, user) => {
-        if(err) res.status('400').send('admin does not exist');
-        else
-        {
-            Administrator.findOne({email: user.email}, async(err, data)=>{
-                if(err) res.send('Try again...');
-                else{
-                    if(data) next();
+    try{
+        const authHeader = req.headers['auth'];
+        const token = authHeader && authHeader.split(' ')[1];
+        if(token == null) res.status('400').send('does not have token');
+        jwt.verify(token, process.env.LOGIN_TOKEN, (err, user) => {
+            if(err) res.status('400').send('admin does not exist');
+            else
+            {
+                Administrator.findOne({email: user.email}, async(err, data)=>{
+                    if(err) res.send('Try again...');
                     else{
-                        res.status('400').send('not a admin');
+                        if(data) next();
+                        else{
+                            res.status('400').send('not a admin');
+                        }
                     }
-                }
-            });
-            // if(!auth.adminAuth(user)) res.status('400').send('not a admin');
-            // else{
-            //     next();
-            // }
-        }
-    });
+                });
+                // if(!auth.adminAuth(user)) res.status('400').send('not a admin');
+                // else{
+                //     next();
+                // }
+            }
+        });
+    }
+    catch(err){
+        res.status(500);
+    }
 
 
     // console.log(user);
