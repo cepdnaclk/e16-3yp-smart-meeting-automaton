@@ -1,0 +1,38 @@
+#taken {
+  margin: auto;
+  background-color: rgb(255, 0, 0);
+}
+#free {
+  margin: auto;
+  background-color: rgb(0, 255, 0);
+}
+.NotConfigured {
+  margin: auto;
+  background-color: rgb(255, 251, 0);
+  display: block;
+}
+.configured {
+  margin: auto;
+  background-color: rgb(11, 255, 11);
+  display: block;
+}
+.BreakDown {
+  margin: auto;
+  background-color: rgb(255, 0, 0);
+  display: block;
+}
+
+.roomcard {
+  height: 3rem;
+  background-color: bisque;
+  margin: 1rem auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  border-radius: 10px;
+}
+.pad-in {
+  padding: 4rem;
+  max-width: 1200px;
+  margin: auto;
+}
