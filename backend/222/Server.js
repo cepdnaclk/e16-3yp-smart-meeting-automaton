@@ -17,23 +17,34 @@ const db = mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true ,use
 
     }).catch((error) => {
         console.log('Failed to connect db...', error);
-    })
+    });
+
 
 //init express
 const app = express();
 
+//port
+const PORT = process.env.PORT || 3000;
+
 //server initiating
-const ser = http.createServer(app).listen(3000, 'localhost',function(){
-    console.log("server is listning");
-    //console.log(__dirname);
+const ser = http.createServer(app).listen(PORT, 'localhost',function(){
+    console.log(`Server is listening on port {$PORT}`);
+
 });
 
+
+//need to impl
 cron.schedule('* * /2 * *', ()=>{
     //run background task
+
 });
 
 //middleware
 app.use(express.json());
+
+//user signup
+const signup = require('./Route/signup');
+app.use('/signup', signup);
 
 //route middleware
 const login = require('./Route/login');
