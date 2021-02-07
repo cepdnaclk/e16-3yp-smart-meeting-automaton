@@ -1,3 +1,4 @@
+const { boolean } = require('@hapi/joi');
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
@@ -9,6 +10,12 @@ const coordinatorSchema = new Schema({
         required: true,
         min: 1,
         max: 1024,
+    },
+
+    verified: {
+        type: Boolean,
+        //required: true,
+        default: false
     },
 
     password: {

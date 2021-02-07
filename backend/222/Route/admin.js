@@ -2,6 +2,9 @@ const express = require('express')
 //init
 const router = express.Router();
 
+//jwt
+const jwt = require('jsonwebtoken');
+
 //bcryptjs
 const bcryptjs = require('bcryptjs');
 
@@ -11,24 +14,109 @@ const Administrator = require('../modules/administrator.model');
 //module user
 const userSchema = require('../modules/user.model');
 
+//module request
+const requestSchema = require('../modules/userRequest.model');
+
 //module room
 const roomschema = require('../modules/lecRoom.model');
 
 //autheratazation
-const autheratazation = require('./autherazation');
+const {authAdmin, authUser, authAdminFresh} = require('./autherazation');
 
 //validation
-const {userValidation } = require('../validation/user'); 
+const {userValidation , userLoginValidation} = require('../validation/user'); 
 
 //validation room
 const {roomValidation} = require('../validation/room');
 
+//auth
+const { userFreshAuth } = require('./auth');
+
+//email
+const {sendMailVerification} = require('../modules/email');
+
+router.post('/adduser/list', authAdmin);
+
+router.get('/requests', authAdmin, async(req, res)=>{
+    requestSchema.find({}, (err, data) => {
+        if(err)
+        {
+            console.log('Error in get room')
+            req.status(401).send('Cannot find');
+
+        }
+        else{
+            if(data){
+                console.log('Sending data');
+                res.json({
+                    'userId': data._id,
+                    'userName': data.username,
+                    'email': data.email
+                });
+            }
+            else{
+                res.status(400).json({
+                    'Error': 'No request'
+                });
+            }
+        }
+        
+        // console.log('Send data');
+        // res.send(data);
+    });
+
+});
 
 
-router.post('/adduser', autheratazation.authAdmin, userValidation, async(req, res) => {
+router.post('/adduser/:id', userFreshAuth, async(req, res)=>{
+    requestSchema.findOneAndDelete({_id: req.params.id}, (err, data)=>{
+        if(err){
+            res.status(400).json({
+                'Error': 'Try again'
+            });
+        }else{
+            if(data){
+                const userNew = new userSchema({
+                    username: data.username,
+                    password: data.password,
+                    email: data.email
+                });
+                try{
+                    const usersaved = await userNew.save();
+                    console.log('saved user to the db...');
+                    const verifUrl = jwt.sign(usersaved._id, process.env.LOGIN_VARIFICATION_TOKEN, {expiresIn: '10m'});
+                    verifUrl = 'http://localhost:3000/user/verify/' + verifUrl;
+                    sendMailVerification(whom=usersaved.email, url=verifUrl).then((data) => {
+                        res.status(200).json({
+                            'message': 'User added success'
+                        });
+                    }).catch((err)=>{
+                        res.status(400).json({
+                            'Error': 'Email sending fasild need to resend'
+                        });
+                    });
+
+                   
+                }catch(error)
+                {
+                    console.log('Saving faild...', error);
+                    res.status(400).json({
+                        'error': 'Saving error'
+                    });
+                
+                }
+
+
+            }
+        }
+    });
+});
+
+
+router.post('/adduser', authAdmin, userValidation, async(req, res) => {
     // const authHeader = req.headers['auth'];
     // const token = authHeader && authHeader.split(' ')[1];
-    // if(token == null) res.sendStatus(401);
+    // if(token == null) res.sendStatus(401);       //process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
     // const authToken = await autheratazation.authToken(token);
     // if(!authToken) return res.sendStatus(403);
 
@@ -80,7 +168,7 @@ router.post('/adduser', autheratazation.authAdmin, userValidation, async(req, re
 
 });
 
-router.get('/table', autheratazation.authAdmin, async(req, res) => {
+router.get('/table', authAdmin, async(req, res) => {
     roomschema.find({}, (err, data) => {
         if(err)
         {
@@ -95,7 +183,7 @@ router.get('/table', autheratazation.authAdmin, async(req, res) => {
 });
 
 
-router.post('/addroom', autheratazation.authAdmin, roomValidation, async (req, res) => {
+router.post('/addroom', authAdminFresh, roomValidation, async (req, res) => {
 
     // try{
     //     const loginvalidate = await roomvalidation(req.body);
@@ -158,7 +246,7 @@ router.post('/addroom', autheratazation.authAdmin, roomValidation, async (req, r
 
 });
 
-router.get('/room:id', autheratazation.authAdmin, async(req, res)=>{
+router.get('/room:id', authAdmin, async(req, res)=>{
     roomschema.findOne({roomId: req.params.id}, (err, data)=>{
         if(err)
         {
@@ -176,7 +264,7 @@ router.get('/room:id', autheratazation.authAdmin, async(req, res)=>{
     });
 });
 
-router.delete('/deleteroom/:id', autheratazation.authAdmin, async(req,res)=>{
+router.delete('/deleteroom/:id', authAdminFresh, async(req,res)=>{
     // console.log(req.params.id);
     roomschema.findOneAndDelete({roomId: req.params.id},(err,data)=>{
         if(err)
@@ -198,7 +286,7 @@ router.delete('/deleteroom/:id', autheratazation.authAdmin, async(req,res)=>{
 
 });
 
-router.delete('/removeuser/:id', autheratazation.authAdmin, async(req,res)=>{
+router.delete('/removeuser/:id', authAdminFresh, async(req,res)=>{
     userSchema.findOneAndDelete({email: req.params.id},(err,data)=>{
         if(err)
         {
