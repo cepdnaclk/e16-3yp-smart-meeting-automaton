@@ -8,97 +8,199 @@ const auth = require('./auth');
 const Administrator = require('../modules/administrator.model');
 
 //module 
-const user = require('../modules/user.model');
+const User = require('../modules/user.model');
 
 
-function getToken(data) {
-    console.log('token');
+
+
+// function authToken(token) {
+//     jwt.verify(token, process.env.LOGIN_TOKEN, (err, user) => {
+//         if(err) return false;
+//         else return user;
+//     });
+    
+// }
+
+async function authAdminFresh(req, res, next) {
     try{
-        const token = jwt.sign(data, process.env.LOGIN_TOKEN, {expiresIn: '60m'});
-        // console.log(token);
-        return token;
+        const authHeader = req.headers['x-auth-token'];
+        const token = authHeader && authHeader.split(' ')[1];   //like <word> + <space> + token
+        if(token == null) res.status(401).json({
+            'Error': 'does not have token. authorization denied'
+        });
+        else{
+            jwt.verify(token, process.env.LOGIN_FRESH_TOKEN, (err, userByToken) => {
+                if(err) res.status(401).json({
+                    'Error': 'Token not valid'
+                });
+                else
+                {
+                    Administrator.findById( userByToken._id, async(err, data)=>{
+                        if(err) res.json({
+                            'Error':'Try again...'
+                        });
+                        else{
+                            if(data){
+                                req.user = data_id;
+                                next();
+
+                            }
+                            else{
+                                res.status(400).json({
+                                    'Error':'not a admin'
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        }
+        
     }
     catch(err){
-        console.log(err);
+        res.status(500).json({
+            'Error': 'Error'
+        });
     }
-    
-    
-}
-
-function authToken(token) {
-    jwt.verify(token, process.env.LOGIN_TOKEN, (err, user) => {
-        if(err) return false;
-        else return user;
-    });
     
 }
 
 async function authAdmin(req, res, next) {
     try{
-        const authHeader = req.headers['auth'];
-        const token = authHeader && authHeader.split(' ')[1];
-        if(token == null) res.status('400').send('does not have token');
-        jwt.verify(token, process.env.LOGIN_TOKEN, (err, user) => {
-            if(err) res.status('400').send('admin does not exist');
-            else
-            {
-                Administrator.findOne({email: user.email}, async(err, data)=>{
-                    if(err) res.send('Try again...');
-                    else{
-                        if(data) next();
-                        else{
-                            res.status('400').send('not a admin');
-                        }
-                    }
-                });
-                // if(!auth.adminAuth(user)) res.status('400').send('not a admin');
-                // else{
-                //     next();
-                // }
-            }
+        const authHeader = req.headers['x-auth-token'];
+        const token = authHeader && authHeader.split(' ')[1];   //like <word> + <space> + token
+        if(token == null) res.status(401).json({
+            'Error': 'does not have token. authorization denied'
         });
+        else{
+            jwt.verify(token, process.env.LOGIN_TOKEN, (err, userByToken) => {
+                if(err) res.status(401).json({
+                    'Error': 'Token not valid'
+                });
+                else
+                {
+                    Administrator.findById( userByToken._id, async(err, data)=>{
+                        if(err) res.json({
+                            'Error':'Try again...'
+                        });
+                        else{
+                            if(data){
+                                req.user = data_id;
+                                next();
+
+                            }
+                            else{
+                                res.status(400).json({
+                                    'Error':'not a admin'
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        }
+        
     }
     catch(err){
-        res.status(500);
+        res.status(500).json({
+            'Error': 'Error'
+        });
     }
-
-
-    // console.log(user);
-    // if(!user) return res.status('400').send('user does not exist');
-    // else{
-
-    //     if(!adminAuth(user)) res.status('400').send('not a admin');
-    //     else{
-    //         next();
-    //     }
-    // }
     
 }
 
 async function authUser(req, res, next) {
-    const authHeader = req.headers['auth'];
-    const token = authHeader && authHeader.split(' ')[1];
-    if(token == null) res.status('400').send('does not have token');
-    jwt.verify(token, process.env.LOGIN_TOKEN, (err, user) => {
-        if(err) res.status('400').send('user does not exist');
-        else
-        {
-            user.findOne({email: user.email}, async(err, data)=>{
-                if(err) res.send('Try again...');
-                else{
-                    if(data) next();
-                    else{
-                        res.status('400').send('not a user');
-                    }
+    try{
+        const authHeader = req.headers['auth'];
+        const token = authHeader && authHeader.split(' ')[1];
+        if(token == null) res.status(401).json({
+            'Error': 'does not have token. authorization denied'
+        });
+        else{
+
+            jwt.verify(token, process.env.LOGIN_TOKEN, (err, userByToken) => {
+                if(err) res.status(401).json({
+                    'Error': 'Token not valid'
+                });
+                else
+                {
+                    User.findById(userByToken, async(err, data)=>{
+                        if(err) res.json({
+                            'Error':'Try again...'
+                        });
+                        else{
+                            if(data){
+                                req.user = data_id;
+                                next();
+
+                            }
+                            else{
+                                res.status(400).json({
+                                    'Error':'not a admin'
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+
+        }
+        
+
+    }catch(err){
+        res.status(500).json({
+            'Error': 'Error'
+        });
+    }
+    
+}
+
+async function authUserFresh(req, res, next) {
+    try{
+        const authHeader = req.headers['x-auth-token'];
+        const token = authHeader && authHeader.split(' ')[1];   //like <word> + <space> + token
+        if(token == null) res.status(401).json({
+            'Error': 'does not have token. authorization denied'
+        });
+        else{
+            jwt.verify(token, process.env.LOGIN_FRESH_TOKEN, (err, userByToken) => {
+                if(err) res.status(401).json({
+                    'Error': 'Token not valid'
+                });
+                else
+                {
+                    User.findById( userByToken._id, async(err, data)=>{
+                        if(err) res.json({
+                            'Error':'Try again...'
+                        });
+                        else{
+                            if(data){
+                                req.user = data_id;
+                                next();
+
+                            }
+                            else{
+                                res.status(400).json({
+                                    'Error':'not a User'
+                                });
+                            }
+                        }
+                    });
                 }
             });
         }
-    });
+        
+    }
+    catch(err){
+        res.status(500).json({
+            'Error': 'Error'
+        });
+    }
     
 }
 
 
 
 module.exports = {
-    getToken,authToken,authAdmin,authUser
+    authAdmin,authUser,authAdminFresh,authUserFresh
 }
