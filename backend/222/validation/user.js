@@ -58,8 +58,9 @@ function userValidation(req, res, next) {
         });
     }
     else{
+        console.log('No validation error');
         next();
     }
 }
 
-module.exports.userValidation = {userValidation, userLoginValidation};
+module.exports = {userValidation, userLoginValidation};
