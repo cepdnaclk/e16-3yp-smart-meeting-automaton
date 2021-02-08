@@ -1,7 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 const express = require('express');
-const cron = require('node-cron');
+// const cron = require('node-cron');
 
 //configer env veriable
 const dotenv = require('dotenv').config();
@@ -28,16 +28,16 @@ const PORT = process.env.PORT || 3000;
 
 //server initiating
 const ser = http.createServer(app).listen(PORT, 'localhost',function(){
-    console.log(`Server is listening on port {$PORT}`);
+    console.log(`Server is listening on port ${PORT}`);
 
 });
 
 
-//need to impl
-cron.schedule('* * /2 * *', ()=>{
-    //run background task
+// //need to impl
+// cron.schedule('* * /2 * *', ()=>{
+//     //run background task
 
-});
+// });
 
 //middleware
 app.use(express.json());
@@ -58,6 +58,10 @@ app.use('/admin', admin);
 //route middleware admin
 const user = require('./Route/user');
 app.use('/user', user);
+
+// //route signup
+// const signup = require('./Route/signup');
+// app.use('/signup', signup);
 
 // 404
 app.use((req, res)=>{

@@ -11,21 +11,111 @@ const Administrator = require('../modules/administrator.model');
 //module user
 const userSchema = require('../modules/user.model');
 
+//for now //
+///////////////////////////////////////////////////////////
+const userrequest = require('../modules/userRequest.model');
+/////////////////////////////////////////////////////////
+
 //module room
 const roomschema = require('../modules/lecRoom.model');
 
 //autheratazation
-const autheratazation = require('./autherazation');
+const {authUser, authUserFresh} = require('../middleware/autherazation');
 
 //validation
 const {userValidation } = require('../validation/user'); 
 
+//email
+const {sendMailVerification} = require('../middleware/email');
+
 //validation room
 const {roomValidation} = require('../validation/room');
 
+//jwt
+const jwt = require('jsonwebtoken');
+
+router.get('/verify', authUser, async(req, res)=>{
+    userSchema.findById(req.user, async(err, userinfo)=>{
+        if(err){
+            res.status(400).json({
+                'Error': 'Try again'
+            });
+        }else{
+            if(userinfo){
+                if(userinfo.verified){
+                    res.status(400).json({
+                        'Error': 'Already verified'
+                    });
+                }else{
+
+                    const payload = {
+                        user: {
+                          id: userinfo._id
+                        }
+                    };
+                    // const verifUrl = jwt.sign(usersaved._id, process.env.LOGIN_VARIFICATION_TOKEN, {expiresIn: '10m'});
+                    const verifUrlToken = jwt.sign(payload, process.env.LOGIN_VARIFICATION_TOKEN, {expiresIn: '10m'});
+                    const verifUrl = `http://localhost:3000/user/verify/${verifUrlToken}`;
+                    console.log(verifUrl);
+                    // sendMailVerification(whom=usersaved.email, url=verifUrl).then((data) => {
+                    sendMailVerification(userinfo.email, verifUrl).then((data) => {
+                        res.status(200).json({
+                            'message': 'Email send success'
+                        });
+                    }).catch((err)=>{
+                        console.log(err);
+                        res.status(400).json({
+                            'Error': err
+                        });
+                    });
+
+                }
+
+            }else{
+                res.status(400).json({
+                    'Error': 'No user found'
+                });
+            }
+        }
+    });
+    
+})
+
+router.get('/verify/:token', async(req, res)=>{
+    jwt.verify(req.params.token, process.env.LOGIN_VARIFICATION_TOKEN, (err, userByToken) => {
+        if(err) res.status(401).json({
+            'Error': 'Token not valid'
+        });
+        else
+        {
+            userSchema.findByIdAndUpdate( userByToken.user.id, { verified: true}, async(err, data)=>{
+                if(err) res.json({
+                    'Error':'Try again...'
+                });
+                else{
+                    // console.log(data);
+                    if(data){
+                        req.user = data._id;
+                        // console.log(data);
+                        res.status(200).json({
+                            'masseage': 'Successfully verify'
+                        });
+
+                    }
+                    else{
+                        res.status(400).json({
+                            'Error':'not a admin'
+                        });
+                    }
+                }
+            });
+        }
+    });
+});
 
 
-router.get('/table', autheratazation.authUser, async(req, res) => {
+
+router.get('/table', authUser, async(req, res) => {
     roomschema.find({}, (err, data) => {
         if(err)
         {
@@ -39,7 +129,7 @@ router.get('/table', autheratazation.authUser, async(req, res) => {
     });
 });
 
-router.get('/room:id', autheratazation.authUser, async(req, res)=>{
+router.get('/room/:id', authUser, async(req, res)=>{
     roomschema.findOne({roomId: req.params.id}, (err, data)=>{
         if(err)
         {

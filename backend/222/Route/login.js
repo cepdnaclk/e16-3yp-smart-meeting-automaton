@@ -6,7 +6,7 @@ const router = express.Router();
 const bcryptjs = require('bcryptjs');
 
 //auth
-const {adminAuth, userAuth, userFreshAuth, adminFreshAuth} = require('./auth');
+const {adminAuth, userAuth, userFreshAuth, adminFreshAuth} = require('../middleware/auth');
 
 //joi
 const joi = require('@hapi/joi');
@@ -16,8 +16,8 @@ const {userValidation, userLoginValidation} = require('../validation/user');
 //module administrator
 const Administrator = require('../modules/administrator.model');
 
-//autheratazation
-const autheratazation = require('./autherazation');
+// //autheratazation
+// const autheratazation = require('../middleware/autherazation');
 
 //admin loggin
 router.post('/admin', userLoginValidation, adminAuth);
