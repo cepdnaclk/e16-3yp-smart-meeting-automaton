@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-const userRequest = new Schema({
+const userRequestSchema = new Schema({
 
     username: {
         type: String,
@@ -10,6 +10,12 @@ const userRequest = new Schema({
         unique: true,
         min: 1,
         max: 1024,
+    },
+
+    verified: {
+        type: Boolean,
+        //required: true,
+        default: false
     },
 
     password: {
@@ -35,6 +41,6 @@ const userRequest = new Schema({
     timestamps: true
 });
 
-const userRequest = mongoose.model('userRequest', userRequest);
+const userRequest = mongoose.model('userRequest', userRequestSchema);
 
 module.exports = userRequest;

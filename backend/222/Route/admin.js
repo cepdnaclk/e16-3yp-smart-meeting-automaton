@@ -21,7 +21,7 @@ const requestSchema = require('../modules/userRequest.model');
 const roomschema = require('../modules/lecRoom.model');
 
 //autheratazation
-const {authAdmin, authUser, authAdminFresh} = require('./autherazation');
+const {authAdmin, authUser, authAdminFresh} = require('../middleware/autherazation');
 
 //validation
 const {userValidation , userLoginValidation} = require('../validation/user'); 
@@ -30,10 +30,10 @@ const {userValidation , userLoginValidation} = require('../validation/user');
 const {roomValidation} = require('../validation/room');
 
 //auth
-const { userFreshAuth } = require('./auth');
+const { userFreshAuth } = require('../middleware/auth');
 
 //email
-const {sendMailVerification} = require('../modules/email');
+const {sendMailVerification} = require('../middleware/email');
 
 router.post('/adduser/list', authAdmin);
 
@@ -47,11 +47,9 @@ router.get('/requests', authAdmin, async(req, res)=>{
         }
         else{
             if(data){
-                console.log('Sending data');
-                res.json({
-                    'userId': data._id,
-                    'userName': data.username,
-                    'email': data.email
+                // console.log(data);
+                res.status(200).json({
+                    arry: data
                 });
             }
             else{
@@ -60,16 +58,14 @@ router.get('/requests', authAdmin, async(req, res)=>{
                 });
             }
         }
-        
-        // console.log('Send data');
-        // res.send(data);
     });
 
 });
 
 
-router.post('/adduser/:id', userFreshAuth, async(req, res)=>{
-    requestSchema.findOneAndDelete({_id: req.params.id}, (err, data)=>{
+router.post('/adduser/:id', authAdminFresh, (req, res)=>{
+    // requestSchema.findOne({_id: req.params.id}, async(err, data)=>{
+    requestSchema.findOneAndDelete({_id: req.params.id}, async(err, data)=>{
         if(err){
             res.status(400).json({
                 'Error': 'Try again'
@@ -84,15 +80,24 @@ router.post('/adduser/:id', userFreshAuth, async(req, res)=>{
                 try{
                     const usersaved = await userNew.save();
                     console.log('saved user to the db...');
-                    const verifUrl = jwt.sign(usersaved._id, process.env.LOGIN_VARIFICATION_TOKEN, {expiresIn: '10m'});
-                    verifUrl = 'http://localhost:3000/user/verify/' + verifUrl;
-                    sendMailVerification(whom=usersaved.email, url=verifUrl).then((data) => {
+                    const payload = {
+                        user: {
+                          id: usersaved._id
+                        }
+                    };
+                    // const verifUrl = jwt.sign(usersaved._id, process.env.LOGIN_VARIFICATION_TOKEN, {expiresIn: '10m'});
+                    const verifUrlToken = jwt.sign(payload, process.env.LOGIN_VARIFICATION_TOKEN, {expiresIn: '10m'});
+                    const verifUrl = `http://localhost:3000/user/verify/${verifUrlToken}`;
+                    console.log(verifUrl);
+                    // sendMailVerification(whom=usersaved.email, url=verifUrl).then((data) => {
+                    sendMailVerification(usersaved.email, verifUrl).then((data) => {
                         res.status(200).json({
                             'message': 'User added success'
                         });
                     }).catch((err)=>{
+                        console.log(err);
                         res.status(400).json({
-                            'Error': 'Email sending fasild need to resend'
+                            'Error': err
                         });
                     });
 
@@ -107,31 +112,17 @@ router.post('/adduser/:id', userFreshAuth, async(req, res)=>{
                 }
 
 
+            }else{
+                res.status(400).json({
+                    'Error': 'No such request'
+                });
             }
         }
     });
 });
 
 
-router.post('/adduser', authAdmin, userValidation, async(req, res) => {
-    // const authHeader = req.headers['auth'];
-    // const token = authHeader && authHeader.split(' ')[1];
-    // if(token == null) res.sendStatus(401);       //process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
-    // const authToken = await autheratazation.authToken(token);
-    // if(!authToken) return res.sendStatus(403);
-
-    // const loginvalidate = uservalidation(req.body, (err, data) => {
-    //     if(err) console.log('er');
-    // });
-    // if(loginvalidate.error){
-    //     console.log('Error in validation...');
-    //     res.status('400').send(loginvalidate);
-    // }
-
-    // const {err, findUser} = userSchema.findOne({email: req.body.email},(er, data)=>{
-    //     if(er)
-    // });
-    // console.log(findUser);
+router.post('/adduser/hh', authAdmin, userValidation, async(req, res) => {
 
     userSchema.findOne({email: req.body.email}, async (err, data)=>{
         if(err) res.status('400').send('Try again');
@@ -185,23 +176,6 @@ router.get('/table', authAdmin, async(req, res) => {
 
 router.post('/addroom', authAdminFresh, roomValidation, async (req, res) => {
 
-    // try{
-    //     const loginvalidate = await roomvalidation(req.body);
-    // }
-    // catch(err){
-    //     console.log('Error in validation...');
-    //     res.status('400').send(err);
-    // }
-
-    // const loginvalidate = await roomvalidation(req.body);
-    // if(loginvalidate.error){
-    //     console.log('err');
-    //     res.send('error');
-    // }
-    // else{
-    //     next();
-    // }
-
     roomschema.findOne({roomId: req.body.roomId}, async(err, data)=>{
         if(err){
             res.send('Try again...');
@@ -234,19 +208,9 @@ router.post('/addroom', authAdminFresh, roomValidation, async (req, res) => {
         }
     });
 
-
-    // const room = new roommodule({
-    //     roomId: req.body.roomId,
-    //     controlUnitId: req.body.controlUnitId,
-    //     meetingOwnerId: req.body.meetingOwnerId,
-    //     isReserved: req.body.isReserved
-    // });
-
-    
-
 });
 
-router.get('/room:id', authAdmin, async(req, res)=>{
+router.get('/room/:id', authAdmin, async(req, res)=>{
     roomschema.findOne({roomId: req.params.id}, (err, data)=>{
         if(err)
         {

@@ -6,14 +6,16 @@ const bcryptjs = require('bcryptjs');
 //validation
 const {userValidation } = require('../validation/user');
 //userRequest model
-const {userRequest} = require('../modules/userRequest.model');
-//userNeedSignup
-const {userNeedSignup} = require('../modules/userNeedSignup.model');
-//user
-const {user} = require('../modules/user.model');
+const userRequestSchema = require('../modules/userRequest.model');
 
-router.post('/request', userValidation, checkExist, async(req, res)=>{
-    user.findOne({email: req.body.email}, (err, data)=>{
+//user
+const userSchema = require('../modules/user.model');
+// checkExist,
+router.post('/request', userValidation, async(req, res)=>{
+    console.log(req.body.email);
+    
+    userSchema.findOne({email: req.body.email}, (err, data)=>{
+        console.log('here');
         if(err){
             res.status(500).json({
                 'Error': 'Error in server side'
@@ -24,7 +26,7 @@ router.post('/request', userValidation, checkExist, async(req, res)=>{
                     'Error': 'User already exist'
                 });
             }else{
-                userRequest.findOne({email: req.body.email}, async(err, dataInRequests)=>{
+                userRequestSchema.findOne({email: req.body.email}, async(err, dataInRequests)=>{
                     if(err){
                         res.status(500).json({
                             'Error': 'Error in server side'
@@ -37,7 +39,7 @@ router.post('/request', userValidation, checkExist, async(req, res)=>{
                         }else{
                             const salt = await bcryptjs.genSalt(10);
                             const hashPassword = await bcryptjs.hash(req.body.password, salt);
-                            const requestForUser = new userRequest({
+                            const requestForUser = new userRequestSchema({
                                 username: req.body.username,
                                 password: hashPassword,
                                 email: req.body.email
@@ -68,3 +70,6 @@ router.post('/request', userValidation, checkExist, async(req, res)=>{
     });
 
 });
+
+
+module.exports = router;
