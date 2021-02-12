@@ -1,10 +1,6 @@
 const joi = require('@hapi/joi');
 
 const userLoginschema = joi.object({
-    // username: joi.string()
-    //     .required()
-    //     .min(1)
-    //     .max(1024),
 
     password: joi.string()
         .min(6)
