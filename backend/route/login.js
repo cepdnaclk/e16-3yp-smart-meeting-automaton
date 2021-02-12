@@ -6,7 +6,7 @@ const router = express.Router();
 const bcryptjs = require('bcryptjs');
 
 //auth
-const {adminAuth, userAuth, userFreshAuth, adminFreshAuth} = require('../middleware/auth');
+const {adminAuth, userAuth, userFreshAuth, adminFreshAuth} = require('../middleware/auth.js');
 
 //joi
 const joi = require('@hapi/joi');
