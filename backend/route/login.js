@@ -10,14 +10,9 @@ const {adminAuth, userAuth, userFreshAuth, adminFreshAuth} = require('../middlew
 
 //joi
 const joi = require('@hapi/joi');
+
 //joi schema
-const {userValidation, userLoginValidation} = require('../validation/user'); 
-
-//module administrator
-const Administrator = require('../modules/administrator.model');
-
-// //autheratazation
-// const autheratazation = require('../middleware/autherazation');
+const {userLoginValidation} = require('../validation/user'); 
 
 //admin loggin
 router.post('/admin', userLoginValidation, adminAuth);
@@ -35,9 +30,6 @@ router.post('/user/fresh', userLoginValidation, userFreshAuth);
 router.use((req, res)=>{
     res.status(404).send('404');
 });
-
-
-
 
 module.exports = router;
 
