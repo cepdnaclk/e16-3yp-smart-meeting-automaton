@@ -19,7 +19,7 @@
 
     </head>
     <body id="page-top">
-        <!-- Navigation-->
+        <!-- Navigation Bar -->
         <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
             <div class="container">
                 <a class="navbar-brand js-scroll-trigger" href="#page-top">Unified Project</a>
@@ -32,13 +32,15 @@
                         <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#about">About</a></li>
                         <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#overview">Overview</a></li>
                         <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#solution">Solution</a></li>
-                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#design">Design</a></li>
-                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#signup">Contact</a></li>
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#design">Design/Progress</a></li>
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#budget">Budget</a></li>
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#contacts">Contacts</a></li>
                     </ul>
                 </div>
             </div>
         </nav>
-        <!-- Masthead-->
+
+        <!-- Masthead -->
         <header class="masthead">
             <div class="container d-flex h-100 align-items-center">
                 <div class="mx-auto text-center">
@@ -53,7 +55,9 @@
                 </div>
             </div>
         </header>
-        <!-- About-->
+
+        <!-- About -->
+        <!-- Solution for a Problem -->
         <section class="about-section text-center" id="about">
             <div class="container">
                 <div class="row">
@@ -69,7 +73,8 @@
                 <!--<img class="img-fluid" src="assets/img/ipad.jpg" alt="" />-->
             </div>
         </section>
-        <!-- overview-->
+        
+        <!-- System Overview -->
         <section class="projects-section bg-light" id="overview">
             <h1 class="text-black mb-4 text-center">System Overview</h1>
             
@@ -91,12 +96,12 @@
             </div>
         </section>
 
-        <!-- Solution-->
+        <!-- Solution Architecture -->
         <section class="projects-section bg-light" id="solution">
             <h1 class="text-black mb-4 text-center">Solution Architecture</h1>
             
             <div class="container">
-                <!-- Project One Row-->
+                <!-- Project One Row : Main Control Unit -->
                 <div class="row justify-content-center no-gutters mb-5 mb-lg-0">
                     <div class="col-lg-6"><img class="img-fluid" src="assets/img/Main_Control_Unit.jpg" alt="" /></div>
                     <div class="col-lg-6">
@@ -117,7 +122,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- Project Two Row-->
+                <!-- Project Two Row : Extending Unit -->
                 <div class="row justify-content-center no-gutters">
                     <div class="col-lg-6"><img class="img-fluid" src="assets/img/Sub_Control_Units.jpg" alt="" /></div>
                     <div class="col-lg-6 order-lg-first">
@@ -131,14 +136,7 @@
                                             <li class="mb-0 text-white-50">Give signals to AC machines, projectors as IR signals.</li>
                                         </ul>
                                     </p>
-
-                                    <h4 class="text-white">Role of Feedback Sending Unit</h4>
-                                    <p class="mb-0 text-white-50">
-                                        <ul>
-                                            <li class="mb-0 text-white-50">Monitors temperature and humidity.</li>
-                                            <li class="mb-0 text-white-50">Send data to the Main Control Unit via Wi-Fi.</li>
-                                        </ul>
-                                    </p>
+                                    
                                     <hr class="d-none d-lg-block mb-0 ml-0" />
                                 </div>
                             </div>
@@ -149,8 +147,10 @@
         </section>    
 
 
-        <!-- Design-->
+        <!-- Design -->
         <section class="projects-section bg-light" id="design">
+
+            <!-- Circuit Diagrams -->
             <div class="container">
                 <h1 class="text-black mb-4 text-center">Circuit Diagrams</h1>
                 <!-- Project One Row-->
@@ -160,6 +160,7 @@
                 </div>
             </div>
             
+            <!-- UI Wireframe Designs -->
             <div id="UIimage">
                 <div class="container-fluid p-0">
                     <h1 class="text-center mt-5">UI Wireframe Designs</h1>
@@ -231,7 +232,7 @@
                 </div>
             </div>
         
-
+            <!-- Entity Relationship Diagram -->
             <div class="container">
                 <h1 class="text-black mb-4 text-center">Entity Relationship Diagram</h1>
                 <!-- Featured Project Row-->
@@ -240,12 +241,15 @@
                     <div class="col-xl-8 col-lg-7"><img class="img-fluid mb-3 mb-lg-0" src="assets/img/ER_Diagram.jpg" alt="" /></div>
                     <div class="col-xl-4 col-lg-5">
                         <div class="featured-text text-center text-lg-left">
-                            <p class="text-black-100 mb-0">
-                                <!--
-                                <li>Client Application</li>
-                                <li>Control Unit</li>
-                                These two streams are connected via AWS cloud.
-                                -->
+                            <p class="text-black-200 mb-0">
+
+                                <li>System has administrator persons</li>
+                                <li>Administrators create accounts for users(Lecturers/meeting owners)</li>
+                                <li>Administrators reserves lecture rooms/meeting rooms</li>
+                                <li>Admins figure out how to control devices in meeting room/lecture room</li>
+                                <li>Devices within meeting rooms automatically operates according to schedules</li>
+                                <li>Users can also control devices within the meeting room.(Via mobile app)</li>
+                                
                             </p>
                         </div>
                     </div>
@@ -253,8 +257,8 @@
             </div>
 
 
-            <!--New added 2/2/2021-->
-
+            <!-- New added 2/2/2021 -->
+            <!-- Software Testing -->
             <div id="UIimage">
                 <div class="container-fluid p-0">
                     <h1 class="text-center mt-5">Software Testing</h1>
@@ -326,9 +330,40 @@
                 </div>
             </div>
         
+            <!-- Front-end Software -->
             <div id="UIimage">
                 <div class="container-fluid p-0">
                     <h1 class="text-center mt-5">Front-end Software</h1>
+                    <h3 class="text-center mt-5">Design Architecture</h3>
+                
+                    <!-- Design Architecture -->
+                    <div class="container">
+                        <div class="row align-items-center no-gutters mb-4 mb-lg-5">
+                            
+                            <div class="col-xl-8 col-lg-7"><img class="img-fluid mb-3 mb-lg-0" src="assets/img/Front_Design_Architecture.jpg" alt="" /></div>
+                            <div class="col-xl-4 col-lg-5">
+                                <div class="featured-text text-center text-lg-left">
+                                    <p class="text-black-100 mb-0">
+                                
+                                        <h4>React</h4>
+                                        <li>Dynamic content</li>
+                                        <li>React Hooks</li>
+                                        <hr class="divider my-4" />
+                                
+                                        <h4>AXIOS</h4>
+                                        <li>Communication with the backend</li>
+                                        <hr class="divider my-4" />
+                                        
+                                        <h4>Context API</h4>
+                                        <li>State management</li>
+                                        
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Front-end User Interfaces -->
                     <hr class="divider my-4" />
                     <div class="row no-gutters">
                         <div class="col-lg-4 col-sm-6">
@@ -396,12 +431,88 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Backend Software -->
+            <div class="container-fluid p-0">
+                <h1 class="text-center mt-5">Back-end Software</h1>
+            
+                <!-- Backend Design Architecture -->
+                <div class="container">
+                    <div class="row align-items-center no-gutters mb-4 mb-lg-5">
+                        
+                        <div class="col-xl-4 col-lg-5">
+                            <div class="featured-text text-center text-lg-left">
+                                <p class="text-black-100 mb-0">
+                            
+                                    <h4>Node.js Express</h4>
+                                    <hr class="divider my-4" />
+                                    <li>Can build scalable, fast and non-blocking I-O backend server</li>
+                                    
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-4 col-lg-5">
+                            <div class="featured-text text-center text-lg-left">
+                                <p class="text-black-100 mb-0">
+                            
+                                    <h4>MongoDB Atlas</h4>
+                                    <hr class="divider my-4" />
+                                    <li>Automatically scale increase cluster storage with the growth of data</li>
+                                    <li>Storage can be maximized with auto-scaling features</li>
+                                    
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-4 col-lg-5">
+                            <div class="featured-text text-center text-lg-left">
+                                <p class="text-black-100 mb-0">
+                            
+                                    <h4>Security</h4>
+                                    <hr class="divider my-4" />
+                                    <li>Password hashing</li>
+                                    <li>Json Web Tokens(JWT) for user authorization</li>
+                                    <li>Authenticated local strategy using email and password</li>
+                                    <li>Authorization using JWT strategy to protect end points</li>
+                                    <li>Access tokens and refresh tokens for user identification</li>
+                                    <li>Data validation before sending them to database</li>
+                                    
+                                </p>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cloud Deployment -->
+            <div class="container">
+                <h1 class="text-black mb-4 text-center">Cloud Deployment</h1>
+                <div class="img-container">
+                    
+                    <div class="col-xl-15 col-lg-11"><img class="img-fluid ml-5 mr-5 mb-lg-0" src="assets/img/Cloud_Deployment.jpg" alt="" /></div>
+                    
+                </div>
+            </div>
+
         </section>    
         
-       
 
-        <!-- Signup-->
-        <section class="signup-section" id="signup">
+        <!-- Budget Report -->
+        <section id="budget">
+            <div class="container">
+                <h1 class="text-black mb-4 text-center">Budget Report</h1>
+                <div class="img-container">
+                    
+                    <div class="col-xl-7 col-lg-7"><img class="img-fluid ml-15 mr-5 mb-lg-0" src="assets/img/budget_report.jpg" alt="" /></div>
+                    
+                </div>
+            </div>
+        </section>
+
+        <!-- Contacts -->
+        <section class="signup-section" id="contacts">
             <div class="container">
                 <div class="row">
                     <div class="col-md-10 col-lg-8 mx-auto text-center">
@@ -412,7 +523,8 @@
                 </div>
             </div>
         </section>
-        <!-- Contact-->
+
+        <!-- Contacts -->
         <section class="contact-section bg-black">
             <div class="container">
                 <div class="row">
