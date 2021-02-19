@@ -17,6 +17,31 @@
 
         <link rel="stylesheet" href="mobirise-gallery/style.css">
 
+        <style>
+            #table-summary {
+                font-family: Arial, Helvetica, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            #table-summary td, #table-summary th {
+                border: 1px solid #ddd;
+                padding: 8px;
+                }
+
+            #table-summary tr:nth-child(even){background-color: #f2f2f2;}
+
+            #table-summary tr:hover {background-color: #ddd;}
+
+            #table-summary th {
+                padding-top: 12px;
+                padding-bottom: 12px;
+                text-align: left;
+                background-color: #4CAF50;
+                color: white;
+            }
+        </style>
+
     </head>
     <body id="page-top">
         <!-- Navigation Bar -->
@@ -258,77 +283,6 @@
 
 
             <!-- New added 2/2/2021 -->
-            <!-- Software Testing -->
-            <div id="UIimage">
-                <div class="container-fluid p-0">
-                    <h1 class="text-center mt-5">Software Testing</h1>
-                    <hr class="divider my-4" />
-                    <div class="row no-gutters">
-                        <div class="col-lg-4 col-sm-6">
-                            <a class="UIimage-box" href="assets/img/ST1.jpg">
-                                <img class="img-fluid" src="assets/img/ST1.jpg" alt="" />
-                                
-                                <div class="UIimage-box-caption">
-                                    
-                                   <div class="project-name"></div>
-                                </div>
-                                
-                            </a>
-                        </div>
-                        <div class="col-lg-4 col-sm-6">
-                            <a class="UIimage-box" href="assets/img/ST2.jpg">
-                                <img class="img-fluid" src="assets/img/ST2.jpg" alt="" />
-                                     
-                                <div class="UIimage-box-caption">
-                                   
-                                    <div class="project-name"></div>
-                                </div>
-                             
-                            </a>
-                        </div>
-                        <div class="col-lg-4 col-sm-6">
-                            <a class="UIimage-box" href="assets/img/ST3.jpg">
-                                <img class="img-fluid" src="assets/img/ST3.jpg" alt="" />
-                                 
-                                <div class="UIimage-box-caption">
-                                   
-                                    <div class="project-name"></div>
-                                </div>
-                           
-                            </a>
-                        </div>
-                    
-                        <div class="col-lg-4 col-sm-6">
-                            <a class="UIimage-box" href="assets/img/ST4.jpg">
-                                <img class="img-fluid" src="assets/img/ST4.jpg" alt="" />
-                                <div class="UIimage-box-caption">
-                                   
-                                    <div class="project-name"></div>
-                                </div>
-                            </a>
-                        </div>                    
-                        <div class="col-lg-4 col-sm-6">
-                            <a class="UIimage-box" href="assets/img/ST5.jpg">
-                                <img class="img-fluid" src="assets/img/ST5.jpg" alt="" />
-                                <div class="UIimage-box-caption">
-                                    
-                                    <div class="project-name"></div>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-lg-4 col-sm-6">
-                            <a class="UIimage-box" href="assets/img/ST6.jpg">
-                                <img class="img-fluid" src="assets/img/ST6.jpg" alt="" />
-                                <div class="UIimage-box-caption p-3">
-                                    
-                                    <div class="project-name"></div>
-                                </div>
-                            </a>
-                        </div>
-                        
-                    </div>
-                </div>
-            </div>
         
             <!-- Front-end Software -->
             <div id="UIimage">
@@ -485,6 +439,272 @@
                     </div>
                 </div>
             </div>
+
+
+            <!-- Software Testing -->
+            <div id="UIimage">
+                <div class="container-fluid p-0">
+                    <h1 class="text-center mt-5">Software Testing</h1>
+                    <hr class="divider my-4" />
+
+                    <!-- Software Testing Summary -->
+                    <h2 class="text-center mt-5">Summary Report</h2>
+                    <div>
+                        <table id="table-summary" style="width: 100%">
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 15%;">
+                                <col span="1" style="width: 20%;">
+                                <col span="1" style="width: 20%;">
+                                <col span="1" style="width: 20%;">
+                                <col span="1" style="width: 20%;">
+                            </colgroup>
+                            <tr>
+                                <th>Area of testing</th>
+                                <th>What was tested</th>
+                                <th>How was the test done ?</th>
+                                <th>Purpose</th>
+                                <th>Expected Results</th>
+                                <th>Findings</th>
+                            </tr>
+                            <tr>
+                                <td>Server</td>
+                                <td>Login to the system</td>
+                                <td>User needs to give correct username and password</td>
+                                <td>Admin and user have separate authorization methods. So some route need to admin login it will check by The API (User or Admin that are logged in)</td>
+                                <td>
+                                    <ul>
+                                        <li>Token is given, if user logged successfully</li>
+                                        <li>Otherwise, anyone can not access the services of the system</li>
+                                    </ul>
+                                </td>
+                                <td>Token is valid for 30 minutes. If a person knows this token within that time, he can access the system. (except for critical operations)</td>
+                            </tr>
+                            <tr>
+                                <td>Server</td>
+                                <td>Adding user to system and verify</td>
+                                <td>
+                                    <ul>
+                                        <li>User need to register for the system</li>
+                                        <li>Need freshly logging of admin</li>
+                                        <li>User needs the verification link that comes to email</li>
+                                        <li>After successfully adding, user needs to login again</li>
+                                    </ul>
+                                </td>
+                                <td>User can be added to the system with an email verifification and only admin can add user</td>
+                                <td>
+                                    <ul>
+                                        <li>On success : When admin adds a user to the system, verification email is sent</li>
+                                        <li>New user can only login the system via that verification link</li>
+                                    </ul>
+                                </td>
+                                
+                                <td>
+                                    <ul>
+                                        <li>User is uniquely identified by the email</li>
+                                        <li>User is validated whether he has provided an correct email</li>
+                                    </ul>
+                                </td>
+                                
+                            </tr>
+                            <tr>
+                                <td>Server</td>
+                                <td>
+                                    <ul>
+                                        <li>Adding room</li>
+                                        <li>Delete room</li>
+                                        <li>Delete user</li>
+                                    </ul>
+                                </td>
+                                <td>Need admin fresh login (It expires within 5 mins)</td>
+                                <td>These operations are allowed only for admin to avoid misbehaviours of the system</td>
+                                <td>
+                                    <ul>
+                                        <li>On success : Status code - 200</li>
+                                        <li>Failed operations : Status code - 401</li>
+                                    </ul>
+                                </td>
+                                <td>Admin should verify his login with his password each time when he does these operations</td>
+                            </tr>
+                        </table>
+
+                    </div>
+
+
+                    <!-- Unit tests to verify outputs over inputs -->
+                    <h2 class="text-center mt-5">Unit tests to verify outputs over inputs</h2>
+                    <hr class="divider my-4" />
+                    <div class="row no-gutters">
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/verifing_results/addingUserToSystemWithInvalidToken.jpg">
+                                <img class="img-fluid" src="assets/img/verifing_results/addingUserToSystemWithInvalidToken.jpg" alt="" />
+                                
+                                <div class="UIimage-box-caption">
+                                    
+                                   <div class="project-name"></div>
+                                </div>
+                                
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/verifing_results/adminFreshLogin.jpg">
+                                <img class="img-fluid" src="assets/img/verifing_results/adminFreshLogin.jpg" alt="" />
+                                     
+                                <div class="UIimage-box-caption">
+                                   
+                                    <div class="project-name"></div>
+                                </div>
+                             
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/verifing_results/adminLoginPasswordInvalid.jpg">
+                                <img class="img-fluid" src="assets/img/verifing_results/adminLoginPasswordInvalid.jpg" alt="" />
+                                 
+                                <div class="UIimage-box-caption">
+                                   
+                                    <div class="project-name"></div>
+                                </div>
+                           
+                            </a>
+                        </div>
+                    
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/verifing_results/getRegisteredUserWithInvalidToken.jpg">
+                                <img class="img-fluid" src="assets/img/verifing_results/getRegisteredUserWithInvalidToken.jpg" alt="" />
+                                <div class="UIimage-box-caption">
+                                   
+                                    <div class="project-name"></div>
+                                </div>
+                            </a>
+                        </div>                    
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/verifing_results/successfullAdminLogin.jpg">
+                                <img class="img-fluid" src="assets/img/verifing_results/successfullAdminLogin.jpg" alt="" />
+                                <div class="UIimage-box-caption">
+                                    
+                                    <div class="project-name"></div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/verifing_results/successfullGettingRegisteredUser.jpg">
+                                <img class="img-fluid" src="assets/img/verifing_results/successfullGettingRegisteredUser.jpg" alt="" />
+                                <div class="UIimage-box-caption p-3">
+                                    
+                                    <div class="project-name"></div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/verifing_results/successUserLogin.jpg">
+                                <img class="img-fluid" src="assets/img/verifing_results/successUserLogin.jpg" alt="" />
+                                <div class="UIimage-box-caption p-3">
+                                    
+                                    <div class="project-name"></div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/verifing_results/successUserRegister.jpg">
+                                <img class="img-fluid" src="assets/img/verifing_results/successUserRegister.jpg" alt="" />
+                                <div class="UIimage-box-caption p-3">
+                                    
+                                    <div class="project-name"></div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/verifing_results/userEmailWrongLoginFaild.jpg">
+                                <img class="img-fluid" src="assets/img/verifing_results/userEmailWrongLoginFaild.jpg" alt="" />
+                                <div class="UIimage-box-caption p-3">
+                                    
+                                    <div class="project-name"></div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/verifing_results/userRegisterRequestEmailAlreadyExist.jpg">
+                                <img class="img-fluid" src="assets/img/verifing_results/userRegisterRequestEmailAlreadyExist.jpg" alt="" />
+                                <div class="UIimage-box-caption p-3">
+                                    
+                                    <div class="project-name"></div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                    </div>
+
+                    <!-- How testing was done -->
+                    <hr class="divider my-4" />
+                    <div class="row no-gutters">
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/ST1.jpg">
+                                <img class="img-fluid" src="assets/img/ST1.jpg" alt="" />
+                                
+                                <div class="UIimage-box-caption">
+                                    
+                                   <div class="project-name"></div>
+                                </div>
+                                
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/ST2.jpg">
+                                <img class="img-fluid" src="assets/img/ST2.jpg" alt="" />
+                                     
+                                <div class="UIimage-box-caption">
+                                   
+                                    <div class="project-name"></div>
+                                </div>
+                             
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/ST3.jpg">
+                                <img class="img-fluid" src="assets/img/ST3.jpg" alt="" />
+                                 
+                                <div class="UIimage-box-caption">
+                                   
+                                    <div class="project-name"></div>
+                                </div>
+                           
+                            </a>
+                        </div>
+                    
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/ST4.jpg">
+                                <img class="img-fluid" src="assets/img/ST4.jpg" alt="" />
+                                <div class="UIimage-box-caption">
+                                   
+                                    <div class="project-name"></div>
+                                </div>
+                            </a>
+                        </div>                    
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/ST5.jpg">
+                                <img class="img-fluid" src="assets/img/ST5.jpg" alt="" />
+                                <div class="UIimage-box-caption">
+                                    
+                                    <div class="project-name"></div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/ST6.jpg">
+                                <img class="img-fluid" src="assets/img/ST6.jpg" alt="" />
+                                <div class="UIimage-box-caption p-3">
+                                    
+                                    <div class="project-name"></div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                    </div>
+
+                </div>
+            </div>
+
 
             <!-- Cloud Deployment -->
             <div class="container">
