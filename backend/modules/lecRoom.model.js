@@ -1,3 +1,4 @@
+const { string } = require('@hapi/joi');
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
@@ -20,7 +21,17 @@ const lecRoomSchema = new Schema({
         required: true,
         min: 1,
         max: 20
-    }
+    },
+
+    acId: {
+        type: [String],
+        default: undefined
+    },
+
+    projectorId: {
+        type: [String],
+        default: undefined
+    },
 
     // isReserved: {
     //     type: Boolean,
