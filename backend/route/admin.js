@@ -159,6 +159,10 @@ router.post('/adduser/hh', authAdmin, userValidation, async(req, res) => {
 
 });
 
+router.post('/add/room', authAdminFresh, async(req, res)=>{
+    
+});
+
 router.get('/table', authAdmin, async(req, res) => {
     roomschema.find({}, (err, data) => {
         if(err)

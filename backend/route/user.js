@@ -147,6 +147,8 @@ router.get('/room/:id', authUser, async(req, res)=>{
     });
 });
 
+router.post('/add/room', )
+
 
 //404
 router.use((req, res)=>{

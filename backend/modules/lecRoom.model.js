@@ -4,25 +4,28 @@ const Schema = mongoose.Schema;
 
 const lecRoomSchema = new Schema({
 
-    roomId: {
-        type: String,
-        required: true,
-        unique: true,
-    },
+    // roomId: {
+    //     type: String,
+    //     required: true,
+    //     unique: true,
+    // },
 
     controlUnitId:{
         type: String,
         required: true
     },
 
-    meetingOwnerId: {
-        type: String
-    },
+    roomName: {
+        type: String,
+        required: true,
+        min: 1,
+        max: 20
+    }
 
-    isReserved: {
-        type: Boolean,
-        required: true
-    },
+    // isReserved: {
+    //     type: Boolean,
+    //     required: true
+    // },
 
 }, {
     timestamps: true
