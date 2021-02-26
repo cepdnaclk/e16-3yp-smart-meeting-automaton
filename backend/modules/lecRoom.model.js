@@ -5,22 +5,16 @@ const Schema = mongoose.Schema;
 
 const lecRoomSchema = new Schema({
 
-    // roomId: {
-    //     type: String,
-    //     required: true,
-    //     unique: true,
-    // },
-
-    controlUnitId:{
-        type: String,
-        required: true
-    },
-
     roomName: {
         type: String,
         required: true,
         min: 1,
         max: 20
+    },
+
+    controlUnitId:{
+        type: String,
+        required: true
     },
 
     acId: {
@@ -32,11 +26,6 @@ const lecRoomSchema = new Schema({
         type: [String],
         default: undefined
     },
-
-    // isReserved: {
-    //     type: Boolean,
-    //     required: true
-    // },
 
 }, {
     timestamps: true
