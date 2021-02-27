@@ -20,6 +20,15 @@ const requestSchema = require('../modules/userRequest.model');
 //module room
 const roomschema = require('../modules/lecRoom.model');
 
+//model ac
+const acschema = require('../modules/ac.model');
+
+//model projector
+const projectorschema = require('../modules/projectors.model');
+
+//model schedule
+const scheduleschema = require('../modules/schedule.model');
+
 //autheratazation
 const {authAdmin, authUser, authAdminFresh} = require('../middleware/autherazation');
 
@@ -28,6 +37,15 @@ const {userValidation , userLoginValidation} = require('../validation/user');
 
 //validation room
 const {roomValidation} = require('../validation/room');
+
+//validation ac
+const {acValidation} = require('../validation/ac');
+
+//projector validation
+const {projectorValidation} = require('../validation/projector');
+
+//schedule validation
+const {scheduleValidation} = require('../validation/schedule');
 
 //auth
 const { userFreshAuth } = require('../middleware/auth');
@@ -122,51 +140,43 @@ router.post('/adduser/:id', authAdminFresh, (req, res)=>{
 });
 
 
-router.post('/adduser/hh', authAdmin, userValidation, async(req, res) => {
+// router.post('/adduser/hh', authAdmin, userValidation, async(req, res) => {
 
-    userSchema.findOne({email: req.body.email}, async (err, data)=>{
-        if(err) res.status('400').send('Try again');
-        else{
+//     userSchema.findOne({email: req.body.email}, async (err, data)=>{
+//         if(err) res.status('400').send('Try again');
+//         else{
 
-            if(data) res.status('400').send('email already exist');
-            else{
-                const salt = await bcryptjs.genSalt(10);
-                const hashPassword = await bcryptjs.hash(req.body.password, salt);
-                console.log(salt);
-                console.log(hashPassword);
-                const user = new userSchema({
-                    username: req.body.username,
-                    password: hashPassword,
-                    email: req.body.email
-                });
+//             if(data) res.status('400').send('email already exist');
+//             else{
+//                 const salt = await bcryptjs.genSalt(10);
+//                 const hashPassword = await bcryptjs.hash(req.body.password, salt);
+//                 console.log(salt);
+//                 console.log(hashPassword);
+//                 const user = new userSchema({
+//                     username: req.body.username,
+//                     password: hashPassword,
+//                     email: req.body.email
+//                 });
             
-                try{
-                    const userloged = await user.save();
-                    console.log('saved user to the db...');
-                    res.send(userloged);
-                }catch(error)
-                {
-                    console.log('Saving faild...', error);
-                    res.send({
-                        'error': 'Saving error'
-                    });
+//                 try{
+//                     const userloged = await user.save();
+//                     console.log('saved user to the db...');
+//                     res.send(userloged);
+//                 }catch(error)
+//                 {
+//                     console.log('Saving faild...', error);
+//                     res.send({
+//                         'error': 'Saving error'
+//                     });
                 
-                }
-            }
+//                 }
+//             }
 
-        }
-    });
+//         }
+//     });
 
-});
+// });
 
-router.post('/add/ac', authAdminFresh, async(req, res)=>{
-    
-});
-
-router.post('/add/room', authAdminFresh, async(req, res)=>{
-
-    
-});
 
 router.get('/table', authAdmin, async(req, res) => {
     roomschema.find({}, (err, data) => {
@@ -182,8 +192,108 @@ router.get('/table', authAdmin, async(req, res) => {
     });
 });
 
+router.post('/add/ac', authAdminFresh, acValidation, async(req, res)=>{
+    const ac = new acschema({
+        controlUnitId: req.body.controlUnitId
 
-router.post('/addroom', authAdminFresh, roomValidation, async (req, res) => {
+    });
+
+    try{
+        const acsaved = await ac.save();
+        console.log('saved user to the db...');
+        res.send(acsaved._id);
+    }
+    catch(error){
+        console.log('Saving faild...', error);
+        res.send({
+            'error': 'Saving error'
+        });
+                
+    }
+
+});
+
+router.post('/add/projector', authAdminFresh, projectorValidation, async(req, res)=>{
+    const projector = new projectorschema({
+        controlUnitId: req.body.controlUnitId
+
+    });
+
+    try{
+        const projectorSaved = await projector.save();
+        console.log('saved user to the db...');
+        res.send(projectorSaved._id);
+    }
+    catch(error){
+        console.log('Saving faild...', error);
+        res.send({
+            'error': 'Saving error'
+        });
+                
+    }
+
+});
+
+router.post('/add/schedule', authAdminFresh, scheduleValidation, async(req, res)=>{
+    const schedule = new scheduleschema({
+        roomName: req.body.roomName,
+        subject: req.body.subject,
+        startTime: req.body.startTime,
+        endTime: req.body.endTime,
+        userName: req.body.userName
+
+    });
+
+    try{
+        // const scheduleSaved = 
+        schedule.save((err, result)=>{
+            if(err) {
+                console.log('Saving faild...', error);
+                res.send({
+                    'error': 'Saving error'
+                });
+            }
+            else{
+                const event = {
+                    id: result._id,
+                    summary: 'Lecture',
+                    location: 'University of peradeniya, sri lanka',
+                    description: result.subject + 'Lecture in ' + result.roomName + ' conduct by '+ result.userName,
+                    start: {
+                        dateTime: req.body.start,
+                        // timeZone: 'Sri Lanka/Sri Jayawardenepura Kotte',
+                    },
+                    end: {
+                        dateTime: req.body.end,
+                        // timeZone: 'UTC/GMT',
+                    },
+                    reminders: {
+                    useDefault: false,
+                    overrides: [
+                        {method: 'email', minutes: 30 * 60},
+                        {method: 'popup', minutes: 15},
+                        ],
+                    },
+                }
+
+                
+
+            }
+        });
+        console.log('saved user to the db...');
+        res.send(scheduleSaved._id);
+    }
+    catch(error){
+        console.log('Saving faild...', error);
+        res.send({
+            'error': 'Saving error'
+        });
+                
+    }
+
+});
+
+router.post('/add/room', authAdminFresh, roomValidation, async (req, res) => {
 
     roomschema.findOne({roomId: req.body.roomId}, async(err, data)=>{
         if(err){
@@ -197,8 +307,8 @@ router.post('/addroom', authAdminFresh, roomValidation, async (req, res) => {
                 const room = new roomschema({
                     roomId: req.body.roomId,
                     controlUnitId: req.body.controlUnitId,
-                    meetingOwnerId: req.body.meetingOwnerId,
-                    isReserved: req.body.isReserved
+                    acId: req.body.acId,
+                    projectorId: req.body.projectorId
                 });
 
                 try{
