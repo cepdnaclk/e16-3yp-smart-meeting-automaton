@@ -9,7 +9,7 @@ const lecRoomSchema = new Schema({
         type: String,
         required: true,
         min: 1,
-        max: 20,
+        max: 100,
         unique: true
     },
 

@@ -19,9 +19,14 @@ const scheduleSchema = new Schema({
         max: 50
     },
 
-    time: {
+    startTime: {
         type: String,
         required: true,
+    },
+
+    endTime: {
+        type: String,
+        required: true
     },
 
     username: {
