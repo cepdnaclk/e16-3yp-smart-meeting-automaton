@@ -19,7 +19,8 @@ const projectorSchema = new Schema({
 
     isWorking: {
         type: Boolean,
-        required: true
+        required: true,
+        default: true
     }
 
 }, {

@@ -159,7 +159,12 @@ router.post('/adduser/hh', authAdmin, userValidation, async(req, res) => {
 
 });
 
+router.post('/add/ac', authAdminFresh, async(req, res)=>{
+    
+});
+
 router.post('/add/room', authAdminFresh, async(req, res)=>{
+
     
 });
 

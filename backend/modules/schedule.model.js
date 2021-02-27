@@ -1,4 +1,5 @@
 // const { string } = require('@hapi/joi');
+const { date } = require('@hapi/joi');
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
@@ -20,16 +21,16 @@ const scheduleSchema = new Schema({
     },
 
     startTime: {
-        type: String,
+        type: Date,
         required: true,
     },
 
     endTime: {
-        type: String,
+        type: Date,
         required: true
     },
 
-    username: {
+    userName: {
         type: String,
         required: true,
         min: 1,

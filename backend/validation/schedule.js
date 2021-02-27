@@ -13,10 +13,10 @@ const scheduleschema = joi.object({
         .min(1)
         .max(50),
 
-    startTime: joi.string()
+    startTime: joi.date()
         .required(),
 
-    endTime: joi.string()
+    endTime: joi.date()
         .required(),
 
     username: joi.string()
