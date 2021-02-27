@@ -8,6 +8,7 @@ const coordinatorSchema = new Schema({
     username: {
         type: String,
         required: true,
+        unique: true,
         min: 1,
         max: 1024,
     },

@@ -24,10 +24,12 @@ const scheduleSchema = new Schema({
         required: true,
     },
 
-    userId: {
+    username: {
         type: String,
-        required: true
-    }
+        required: true,
+        min: 1,
+        max: 1024,
+    },
 
 }, {
     timestamps: true
