@@ -53,6 +53,9 @@ const { userFreshAuth } = require('../middleware/auth');
 //email
 const {sendMailVerification} = require('../middleware/email');
 
+//calendar api
+const {getEvent, addEvent, editEvent, deleteEvent} = require('../middleware/calendarApi');
+
 router.post('/adduser/list', authAdmin);
 
 router.get('/requests', authAdmin, async(req, res)=>{
@@ -235,61 +238,100 @@ router.post('/add/projector', authAdminFresh, projectorValidation, async(req, re
 });
 
 router.post('/add/schedule', authAdminFresh, scheduleValidation, async(req, res)=>{
-    const schedule = new scheduleschema({
-        roomName: req.body.roomName,
-        subject: req.body.subject,
-        startTime: req.body.startTime,
-        endTime: req.body.endTime,
-        userName: req.body.userName
 
-    });
-
-    try{
-        // const scheduleSaved = 
-        schedule.save((err, result)=>{
-            if(err) {
-                console.log('Saving faild...', error);
-                res.send({
-                    'error': 'Saving error'
+    scheduleschema.findOne({roomName: req.body.roomName,
+            subject: req.body.subject,
+            startTime: req.body.startTime,
+            endTime: req.body.endTime,
+            userName: req.body.userName}
+        ,(err, result)=>{
+            if(err){
+                res.status(400).json({
+                    'Error': 'Try again'
                 });
             }
             else{
-                const event = {
-                    id: result._id,
-                    summary: 'Lecture',
-                    location: 'University of peradeniya, sri lanka',
-                    description: result.subject + 'Lecture in ' + result.roomName + ' conduct by '+ result.userName,
-                    start: {
-                        dateTime: req.body.start,
-                        // timeZone: 'Sri Lanka/Sri Jayawardenepura Kotte',
-                    },
-                    end: {
-                        dateTime: req.body.end,
-                        // timeZone: 'UTC/GMT',
-                    },
-                    reminders: {
-                    useDefault: false,
-                    overrides: [
-                        {method: 'email', minutes: 30 * 60},
-                        {method: 'popup', minutes: 15},
-                        ],
-                    },
+                if(result){
+                    res.status(400).json({
+                        'Error': 'alredy have',
+                        'schedule': result
+                    });
                 }
-
+                else{
+                    const newSchedule = new scheduleschema({
+                        roomName: req.body.roomName,
+                        subject: req.body.subject,
+                        startTime: req.body.startTime,
+                        endTime: req.body.endTime,
+                        userName: req.body.userName
                 
+                    });
 
+                    try{
+                        newSchedule.save((err, result)=>{
+                            if(err) {
+                                console.log('Saving faild...', error);
+                                res.status(400).json({
+                                    'Error': 'saving feild. try again',
+                                });
+                            }
+                            else{
+                                const event = {
+                                    id: result._id,
+                                    summary: 'Lecture',
+                                    location: 'University of peradeniya, sri lanka',
+                                    description: result.subject + 'Lecture in ' + result.roomName + ' conduct by '+ result.userName,
+                                    start: {
+                                        dateTime: req.body.start,
+                                        // timeZone: 'Sri Lanka/Sri Jayawardenepura Kotte',
+                                    },
+                                    end: {
+                                        dateTime: req.body.end,
+                                        // timeZone: 'UTC/GMT',
+                                    },
+                                    reminders: {
+                                    useDefault: false,
+                                    overrides: [
+                                        {method: 'email', minutes: 30 * 60},
+                                        {method: 'popup', minutes: 15},
+                                        ],
+                                    },
+                                }
+
+                                const {err, apiResult} = await addEvent(event);
+                                if(err){
+                                    console.log('There was an error contacting the Calendar service: ' + err);
+                                    res.status(400).json({
+                                        'Error': 'Inserted to database but calendar api error',
+                                        'apiError': err,
+                                        'id': result._id
+                                    })
+                                }
+                                else{
+                                    console.log('Successfully inserted');
+                                    res.status(200).json({
+                                        'Data': apiResult.data
+                                    });
+
+                                }
+
+                                // console.log('saved user to the db...');
+                                // res.send(scheduleSaved._id);
+                
+                            }
+                        });
+                    }
+                    catch(error){
+                        console.log('Saving faild...', error);
+                        res.send({
+                            'Error': 'Saving error'
+                        });
+                                
+                    }
+                }
             }
+
         });
-        console.log('saved user to the db...');
-        res.send(scheduleSaved._id);
-    }
-    catch(error){
-        console.log('Saving faild...', error);
-        res.send({
-            'error': 'Saving error'
-        });
-                
-    }
 
 });
 

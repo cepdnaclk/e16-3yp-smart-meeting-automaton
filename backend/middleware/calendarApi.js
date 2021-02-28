@@ -19,17 +19,18 @@ const calendar = google.calendar({
 const isRequired = () => { throw new Error('param is required'); };
 
 function addEvent({event = isRequired()}) {
-    calendar.events.insert({
+    return calendar.events.insert({
         auth: auth,
         calendarId: process.env.CALENDAR_ID,
         resource: event,
-        },function(err, event) {
-            if (err) {
-                console.log('There was an error contacting the Calendar service: ' + err);
-                return;
-            }
-            console.log('Event created: %s', event);
         }
+        // ,function(err, event) {
+        //     if (err) {
+        //         console.log('There was an error contacting the Calendar service: ' + err);
+        //         return;
+        //     }
+        //     console.log('Event created: %s', event);
+        // }
     );
 }
 
@@ -71,6 +72,10 @@ function deleteEvent(params) {
 
 function getEvent(params) {
     
+}
+
+module.exports = {
+    getEvent, addEvent, editEvent, deleteEvent
 }
 
 // var event = {
