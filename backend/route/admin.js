@@ -45,7 +45,7 @@ const {acValidation} = require('../validation/ac');
 const {projectorValidation} = require('../validation/projector');
 
 //schedule validation
-const {scheduleValidation} = require('../validation/schedule');
+const {scheduleValidation, schedulCalendarApiValidation} = require('../validation/schedule');
 
 //auth
 const { userFreshAuth } = require('../middleware/auth');
@@ -235,6 +235,67 @@ router.post('/add/projector', authAdminFresh, projectorValidation, async(req, re
                 
     }
 
+});
+
+router.post('/add/calendarapi', authAdminFresh, schedulCalendarApiValidation, async(req, res)=>{
+    scheduleschema.findById(req.body.id, (err, result)=>{
+        if(err){
+            res.status(400).json({
+                'Error': 'Try again'
+            });
+        }
+        else{
+            if(result){
+                const event = {
+                    id: result.id,
+                    summary: 'Lecture',
+                    location: 'University of peradeniya, sri lanka',
+                    description: result.subject + 'Lecture in ' + result.roomName + ' conduct by '+ result.userName,
+                    start: {
+                        dateTime: req.body.start,
+                        // timeZone: 'Sri Lanka/Sri Jayawardenepura Kotte',
+                    },
+                    end: {
+                        dateTime: req.body.end,
+                        // timeZone: 'UTC/GMT',
+                    },
+                    reminders: {
+                    useDefault: false,
+                    overrides: [
+                        {method: 'email', minutes: 30 * 60},
+                        {method: 'popup', minutes: 15},
+                        ],
+                    },
+                }
+            
+                const {err, apiResult} = await addEvent(event);
+                if(err){
+                    console.log('There was an error contacting the Calendar service: ' + err);
+                    res.status(400).json({
+                        'Error': 'Inserting calendar api error',
+                        'apiError': err,
+                        'id': result._id
+                    })
+                }
+                else{
+                    console.log('Successfully inserted');
+                    res.status(200).json({
+                        'Data': apiResult.data
+                    });
+            
+                }
+            }
+            else{
+                console.log('Failed. there is no such schedule');
+                    res.status(400).json({
+                        'Error': 'there is no such schedule'
+                    });
+            }
+        }
+
+    });
+    
+    
 });
 
 router.post('/add/schedule', authAdminFresh, scheduleValidation, async(req, res)=>{
