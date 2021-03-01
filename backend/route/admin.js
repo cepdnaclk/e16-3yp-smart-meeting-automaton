@@ -186,7 +186,7 @@ router.get('/table', authAdmin, async(req, res) => {
         if(err)
         {
             console.log('Error in get room')
-            req.status(401).send('Cannot find');
+            res.status(401).send('Cannot find');
 
         }
         
@@ -363,6 +363,20 @@ router.delete('/delete/schedule/:id', authAdminFresh, async(req, res)=>{
                 });
             }
         }
+    });
+});
+
+router.get('/get/schedule', authAdmin, async(req, res)=>{
+    scheduleschema.find({}, (err, result)=>{
+        if(err){
+            res.status(400).json({
+                'Error': 'Try again'
+            });
+        }
+        else{
+            res.send(result);
+        }
+
     });
 });
 
