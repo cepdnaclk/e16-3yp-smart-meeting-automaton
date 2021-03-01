@@ -298,6 +298,46 @@ router.post('/add/calendarapi', authAdminFresh, schedulCalendarApiValidation, as
     
 });
 
+router.delete('/delete/schedule/:id', authAdminFresh, async(req, res)=>{
+    scheduleschema.findByIdAndDelete({_id: req.params.id}, (err, result)=>{
+        if(err){
+            res.status(400).json({
+                'Error': 'Try again'
+            });
+        }
+        else{
+            if(result){
+                try {
+                    const {err, result} = await deleteEvent( req.params.id);
+                    if(err){
+                        console.log('Alredy deleted : ' + err);
+                        res.status(400).json({
+                            'Error': 'Alredy deleted : ' + err
+                        })
+                        return;
+                    }
+                    else{
+                        if(result){
+                            res.status(200).json({
+                                'message': 'Successfully deleted'
+                            });
+
+                        }
+                    }
+
+                } catch (error) {
+                    
+                }
+            }
+            else{
+                res.status(400).json({
+                    'Error': 'No such schedule. check id'
+                });
+            }
+        }
+    });
+});
+
 router.post('/add/schedule', authAdminFresh, scheduleValidation, async(req, res)=>{
 
     scheduleschema.findOne({roomName: req.body.roomName,

@@ -51,11 +51,11 @@ function editEvent({event = isRequired(), eventId = isRequired()}) {
     
 }
 
-function deleteEvent(params) {
+function deleteEvent({eventId = isRequired()}) {
     
     return calendar.events.delete({
-        calendarId: 'group12.team@gmail.com',
-        eventId: '0017999',
+        calendarId:  process.env.CALENDAR_ID,
+        eventId: eventId,
     //   },(err, result)=>{
     //       if(err){
     //         console.log('There was an error contacting the Calendar service: ' + err);
