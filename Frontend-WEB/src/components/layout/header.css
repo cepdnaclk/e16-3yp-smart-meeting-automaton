@@ -1,0 +1,30 @@
+.asd {
+  background-color: rgb(10, 11, 75);
+}
+
+/* @media (min-width: 992px) {
+  .asd {
+    background-color: rgb(101, 250, 14);
+    flex-flow: row nowrap;
+    justify-content: flex-end;
+  }
+} */
+
+.login-con {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.login-con li {
+  margin-right: 1rem;
+}
+
+@media (max-width: 992px) {
+  .login-con {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+  .login-con li {
+  }
+}
