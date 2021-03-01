@@ -298,8 +298,32 @@ router.post('/add/calendarapi', authAdminFresh, schedulCalendarApiValidation, as
     
 });
 
+router.post('/edit/schedule/:id', authAdminFresh, async(req, res)=>{
+    scheduleschema.findByIdAndUpdate(req.params.id, req.body, (err, result)=>{
+        if(err){
+            res.status(400).json({
+                'Error': 'Try again'
+            });
+        }
+        else{
+            if(result){
+                res.status(200).json({
+                    'message': 'Successfully updated'
+                });
+            }
+            else{
+                res.status(400).json({
+                    'Error': 'No such id'
+                });
+            }
+        }
+    }
+        
+    );
+});
+
 router.delete('/delete/schedule/:id', authAdminFresh, async(req, res)=>{
-    scheduleschema.findByIdAndDelete({_id: req.params.id}, (err, result)=>{
+    scheduleschema.findByIdAndDelete(req.params.id, (err, result)=>{
         if(err){
             res.status(400).json({
                 'Error': 'Try again'
@@ -326,6 +350,10 @@ router.delete('/delete/schedule/:id', authAdminFresh, async(req, res)=>{
                     }
 
                 } catch (error) {
+                    console.log('Error in conncting calendar api: ', error);
+                    res.status(400).json({
+                        'Error': 'Try again'
+                    });
                     
                 }
             }
