@@ -209,6 +209,7 @@ async function userAuth(req, res, next) {
 
                         const accessToken = getToken(payload);
                         // console.log(accessToken);
+                        req.user = userData.username;
                         res.json({ 'token' : accessToken});
                         // next();
                     }

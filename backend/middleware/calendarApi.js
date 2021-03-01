@@ -71,12 +71,69 @@ function deleteEvent({eventId = isRequired()}) {
     
 }
 
+function getEventListOnGoing({startTime = moment().format(), endTime = moment().format("YYYY-MM-DDT23:59:00Z")}) {
+    return calendar.events.list({
+
+        calendarId: process.env.CALENDAR_ID,
+        // timeMin: (startTime),
+        timeMax: (endTime),
+        // maxResults: 10,
+        singleEvents: true,
+        orderBy: 'startTime',
+        }
+        // , (err, res) => {
+        // if (err) return console.log('The API returned an error: ' + err);
+        // const events = res.data.items;
+        // console.log(events);
+        //  }
+    );
+    
+}
+
+function getEventList({startTime = moment().format(), endTime = moment().format("YYYY-MM-DDT23:59:00Z")}) {
+    return calendar.events.list({
+
+        calendarId: process.env.CALENDAR_ID,
+        timeMin: (startTime),
+        timeMax: (endTime),
+        // maxResults: 10,
+        singleEvents: true,
+        orderBy: 'startTime',
+        }
+        // , (err, res) => {
+        // if (err) return console.log('The API returned an error: ' + err);
+        // const events = res.data.items;
+        // console.log(events);
+        //  }
+    );
+    
+}
+
+function getEventListAll({startTime = moment().format()}) {
+    return calendar.events.list({
+
+        calendarId: process.env.CALENDAR_ID,
+        timeMin: (startTime),
+        // timeMax: (endTime),
+        // maxResults: 10,
+        singleEvents: true,
+        orderBy: 'startTime',
+        }
+        // , (err, res) => {
+        // if (err) return console.log('The API returned an error: ' + err);
+        // const events = res.data.items;
+        // console.log(events);
+        //  }
+    );
+    
+}
+
 function getEvent(params) {
     
 }
 
 module.exports = {
-    getEvent, addEvent, editEvent, deleteEvent
+    getEvent, addEvent, editEvent, deleteEvent, getEventList, getEventListAll, getEventListOnGoing
 }
 
 // var event = {
