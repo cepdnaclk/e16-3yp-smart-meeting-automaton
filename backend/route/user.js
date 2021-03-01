@@ -35,7 +35,7 @@ const {roomValidation} = require('../validation/room');
 const jwt = require('jsonwebtoken');
 
 //calendar api
-const {getEvent, addEvent, editEvent, deleteEvent} = require('../middleware/calendarApi');
+const {getEvent, addEvent, editEvent, deleteEvent, getEventListToday, getEventListAll, getEventListOnGoing} = require('../middleware/calendarApi');
 
 
 router.get('/verify', authUser, async(req, res)=>{
@@ -85,14 +85,57 @@ router.get('/verify', authUser, async(req, res)=>{
     
 });
 
-//get schedul happen now
-router.get('/get/schedule/custom', authUser, async(req, res)=>{
+//get schedul from now all
+router.get('/get/schedule/all', authUser, async(req, res)=>{
+    const {error, resultCalApi} = await getEventListAll();
+
+    if(error){
+        res.status(400).json({
+            'Error': 'Try again : ' + error 
+        });
+    }
+    else{
+        if(resultCalApi){
+            try {
+                var idList = [];
+                resultCalApi.forEach(element => {
+                    idList.push(element.data.id);
+                    
+                });
+
+                scheduleschema.find({
+                        _id : {
+                            $in : idList
+                        },
+                        userName: req.user
+
+                    }).sort({startTime: 1}).exec(function(err, docs) { 
+                        if(err){
+                            res.status(400).json({
+                                'Error': 'Try again'
+                            });
+                        }
+                        else{
+                            res.send(docs);
+                        }
+                    });
+                
+            } catch (error) {
+                console.log('Saving faild...', error);
+                res.send({
+                    'Error': 'Data base error : ' + error
+                });
+                
+            }
+            
+        }
+    }
 
 });
 
 //get schedule from now to end of the day
 router.get('/get/schedule/today', authUser, async(req, res)=>{
-    const {error, resultCalApi} = await getEvent();
+    const {error, resultCalApi} = await getEventListToday();
     if(error){
         res.status(400).json({
             'Error': 'Try again : ' + error 

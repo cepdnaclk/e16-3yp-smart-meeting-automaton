@@ -90,7 +90,7 @@ function getEventListOnGoing({startTime = moment().format(), endTime = moment().
     
 }
 
-function getEventList({startTime = moment().format(), endTime = moment().format("YYYY-MM-DDT23:59:00Z")}) {
+function getEventListToday({startTime = moment().format(), endTime = moment().format("YYYY-MM-DDT23:59:00Z")}) {
     return calendar.events.list({
 
         calendarId: process.env.CALENDAR_ID,
@@ -133,7 +133,7 @@ function getEvent(params) {
 }
 
 module.exports = {
-    getEvent, addEvent, editEvent, deleteEvent, getEventList, getEventListAll, getEventListOnGoing
+    getEvent, addEvent, editEvent, deleteEvent, getEventListToday, getEventListAll, getEventListOnGoing
 }
 
 // var event = {
