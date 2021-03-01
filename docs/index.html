@@ -17,9 +17,34 @@
 
         <link rel="stylesheet" href="mobirise-gallery/style.css">
 
+        <style>
+            #table-summary {
+                font-family: Arial, Helvetica, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            #table-summary td, #table-summary th {
+                border: 1px solid #ddd;
+                padding: 8px;
+                }
+
+            #table-summary tr:nth-child(even){background-color: #f2f2f2;}
+
+            #table-summary tr:hover {background-color: #ddd;}
+
+            #table-summary th {
+                padding-top: 12px;
+                padding-bottom: 12px;
+                text-align: left;
+                background-color: #4CAF50;
+                color: white;
+            }
+        </style>
+
     </head>
     <body id="page-top">
-        <!-- Navigation-->
+        <!-- Navigation Bar -->
         <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
             <div class="container">
                 <a class="navbar-brand js-scroll-trigger" href="#page-top">Unified Project</a>
@@ -32,13 +57,15 @@
                         <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#about">About</a></li>
                         <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#overview">Overview</a></li>
                         <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#solution">Solution</a></li>
-                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#design">Design</a></li>
-                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#signup">Contact</a></li>
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#design">Design/Progress</a></li>
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#budget">Budget</a></li>
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#contacts">Contacts</a></li>
                     </ul>
                 </div>
             </div>
         </nav>
-        <!-- Masthead-->
+
+        <!-- Masthead -->
         <header class="masthead">
             <div class="container d-flex h-100 align-items-center">
                 <div class="mx-auto text-center">
@@ -53,7 +80,9 @@
                 </div>
             </div>
         </header>
-        <!-- About-->
+
+        <!-- About -->
+        <!-- Solution for a Problem -->
         <section class="about-section text-center" id="about">
             <div class="container">
                 <div class="row">
@@ -69,7 +98,8 @@
                 <!--<img class="img-fluid" src="assets/img/ipad.jpg" alt="" />-->
             </div>
         </section>
-        <!-- overview-->
+        
+        <!-- System Overview -->
         <section class="projects-section bg-light" id="overview">
             <h1 class="text-black mb-4 text-center">System Overview</h1>
             
@@ -91,12 +121,12 @@
             </div>
         </section>
 
-        <!-- Solution-->
+        <!-- Solution Architecture -->
         <section class="projects-section bg-light" id="solution">
             <h1 class="text-black mb-4 text-center">Solution Architecture</h1>
             
             <div class="container">
-                <!-- Project One Row-->
+                <!-- Project One Row : Main Control Unit -->
                 <div class="row justify-content-center no-gutters mb-5 mb-lg-0">
                     <div class="col-lg-6"><img class="img-fluid" src="assets/img/Main_Control_Unit.jpg" alt="" /></div>
                     <div class="col-lg-6">
@@ -117,7 +147,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- Project Two Row-->
+                <!-- Project Two Row : Extending Unit -->
                 <div class="row justify-content-center no-gutters">
                     <div class="col-lg-6"><img class="img-fluid" src="assets/img/Sub_Control_Units.jpg" alt="" /></div>
                     <div class="col-lg-6 order-lg-first">
@@ -131,14 +161,7 @@
                                             <li class="mb-0 text-white-50">Give signals to AC machines, projectors as IR signals.</li>
                                         </ul>
                                     </p>
-
-                                    <h4 class="text-white">Role of Feedback Sending Unit</h4>
-                                    <p class="mb-0 text-white-50">
-                                        <ul>
-                                            <li class="mb-0 text-white-50">Monitors temperature and humidity.</li>
-                                            <li class="mb-0 text-white-50">Send data to the Main Control Unit via Wi-Fi.</li>
-                                        </ul>
-                                    </p>
+                                    
                                     <hr class="d-none d-lg-block mb-0 ml-0" />
                                 </div>
                             </div>
@@ -149,8 +172,10 @@
         </section>    
 
 
-        <!-- Design-->
+        <!-- Design -->
         <section class="projects-section bg-light" id="design">
+
+            <!-- Circuit Diagrams -->
             <div class="container">
                 <h1 class="text-black mb-4 text-center">Circuit Diagrams</h1>
                 <!-- Project One Row-->
@@ -160,6 +185,7 @@
                 </div>
             </div>
             
+            <!-- UI Wireframe Designs -->
             <div id="UIimage">
                 <div class="container-fluid p-0">
                     <h1 class="text-center mt-5">UI Wireframe Designs</h1>
@@ -231,7 +257,7 @@
                 </div>
             </div>
         
-
+            <!-- Entity Relationship Diagram -->
             <div class="container">
                 <h1 class="text-black mb-4 text-center">Entity Relationship Diagram</h1>
                 <!-- Featured Project Row-->
@@ -240,12 +266,15 @@
                     <div class="col-xl-8 col-lg-7"><img class="img-fluid mb-3 mb-lg-0" src="assets/img/ER_Diagram.jpg" alt="" /></div>
                     <div class="col-xl-4 col-lg-5">
                         <div class="featured-text text-center text-lg-left">
-                            <p class="text-black-100 mb-0">
-                                <!--
-                                <li>Client Application</li>
-                                <li>Control Unit</li>
-                                These two streams are connected via AWS cloud.
-                                -->
+                            <p class="text-black-200 mb-0">
+
+                                <li>System has administrator persons</li>
+                                <li>Administrators create accounts for users(Lecturers/meeting owners)</li>
+                                <li>Administrators reserves lecture rooms/meeting rooms</li>
+                                <li>Admins figure out how to control devices in meeting room/lecture room</li>
+                                <li>Devices within meeting rooms automatically operates according to schedules</li>
+                                <li>Users can also control devices within the meeting room.(Via mobile app)</li>
+                                
                             </p>
                         </div>
                     </div>
@@ -253,82 +282,42 @@
             </div>
 
 
-            <!--New added 2/2/2021-->
-
-            <div id="UIimage">
-                <div class="container-fluid p-0">
-                    <h1 class="text-center mt-5">Software Testing</h1>
-                    <hr class="divider my-4" />
-                    <div class="row no-gutters">
-                        <div class="col-lg-4 col-sm-6">
-                            <a class="UIimage-box" href="assets/img/ST1.jpg">
-                                <img class="img-fluid" src="assets/img/ST1.jpg" alt="" />
-                                
-                                <div class="UIimage-box-caption">
-                                    
-                                   <div class="project-name"></div>
-                                </div>
-                                
-                            </a>
-                        </div>
-                        <div class="col-lg-4 col-sm-6">
-                            <a class="UIimage-box" href="assets/img/ST2.jpg">
-                                <img class="img-fluid" src="assets/img/ST2.jpg" alt="" />
-                                     
-                                <div class="UIimage-box-caption">
-                                   
-                                    <div class="project-name"></div>
-                                </div>
-                             
-                            </a>
-                        </div>
-                        <div class="col-lg-4 col-sm-6">
-                            <a class="UIimage-box" href="assets/img/ST3.jpg">
-                                <img class="img-fluid" src="assets/img/ST3.jpg" alt="" />
-                                 
-                                <div class="UIimage-box-caption">
-                                   
-                                    <div class="project-name"></div>
-                                </div>
-                           
-                            </a>
-                        </div>
-                    
-                        <div class="col-lg-4 col-sm-6">
-                            <a class="UIimage-box" href="assets/img/ST4.jpg">
-                                <img class="img-fluid" src="assets/img/ST4.jpg" alt="" />
-                                <div class="UIimage-box-caption">
-                                   
-                                    <div class="project-name"></div>
-                                </div>
-                            </a>
-                        </div>                    
-                        <div class="col-lg-4 col-sm-6">
-                            <a class="UIimage-box" href="assets/img/ST5.jpg">
-                                <img class="img-fluid" src="assets/img/ST5.jpg" alt="" />
-                                <div class="UIimage-box-caption">
-                                    
-                                    <div class="project-name"></div>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-lg-4 col-sm-6">
-                            <a class="UIimage-box" href="assets/img/ST6.jpg">
-                                <img class="img-fluid" src="assets/img/ST6.jpg" alt="" />
-                                <div class="UIimage-box-caption p-3">
-                                    
-                                    <div class="project-name"></div>
-                                </div>
-                            </a>
-                        </div>
-                        
-                    </div>
-                </div>
-            </div>
+            <!-- New added 2/2/2021 -->
         
+            <!-- Front-end Software -->
             <div id="UIimage">
                 <div class="container-fluid p-0">
                     <h1 class="text-center mt-5">Front-end Software</h1>
+                    <h3 class="text-center mt-5">Design Architecture</h3>
+                
+                    <!-- Design Architecture -->
+                    <div class="container">
+                        <div class="row align-items-center no-gutters mb-4 mb-lg-5">
+                            
+                            <div class="col-xl-8 col-lg-7"><img class="img-fluid mb-3 mb-lg-0" src="assets/img/Front_Design_Architecture.jpg" alt="" /></div>
+                            <div class="col-xl-4 col-lg-5">
+                                <div class="featured-text text-center text-lg-left">
+                                    <p class="text-black-100 mb-0">
+                                
+                                        <h4>React</h4>
+                                        <li>Dynamic content</li>
+                                        <li>React Hooks</li>
+                                        <hr class="divider my-4" />
+                                
+                                        <h4>AXIOS</h4>
+                                        <li>Communication with the backend</li>
+                                        <hr class="divider my-4" />
+                                        
+                                        <h4>Context API</h4>
+                                        <li>State management</li>
+                                        
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Front-end User Interfaces -->
                     <hr class="divider my-4" />
                     <div class="row no-gutters">
                         <div class="col-lg-4 col-sm-6">
@@ -396,12 +385,354 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Backend Software -->
+            <div class="container-fluid p-0">
+                <h1 class="text-center mt-5">Back-end Software</h1>
+            
+                <!-- Backend Design Architecture -->
+                <div class="container">
+                    <div class="row align-items-center no-gutters mb-4 mb-lg-5">
+                        
+                        <div class="col-xl-4 col-lg-5">
+                            <div class="featured-text text-center text-lg-left">
+                                <p class="text-black-100 mb-0">
+                            
+                                    <h4>Node.js Express</h4>
+                                    <hr class="divider my-4" />
+                                    <li>Can build scalable, fast and non-blocking I-O backend server</li>
+                                    
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-4 col-lg-5">
+                            <div class="featured-text text-center text-lg-left">
+                                <p class="text-black-100 mb-0">
+                            
+                                    <h4>MongoDB Atlas</h4>
+                                    <hr class="divider my-4" />
+                                    <li>Automatically scale increase cluster storage with the growth of data</li>
+                                    <li>Storage can be maximized with auto-scaling features</li>
+                                    
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-4 col-lg-5">
+                            <div class="featured-text text-center text-lg-left">
+                                <p class="text-black-100 mb-0">
+                            
+                                    <h4>Security</h4>
+                                    <hr class="divider my-4" />
+                                    <li>Password hashing</li>
+                                    <li>Json Web Tokens(JWT) for user authorization</li>
+                                    <li>Authenticated local strategy using email and password</li>
+                                    <li>Authorization using JWT strategy to protect end points</li>
+                                    <li>Access tokens and refresh tokens for user identification</li>
+                                    <li>Data validation before sending them to database</li>
+                                    
+                                </p>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Software Testing -->
+            <div id="UIimage">
+                <div class="container-fluid p-0">
+                    <h1 class="text-center mt-5">Software Testing</h1>
+                    <hr class="divider my-4" />
+
+                    <!-- Software Testing Summary -->
+                    <h2 class="text-center mt-5">Summary Report</h2>
+                    <div>
+                        <table id="table-summary" style="width: 100%">
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 15%;">
+                                <col span="1" style="width: 20%;">
+                                <col span="1" style="width: 20%;">
+                                <col span="1" style="width: 20%;">
+                                <col span="1" style="width: 20%;">
+                            </colgroup>
+                            <tr>
+                                <th>Area of testing</th>
+                                <th>What was tested</th>
+                                <th>How was the test done ?</th>
+                                <th>Purpose</th>
+                                <th>Expected Results</th>
+                                <th>Findings</th>
+                            </tr>
+                            <tr>
+                                <td>Server</td>
+                                <td>Login to the system</td>
+                                <td>User needs to give correct username and password</td>
+                                <td>Admin and user have separate authorization methods. So some route need to admin login it will check by The API (User or Admin that are logged in)</td>
+                                <td>
+                                    <ul>
+                                        <li>Token is given, if user logged successfully</li>
+                                        <li>Otherwise, anyone can not access the services of the system</li>
+                                    </ul>
+                                </td>
+                                <td>Token is valid for 30 minutes. If a person knows this token within that time, he can access the system. (except for critical operations)</td>
+                            </tr>
+                            <tr>
+                                <td>Server</td>
+                                <td>Adding user to system and verify</td>
+                                <td>
+                                    <ul>
+                                        <li>User need to register for the system</li>
+                                        <li>Need freshly logging of admin</li>
+                                        <li>User needs the verification link that comes to email</li>
+                                        <li>After successfully adding, user needs to login again</li>
+                                    </ul>
+                                </td>
+                                <td>User can be added to the system with an email verifification and only admin can add user</td>
+                                <td>
+                                    <ul>
+                                        <li>On success : When admin adds a user to the system, verification email is sent</li>
+                                        <li>New user can only login the system via that verification link</li>
+                                    </ul>
+                                </td>
+                                
+                                <td>
+                                    <ul>
+                                        <li>User is uniquely identified by the email</li>
+                                        <li>User is validated whether he has provided an correct email</li>
+                                    </ul>
+                                </td>
+                                
+                            </tr>
+                            <tr>
+                                <td>Server</td>
+                                <td>
+                                    <ul>
+                                        <li>Adding room</li>
+                                        <li>Delete room</li>
+                                        <li>Delete user</li>
+                                    </ul>
+                                </td>
+                                <td>Need admin fresh login (It expires within 5 mins)</td>
+                                <td>These operations are allowed only for admin to avoid misbehaviours of the system</td>
+                                <td>
+                                    <ul>
+                                        <li>On success : Status code - 200</li>
+                                        <li>Failed operations : Status code - 401</li>
+                                    </ul>
+                                </td>
+                                <td>Admin should verify his login with his password each time when he does these operations</td>
+                            </tr>
+                        </table>
+
+                    </div>
+
+
+                    <!-- Unit tests to verify outputs over inputs -->
+                    <h2 class="text-center mt-5">Unit tests to verify outputs over inputs</h2>
+                    <hr class="divider my-4" />
+                    <div class="row no-gutters">
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/verifing_results/addingUserToSystemWithInvalidToken.jpg">
+                                <img class="img-fluid" src="assets/img/verifing_results/addingUserToSystemWithInvalidToken.jpg" alt="" />
+                                
+                                <div class="UIimage-box-caption">
+                                    
+                                   <div class="project-name"></div>
+                                </div>
+                                
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/verifing_results/adminFreshLogin.jpg">
+                                <img class="img-fluid" src="assets/img/verifing_results/adminFreshLogin.jpg" alt="" />
+                                     
+                                <div class="UIimage-box-caption">
+                                   
+                                    <div class="project-name"></div>
+                                </div>
+                             
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/verifing_results/adminLoginPasswordInvalid.jpg">
+                                <img class="img-fluid" src="assets/img/verifing_results/adminLoginPasswordInvalid.jpg" alt="" />
+                                 
+                                <div class="UIimage-box-caption">
+                                   
+                                    <div class="project-name"></div>
+                                </div>
+                           
+                            </a>
+                        </div>
+                    
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/verifing_results/getRegisteredUserWithInvalidToken.jpg">
+                                <img class="img-fluid" src="assets/img/verifing_results/getRegisteredUserWithInvalidToken.jpg" alt="" />
+                                <div class="UIimage-box-caption">
+                                   
+                                    <div class="project-name"></div>
+                                </div>
+                            </a>
+                        </div>                    
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/verifing_results/successfullAdminLogin.jpg">
+                                <img class="img-fluid" src="assets/img/verifing_results/successfullAdminLogin.jpg" alt="" />
+                                <div class="UIimage-box-caption">
+                                    
+                                    <div class="project-name"></div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/verifing_results/successfullGettingRegisteredUser.jpg">
+                                <img class="img-fluid" src="assets/img/verifing_results/successfullGettingRegisteredUser.jpg" alt="" />
+                                <div class="UIimage-box-caption p-3">
+                                    
+                                    <div class="project-name"></div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/verifing_results/successUserLogin.jpg">
+                                <img class="img-fluid" src="assets/img/verifing_results/successUserLogin.jpg" alt="" />
+                                <div class="UIimage-box-caption p-3">
+                                    
+                                    <div class="project-name"></div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/verifing_results/successUserRegister.jpg">
+                                <img class="img-fluid" src="assets/img/verifing_results/successUserRegister.jpg" alt="" />
+                                <div class="UIimage-box-caption p-3">
+                                    
+                                    <div class="project-name"></div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/verifing_results/userEmailWrongLoginFaild.jpg">
+                                <img class="img-fluid" src="assets/img/verifing_results/userEmailWrongLoginFaild.jpg" alt="" />
+                                <div class="UIimage-box-caption p-3">
+                                    
+                                    <div class="project-name"></div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/verifing_results/userRegisterRequestEmailAlreadyExist.jpg">
+                                <img class="img-fluid" src="assets/img/verifing_results/userRegisterRequestEmailAlreadyExist.jpg" alt="" />
+                                <div class="UIimage-box-caption p-3">
+                                    
+                                    <div class="project-name"></div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                    </div>
+
+                    <!-- How testing was done -->
+                    <hr class="divider my-4" />
+                    <div class="row no-gutters">
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/ST1.jpg">
+                                <img class="img-fluid" src="assets/img/ST1.jpg" alt="" />
+                                
+                                <div class="UIimage-box-caption">
+                                    
+                                   <div class="project-name"></div>
+                                </div>
+                                
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/ST2.jpg">
+                                <img class="img-fluid" src="assets/img/ST2.jpg" alt="" />
+                                     
+                                <div class="UIimage-box-caption">
+                                   
+                                    <div class="project-name"></div>
+                                </div>
+                             
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/ST3.jpg">
+                                <img class="img-fluid" src="assets/img/ST3.jpg" alt="" />
+                                 
+                                <div class="UIimage-box-caption">
+                                   
+                                    <div class="project-name"></div>
+                                </div>
+                           
+                            </a>
+                        </div>
+                    
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/ST4.jpg">
+                                <img class="img-fluid" src="assets/img/ST4.jpg" alt="" />
+                                <div class="UIimage-box-caption">
+                                   
+                                    <div class="project-name"></div>
+                                </div>
+                            </a>
+                        </div>                    
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/ST5.jpg">
+                                <img class="img-fluid" src="assets/img/ST5.jpg" alt="" />
+                                <div class="UIimage-box-caption">
+                                    
+                                    <div class="project-name"></div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="UIimage-box" href="assets/img/ST6.jpg">
+                                <img class="img-fluid" src="assets/img/ST6.jpg" alt="" />
+                                <div class="UIimage-box-caption p-3">
+                                    
+                                    <div class="project-name"></div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- Cloud Deployment -->
+            <div class="container">
+                <h1 class="text-black mb-4 text-center">Cloud Deployment</h1>
+                <div class="img-container">
+                    
+                    <div class="col-xl-15 col-lg-11"><img class="img-fluid ml-5 mr-5 mb-lg-0" src="assets/img/Cloud_Deployment.jpg" alt="" /></div>
+                    
+                </div>
+            </div>
+
         </section>    
         
-       
 
-        <!-- Signup-->
-        <section class="signup-section" id="signup">
+        <!-- Budget Report -->
+        <section id="budget">
+            <div class="container">
+                <h1 class="text-black mb-4 text-center">Budget Report</h1>
+                <div class="img-container">
+                    
+                    <div class="col-xl-7 col-lg-7"><img class="img-fluid ml-15 mr-5 mb-lg-0" src="assets/img/budget_report.jpg" alt="" /></div>
+                    
+                </div>
+            </div>
+        </section>
+
+        <!-- Contacts -->
+        <section class="signup-section" id="contacts">
             <div class="container">
                 <div class="row">
                     <div class="col-md-10 col-lg-8 mx-auto text-center">
@@ -412,7 +743,8 @@
                 </div>
             </div>
         </section>
-        <!-- Contact-->
+
+        <!-- Contacts -->
         <section class="contact-section bg-black">
             <div class="container">
                 <div class="row">
