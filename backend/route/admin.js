@@ -298,8 +298,8 @@ router.post('/add/calendarapi', authAdminFresh, schedulCalendarApiValidation, as
     
 });
 
-router.post('/edit/schedule/:id', authAdminFresh, async(req, res)=>{
-    scheduleschema.findByIdAndUpdate(req.params.id, req.body, (err, result)=>{
+router.post('/edit/schedule', authAdminFresh, async(req, res)=>{
+    scheduleschema.findByIdAndUpdate(req.body._id, req.body, (err, result)=>{
         if(err){
             res.status(400).json({
                 'Error': 'Try again'
@@ -307,9 +307,30 @@ router.post('/edit/schedule/:id', authAdminFresh, async(req, res)=>{
         }
         else{
             if(result){
-                res.status(200).json({
-                    'message': 'Successfully updated'
-                });
+
+                const eventBody = {
+                    id: result._id,
+                    summary: 'Lecture',
+                    location: 'University of peradeniya, sri lanka',
+                    description: req.body.subject + 'Lecture in ' + req.body.roomName + ' conduct by '+ req.body.userName,
+                    start: {
+                        dateTime: req.body.start,
+                        // timeZone: 'Sri Lanka/Sri Jayawardenepura Kotte',
+                    },
+                    end: {
+                        dateTime: req.body.end,
+                        // timeZone: 'UTC/GMT',
+                    },
+                    reminders: {
+                    useDefault: false,
+                    overrides: [
+                        {method: 'email', minutes: 30 * 60},
+                        {method: 'popup', minutes: 15},
+                        ],
+                    },
+                }
+
+                const {err, resultCalApi} = await editEvent(eventData = )
             }
             else{
                 res.status(400).json({
@@ -332,7 +353,7 @@ router.delete('/delete/schedule/:id', authAdminFresh, async(req, res)=>{
         else{
             if(result){
                 try {
-                    const {err, result} = await deleteEvent( req.params.id);
+                    const {err, resultCalApi} = await deleteEvent( req.params.id);
                     if(err){
                         console.log('Alredy deleted : ' + err);
                         res.status(400).json({
@@ -341,7 +362,7 @@ router.delete('/delete/schedule/:id', authAdminFresh, async(req, res)=>{
                         return;
                     }
                     else{
-                        if(result){
+                        if(resultCalApi){
                             res.status(200).json({
                                 'message': 'Successfully deleted'
                             });
@@ -419,7 +440,7 @@ router.post('/add/schedule', authAdminFresh, scheduleValidation, async(req, res)
                                 });
                             }
                             else{
-                                const event = {
+                                const eventBody = {
                                     id: result._id,
                                     summary: 'Lecture',
                                     location: 'University of peradeniya, sri lanka',
@@ -441,7 +462,8 @@ router.post('/add/schedule', authAdminFresh, scheduleValidation, async(req, res)
                                     },
                                 }
 
-                                const {err, apiResult} = await addEvent(event);
+                                const {err, apiResult} = await addEvent(eventData = eventBody);
+
                                 if(err){
                                     console.log('There was an error contacting the Calendar service: ' + err);
                                     res.status(400).json({

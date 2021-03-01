@@ -18,11 +18,11 @@ const calendar = google.calendar({
 
 const isRequired = () => { throw new Error('param is required'); };
 
-function addEvent({event = isRequired()}) {
+function addEvent({eventData = isRequired()}) {
     return calendar.events.insert({
         auth: auth,
         calendarId: process.env.CALENDAR_ID,
-        resource: event,
+        resource: eventData,
         }
         // ,function(err, event) {
         //     if (err) {
@@ -34,19 +34,20 @@ function addEvent({event = isRequired()}) {
     );
 }
 
-function editEvent({event = isRequired(), eventId = isRequired()}) {
-    calendar.events.update({
-        requestBody:event,
+function editEvent({eventData = isRequired(), eventId = isRequired()}) {
+    return calendar.events.update({
+        requestBody:eventData,
         calendarId: process.env.CALENDAR_ID,
         eventId: eventId,
 
-     }, function(err, event) {
-            if (err) {
-            console.log('There was an error contacting the Calendar service: ' + err);
-            return;
-            }
-            console.log('Event updated: %s', event.data);
-        }
+     }
+    //  , function(err, event) {
+    //         if (err) {
+    //         console.log('There was an error contacting the Calendar service: ' + err);
+    //         return;
+    //         }
+    //         console.log('Event updated: %s', event.data);
+    //     }
     );
     
 }
