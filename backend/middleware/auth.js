@@ -31,7 +31,7 @@ function getToken(data) {
 function getFreshToken(data) {
     //console.log('token');
     try{
-        const token = jwt.sign(data, process.env.LOGIN_FRESH_TOKEN, {expiresIn: '30m'});
+        const token = jwt.sign(data, process.env.LOGIN_FRESH_TOKEN, {expiresIn: '30h'});
         // console.log(token);
         return token;
     }

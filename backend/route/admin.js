@@ -238,7 +238,7 @@ router.post('/add/projector', authAdminFresh, projectorValidation, async(req, re
 });
 
 router.post('/add/calendarapi', authAdminFresh, schedulCalendarApiValidation, async(req, res)=>{
-    scheduleschema.findById(req.body.id, (err, result)=>{
+    scheduleschema.findById(req.body.id, async(err, result)=>{
         if(err){
             res.status(400).json({
                 'Error': 'Try again'
@@ -299,7 +299,7 @@ router.post('/add/calendarapi', authAdminFresh, schedulCalendarApiValidation, as
 });
 
 router.post('/edit/schedule', authAdminFresh, async(req, res)=>{
-    scheduleschema.findByIdAndUpdate(req.body._id, req.body, (err, result)=>{
+    scheduleschema.findByIdAndUpdate(req.body._id, req.body, async(err, result)=>{
         if(err){
             res.status(400).json({
                 'Error': 'Try again'
@@ -330,7 +330,23 @@ router.post('/edit/schedule', authAdminFresh, async(req, res)=>{
                     },
                 }
 
-                const {err, resultCalApi} = await editEvent(eventData = )
+                const {err, resultCalApi} = await editEvent(eventData = eventBody);
+                if (err) {
+                    console.log('There was an error contacting the Calendar service: ' + err);
+                    res.status(400).json({
+                        'Error': 'Inserted to database but calendar api error',
+                        'apiError': err
+                        // 'id': result._id
+                    })
+
+                }
+                else{
+                    console.log('Successfully inserted: ', resultCalApi);
+                    res.status(200).json({
+                    'Data': resultCalApi.data
+                    });
+
+                }
             }
             else{
                 res.status(400).json({
@@ -344,7 +360,7 @@ router.post('/edit/schedule', authAdminFresh, async(req, res)=>{
 });
 
 router.delete('/delete/schedule/:id', authAdminFresh, async(req, res)=>{
-    scheduleschema.findByIdAndDelete(req.params.id, (err, result)=>{
+    scheduleschema.findByIdAndDelete(req.params.id, async(err, result)=>{
         if(err){
             res.status(400).json({
                 'Error': 'Try again'
@@ -404,11 +420,12 @@ router.get('/get/schedule', authAdmin, async(req, res)=>{
 router.post('/add/schedule', authAdminFresh, scheduleValidation, async(req, res)=>{
 
     scheduleschema.findOne({roomName: req.body.roomName,
-            subject: req.body.subject,
-            startTime: req.body.startTime,
-            endTime: req.body.endTime,
-            userName: req.body.userName}
-        ,(err, result)=>{
+            // subject: req.body.subject,
+            // startTime: req.body.startTime,
+            // endTime: req.body.endTime,
+            // userName: req.body.userName
+        }
+        ,async(err, result)=>{
             if(err){
                 res.status(400).json({
                     'Error': 'Try again'
@@ -416,10 +433,25 @@ router.post('/add/schedule', authAdminFresh, scheduleValidation, async(req, res)
             }
             else{
                 if(result){
-                    res.status(400).json({
-                        'Error': 'alredy have',
-                        'schedule': result
+                    result.forEach(element => {
+                        const dateStart = new Data(element.startTime);
+                        const dateStartNew = new Data(req.body.startTime);
+                        const dateEnd = new Data(element.endTime);
+                        const dateEndNew = new Data(req.body.endTime);
+
+                        if(((dateStartNew > dateStart)&&(dateStartNew < dateEnd))||((dateEndNew > dateStart)&&(dateEndNew < dateEnd))){
+                            res.status(400).json({
+                                'Error': 'alredy have Event',
+                                'schedule': result
+                            });
+                        }
+
+                        // if(((dateStart > dateStartNew)&&(dateStart < dateEndNew))||((dateStart < dateStartNew)&&(dateEnd > dateEndNew))){
+
+                        // }
+                        
                     });
+                    
                 }
                 else{
                     const newSchedule = new scheduleschema({
@@ -432,7 +464,7 @@ router.post('/add/schedule', authAdminFresh, scheduleValidation, async(req, res)
                     });
 
                     try{
-                        newSchedule.save((err, result)=>{
+                        newSchedule.save(async(err, result)=>{
                             if(err) {
                                 console.log('Saving faild...', error);
                                 res.status(400).json({
