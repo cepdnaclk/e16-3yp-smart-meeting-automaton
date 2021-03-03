@@ -7,9 +7,11 @@ const userLoginschema = joi.object({
         .max(1024)
         .required(),
 
-    email: joi.string()
-        .required()
-        .email()
+    userId: joi.string()
+        .min(1)
+        .max(1024)
+        .required(),
+    
 });
 
 function userLoginValidation(req, res, next) {
@@ -27,7 +29,13 @@ function userLoginValidation(req, res, next) {
 }
 
 const userschema = joi.object({
-    username: joi.string()
+
+    userId: joi.string()
+        .min(1)
+        .max(1024)
+        .required(),
+
+    userName: joi.string()
         .required()
         .min(1)
         .max(1024),
@@ -37,11 +45,15 @@ const userschema = joi.object({
         .max(1024)
         .required(),
 
-    verified: joi.boolean,
 
     email: joi.string()
         .required()
-        .email()
+        .email(),
+    
+    phone: joi.number()
+        .required()
+        .min(9)
+        .max(10),
 });
 
 function userValidation(req, res, next) {

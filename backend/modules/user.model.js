@@ -1,4 +1,4 @@
-const { boolean } = require('@hapi/joi');
+const { number } = require('@hapi/joi');
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
@@ -26,8 +26,10 @@ const userSchema = new Schema({
     },
 
     phone: {
-        type: String,
+        type: number,
         unique: true,
+        min: 9,
+        max: 10,
         required: true
     },
 
