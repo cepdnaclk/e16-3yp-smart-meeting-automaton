@@ -1,4 +1,5 @@
 //jwt
+const { date } = require('@hapi/joi');
 const jwt = require('jsonwebtoken');
 
 //auth
@@ -8,7 +9,7 @@ const jwt = require('jsonwebtoken');
 const Administrator = require('../modules/administrator.model');
 
 //module 
-const User = require('../modules/user.model');
+const user = require('../modules/user.model');
 
 async function authAdminFresh(req, res, next) {
     try{
@@ -70,20 +71,27 @@ async function authAdmin(req, res, next) {
                 else
                 {
                     // console.log(userByToken);
-                    Administrator.findById( userByToken.user.id, async(err, data)=>{
+                    user.findById( userByToken.user.id, async(err, data)=>{
                         if(err) res.json({
                             'Error':'Try again...'
                         });
                         else{
                             // console.log(data);
                             if(data){
-                                req.user = data._id;
-                                next();
+                                if(date.isAdmin){     
+                                    req.user = data._id;
+                                    next();
+                                }
+                                else{
+                                    res.status(400).json({
+                                        'Error': 'Unauthorized. Not a Admin'
+                                    });
+                                }
 
                             }
                             else{
                                 res.status(400).json({
-                                    'Error':'not a admin'
+                                    'Error': 'Unauthorized'
                                 });
                             }
                         }
@@ -128,7 +136,7 @@ async function authUser(req, res, next) {
                             }
                             else{
                                 res.status(400).json({
-                                    'Error':'not a admin'
+                                    'Error': 'Unauthorized'
                                 });
                             }
                         }

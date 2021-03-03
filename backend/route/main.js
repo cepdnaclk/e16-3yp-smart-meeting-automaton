@@ -14,8 +14,11 @@ const bcryptjs = require('bcryptjs');
 //module user
 const userSchema = require('../modules/user.model');
 
-//module request
-const requestSchema = require('../modules/userRequest.model');
+//newuser model
+const newUserschema = require('../modules/newUser.model');
+
+// //module request
+// const requestSchema = require('../modules/userRequest.model');
 
 //module room
 const roomschema = require('../modules/lecRoom.model');
@@ -30,10 +33,10 @@ const projectorschema = require('../modules/projectors.model');
 const scheduleschema = require('../modules/schedule.model');
 
 //autheratazation
-const {authAdmin, authUser, authAdminFresh} = require('../middleware/autherazation');
+const {authAdmin, authAdminFresh} = require('../middleware/authenticate');
 
 //validation
-const {userValidation , userLoginValidation} = require('../validation/user'); 
+const {userValidation , userLoginValidation, newUserValidation} = require('../validation/user'); 
 
 //validation room
 const {roomValidation} = require('../validation/room');
@@ -56,91 +59,147 @@ const {sendMailVerification} = require('../middleware/email');
 //calendar api
 const {getEvent, addEvent, editEvent, deleteEvent} = require('../middleware/calendarApi');
 
-router.post('/adduser/list', authAdmin);
 
-router.get('/requests', authAdmin, async(req, res)=>{
-    requestSchema.find({}, (err, data) => {
-        if(err)
-        {
-            console.log('Error in get room')
-            req.status(401).send('Cannot find');
+// router.post('/adduser/list', authAdmin);
 
+// router.get('/requests', authAdmin, async(req, res)=>{
+//     requestSchema.find({}, (err, data) => {
+//         if(err)
+//         {
+//             console.log('Error in get room')
+//             req.status(401).send('Cannot find');
+
+//         }
+//         else{
+//             if(data){
+//                 // console.log(data);
+//                 res.status(200).json({
+//                     arry: data
+//                 });
+//             }
+//             else{
+//                 res.status(400).json({
+//                     'Error': 'No request'
+//                 });
+//             }
+//         }
+//     });
+
+// });
+
+router.post('/adduser', authAdmin, verifyAdmin, newUserValidation, async(req, res)=>{
+    try {
+        const newUser = new newUserschema({
+            userId: req.body.userId,
+            OTP: req.body.OTP,
+            userName: req.body.userName,
+            email: req.body.email
+        });
+
+        const {err, doc} = await newUser.save();
+        if(err){
+            console.log('Saving faild...', error);
+            res.status(400).json({
+                'error': 'Saving error'
+            });
         }
         else{
-            if(data){
-                // console.log(data);
-                res.status(200).json({
-                    arry: data
+            console.log('saved user to the db...');
+            const payload = {
+                user: {
+                  id: usersaved._id
+                }
+            };
+            try {
+                const singnUpUrl = 'http://localhost:3000/signup';
+                console.log(singnUpUrl);
+
+                sendMailVerification(doc.email, singnUpUrl).then((data) => {
+                    res.status(200).json({
+                        'message': 'User added success'
+                    });
+                }).catch((err)=>{
+                    console.log(err);
+                    res.status(400).json({
+                        'Error': err
+                    });
                 });
-            }
-            else{
+                
+            } catch (error) {
+                console.log(error);
                 res.status(400).json({
-                    'Error': 'No request'
+                    'Error': 'Failed sending mail : ' + error
                 });
             }
         }
-    });
+        
+    } catch (error) {
+        console.log('Saving faild...', error);
+        res.status(400).json({
+            'error': 'Saving error'
+        });
+    }
+    
 
 });
 
-
-router.post('/adduser/:id', authAdminFresh, (req, res)=>{
-    // requestSchema.findOne({_id: req.params.id}, async(err, data)=>{
-    requestSchema.findOneAndDelete({_id: req.params.id}, async(err, data)=>{
-        if(err){
-            res.status(400).json({
-                'Error': 'Try again'
-            });
-        }else{
-            if(data){
-                const userNew = new userSchema({
-                    username: data.username,
-                    password: data.password,
-                    email: data.email
-                });
-                try{
-                    const usersaved = await userNew.save();
-                    console.log('saved user to the db...');
-                    const payload = {
-                        user: {
-                          id: usersaved._id
-                        }
-                    };
-                    // const verifUrl = jwt.sign(usersaved._id, process.env.LOGIN_VARIFICATION_TOKEN, {expiresIn: '10m'});
-                    const verifUrlToken = jwt.sign(payload, process.env.LOGIN_VARIFICATION_TOKEN, {expiresIn: '10m'});
-                    const verifUrl = `http://localhost:3000/user/verify/${verifUrlToken}`;
-                    console.log(verifUrl);
-                    // sendMailVerification(whom=usersaved.email, url=verifUrl).then((data) => {
-                    sendMailVerification(usersaved.email, verifUrl).then((data) => {
-                        res.status(200).json({
-                            'message': 'User added success'
-                        });
-                    }).catch((err)=>{
-                        console.log(err);
-                        res.status(400).json({
-                            'Error': err
-                        });
-                    });
+// router.post('/adduser', authAdmin, (req, res)=>{
+//     // requestSchema.findOne({_id: req.params.id}, async(err, data)=>{
+//     requestSchema.findOneAndDelete({_id: req.params.id}, async(err, data)=>{
+//         if(err){
+//             res.status(400).json({
+//                 'Error': 'Try again'
+//             });
+//         }else{
+//             if(data){
+//                 const userNew = new userSchema({
+//                     username: data.username,
+//                     password: data.password,
+//                     email: data.email
+//                 });
+//                 try{
+//                     const usersaved = await userNew.save();
+//                     console.log('saved user to the db...');
+//                     const payload = {
+//                         user: {
+//                           id: usersaved._id
+//                         }
+//                     };
+//                     // const verifUrl = jwt.sign(usersaved._id, process.env.LOGIN_VARIFICATION_TOKEN, {expiresIn: '10m'});
+//                     const verifUrlToken = jwt.sign(payload, process.env.LOGIN_VARIFICATION_TOKEN, {expiresIn: '10m'});
+//                     const verifUrl = `http://localhost:3000/user/verify/${verifUrlToken}`;
+//                     console.log(verifUrl);
+//                     // sendMailVerification(whom=usersaved.email, url=verifUrl).then((data) => {
+//                     sendMailVerification(usersaved.email, verifUrl).then((data) => {
+//                         res.status(200).json({
+//                             'message': 'User added success'
+//                         });
+//                     }).catch((err)=>{
+//                         console.log(err);
+//                         res.status(400).json({
+//                             'Error': err
+//                         });
+//                     });
 
                    
-                }catch(error)
-                {
-                    console.log('Saving faild...', error);
-                    res.status(400).json({
-                        'error': 'Saving error'
-                    });
+//                 }catch(error)
+//                 {
+//                     console.log('Saving faild...', error);
+//                     res.status(400).json({
+//                         'error': 'Saving error'
+//                     });
                 
-                }
+//                 }
 
 
-            }else{
-                res.status(400).json({
-                    'Error': 'No such request'
-                });
-            }
-        }
-    });
-});
+//             }else{
+//                 res.status(400).json({
+//                     'Error': 'No such request'
+//                 });
+//             }
+//         }
+//     });
+// });
 
 
 // router.post('/adduser/hh', authAdmin, userValidation, async(req, res) => {

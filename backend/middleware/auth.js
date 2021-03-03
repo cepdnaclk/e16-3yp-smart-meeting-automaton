@@ -4,8 +4,8 @@ const bcryptjs = require('bcryptjs');
 //jwt
 const jwt = require('jsonwebtoken');
 
-//module administrator
-const Administrator = require('../modules/administrator.model');
+// //module administrator
+// const Administrator = require('../modules/administrator.model');
 
 //module user
 const user = require('../modules/user.model');
@@ -23,8 +23,6 @@ function getToken(data) {
     catch(err){
         console.log(err);
     }
-    
-    
 }
 
 
@@ -38,12 +36,10 @@ function getFreshToken(data) {
     catch(err){
         console.log(err);
     }
-    
-    
 }
 
-async function adminAuth(req, res, next) {
-    Administrator.findOne({email: req.body.email}, async(err, userData)=>{
+async function authorize(req, res, next) {
+    user.findOne({userId: req.body.userId}, async(err, userData)=>{
         if(err)  res.status(500).json({
             'Error': 'DB Server faild'
         });
@@ -232,7 +228,7 @@ async function userAuth(req, res, next) {
 
 
 module.exports = {
-    adminAuth,
+    adminAuthorize,
     userAuth,
     userFreshAuth,
     adminFreshAuth

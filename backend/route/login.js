@@ -3,7 +3,7 @@ const express = require('express')
 const router = express.Router();
 
 //auth
-const {adminAuth, userAuth, userFreshAuth, adminFreshAuth} = require('../middleware/auth.js');
+const {userAuth, userFreshAuth} = require('../middleware/auth.js');
 
 //joi schema
 const {userLoginValidation} = require('../validation/user'); 
