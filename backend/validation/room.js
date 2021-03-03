@@ -2,16 +2,19 @@
 const joi = require('@hapi/joi');
 
 const roomschema = joi.object({
-    roomId: joi.string()
+    roomName: joi.string()
         .required()
-        .min(1),
+        .min(1)
+        .max(100),
 
     controlUnitId: joi.string()
         .required(),
 
-    isReserved: joi.boolean().required(),
+    acId: joi.array()
+        .items(String),
 
-    meetingOwnerId: joi.string()
+    projectorId: joi.array()
+        .items(String),
 
 });
 

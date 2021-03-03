@@ -1,33 +1,39 @@
+const { string } = require('@hapi/joi');
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
 const lecRoomSchema = new Schema({
 
-    roomId: {
+    roomName: {
         type: String,
         required: true,
-        unique: true,
+        min: 1,
+        max: 100,
+        unique: true
     },
 
     controlUnitId:{
         type: String,
-        required: true
+        required: true,
+        min: 1,
+        max: 1024
     },
 
-    meetingOwnerId: {
-        type: String
+    acId: {
+        type: [String],
+        default: undefined
     },
 
-    isReserved: {
-        type: Boolean,
-        required: true
+    projectorId: {
+        type: [String],
+        default: undefined
     },
 
 }, {
     timestamps: true
 });
 
-const LecRoom = mongoose.model('LecRoom', lecRoomSchema);
+const lecRoom = mongoose.model('lecRoom', lecRoomSchema);
 
-module.exports = LecRoom;
+module.exports = lecRoom;
