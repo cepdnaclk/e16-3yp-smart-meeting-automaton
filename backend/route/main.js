@@ -2,12 +2,6 @@ const express = require('express')
 //init
 const router = express.Router();
 
-//jwt
-const jwt = require('jsonwebtoken');
-
-//bcryptjs
-const bcryptjs = require('bcryptjs');
-
 // //module administrator
 // const Administrator = require('../modules/administrator.model');
 
@@ -36,7 +30,7 @@ const scheduleschema = require('../modules/schedule.model');
 const {authAdmin, authAdminFresh} = require('../middleware/authenticate');
 
 //validation
-const {userValidation , userLoginValidation, newUserValidation} = require('../validation/user'); 
+const {newUserValidation} = require('../validation/user'); 
 
 //validation room
 const {roomValidation} = require('../validation/room');
@@ -50,14 +44,14 @@ const {projectorValidation} = require('../validation/projector');
 //schedule validation
 const {scheduleValidation, schedulCalendarApiValidation} = require('../validation/schedule');
 
-//auth
-const { userFreshAuth } = require('../middleware/auth');
+// //auth
+// const { userFreshAuth } = require('../middleware/auth');
 
 //email
 const {sendMailVerification} = require('../middleware/email');
 
 //calendar api
-const {getEvent, addEvent, editEvent, deleteEvent} = require('../middleware/calendarApi');
+const {addEvent, editEvent, deleteEvent} = require('../middleware/calendarApi');
 
 
 // router.post('/adduser/list', authAdmin);
@@ -105,16 +99,11 @@ router.post('/adduser', authAdmin, verifyAdmin, newUserValidation, async(req, re
         }
         else{
             console.log('saved user to the db...');
-            const payload = {
-                user: {
-                  id: usersaved._id
-                }
-            };
             try {
                 const singnUpUrl = 'http://localhost:3000/signup';
                 console.log(singnUpUrl);
 
-                sendMailVerification(doc.email, singnUpUrl).then((data) => {
+                sendMailVerification(doc.email, singnUpUrl).then(() => {
                     res.status(200).json({
                         'message': 'User added success'
                     });
