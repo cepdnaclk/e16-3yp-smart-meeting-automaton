@@ -15,7 +15,9 @@ const lecRoomSchema = new Schema({
 
     controlUnitId:{
         type: String,
-        required: true
+        required: true,
+        min: 1,
+        max: 1024
     },
 
     acId: {
@@ -32,6 +34,6 @@ const lecRoomSchema = new Schema({
     timestamps: true
 });
 
-const LecRoom = mongoose.model('LecRoom', lecRoomSchema);
+const lecRoom = mongoose.model('lecRoom', lecRoomSchema);
 
-module.exports = LecRoom;
+module.exports = lecRoom;

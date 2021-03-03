@@ -30,7 +30,7 @@ const scheduleSchema = new Schema({
         required: true
     },
 
-    userName: {
+    userId: {
         type: String,
         required: true,
         min: 1,

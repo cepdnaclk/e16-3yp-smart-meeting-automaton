@@ -14,12 +14,13 @@ const projectorSchema = new Schema({
 
     controlUnitId:{
         type: String,
-        required: true
+        required: true,
+        min: 1,
+        max: 1024
     },
 
     isWorking: {
         type: Boolean,
-        required: true,
         default: true
     }
 
@@ -27,6 +28,6 @@ const projectorSchema = new Schema({
     timestamps: true
 });
 
-const Projector = mongoose.model('Projector', projectorSchema);
+const projector = mongoose.model('projector', projectorSchema);
 
-module.exports = Projector;
+module.exports = projector;

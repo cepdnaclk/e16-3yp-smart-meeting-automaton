@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-const coordinatorSchema = new Schema({
+const userSchema = new Schema({
 
     userId: {
         type: String,
@@ -61,6 +61,6 @@ const coordinatorSchema = new Schema({
     timestamps: true
 });
 
-const Coordinator = mongoose.model('user', coordinatorSchema);
+const user = mongoose.model('user', userSchema);
 
-module.exports = Coordinator;
+module.exports = user;
