@@ -8,12 +8,15 @@ const {userValidation } = require('../validation/user');
 //user
 const userSchema = require('../modules/user.model');
 
+//auth
+const {authNewUser} = require('../middleware/authenticate');
+
 //newuser
 const newUserschema = require('../modules/newUser.model');
 
 
 
-router.post('/newuser', userValidation, async(req, res)=>{
+router.post('/newuser', authNewUser, userValidation, async(req, res)=>{
     // console.log(req.body.email);
     try {
         userSchema.findOne({userId: req.body.userId}, async(err, data)=>{

@@ -2,6 +2,9 @@ const express = require('express')
 //init
 const router = express.Router();
 
+//bcryptjs
+const bcryptjs = require('bcryptjs');
+
 // //module administrator
 // const Administrator = require('../modules/administrator.model');
 
@@ -83,9 +86,11 @@ const {addEvent, editEvent, deleteEvent} = require('../middleware/calendarApi');
 
 router.post('/adduser', authAdmin, verifyAdmin, newUserValidation, async(req, res)=>{
     try {
+        const salt = await bcryptjs.genSalt(10);
+        const hashPassword = await bcryptjs.hash(req.body.OTP, salt);
         const newUser = new newUserschema({
             userId: req.body.userId,
-            OTP: req.body.OTP,
+            OTP: hashPassword,
             userName: req.body.userName,
             email: req.body.email
         });

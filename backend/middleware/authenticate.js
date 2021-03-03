@@ -4,9 +4,11 @@ const jwt = require('jsonwebtoken');
 
 //auth
 // const auth = require('../middleware/auth');
+// newuser
+const newUser = require('../modules/newUser.model');
 
-//module administrator
-const Administrator = require('../modules/administrator.model');
+//bcryptjs
+const bcryptjs = require('bcryptjs');
 
 //module 
 const user = require('../modules/user.model');
@@ -46,6 +48,57 @@ async function authAdminFresh(req, res, next) {
                 }
             });
         }
+        
+    }
+    catch(err){
+        res.status(500).json({
+            'Error': 'Error'
+        });
+    }
+    
+}
+
+async function authNewUser(req, res, next) {
+    try{
+        newUser.findOne({userId: req.body.userId}, async(err, doc)=>{
+            if(err){
+                console.log('Error in db ')
+                res.json({
+                    'Error':'Try again...'
+                });
+            }
+            else{
+                if(doc){
+                    try {
+                        const OTPValid = await bcryptjs.compare(req.body.OTP, doc.OTP);
+                        if(OTPValid){
+                            next();
+                        }
+                        else{
+                            console.log('invalid otp');
+                            res.status(400).json({
+                                'Error': 'username or password wrong'
+                            });
+                        }
+
+                    } catch (error) {
+                        console.log('Error in function');
+                        res.status(400).json({
+                            'Error': 'Try again'
+                        });
+
+                    }
+
+                }
+                else{
+                    console.log('invalid otp');
+                    res.status(400).json({
+                        'Error': 'username or password wrong'
+                    });
+                }
+            }
+
+        });
         
     }
     catch(err){
