@@ -5,19 +5,42 @@ const Schema = mongoose.Schema;
 
 const coordinatorSchema = new Schema({
 
-    username: {
+    userId: {
         type: String,
         required: true,
         unique: true,
         min: 1,
+        max: 1024
+    },
+
+    userName: {
+        type: String,
+        required: true,
+        min: 1,
         max: 1024,
     },
 
-    verified: {
-        type: Boolean,
-        //required: true,
-        default: false
+    date: {
+        type: Date,
+        default: Date.now
     },
+
+    phone: {
+        type: String,
+        unique: true,
+        required: true
+    },
+
+    role: {
+        type: Number,
+        default: 0,
+    },
+
+    // verified: {
+    //     type: Boolean,
+    //     //required: true,
+    //     default: false
+    // },
 
     password: {
         type: String,
