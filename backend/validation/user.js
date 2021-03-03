@@ -28,6 +28,41 @@ function userLoginValidation(req, res, next) {
     }
 }
 
+const newUserschema = joi.object({
+    userId: joi.string()
+        .min(1)
+        .max(1024)
+        .required(),
+
+    userName: joi.string()
+        .required()
+        .min(1)
+        .max(1024),
+
+    email: joi.string()
+        .required()
+        .email(),
+    
+    OPT: joi.string()
+        .required(),
+
+});
+
+function newUserValidation(req, res, next) {
+    const validate = newUserschema.validate(req.body);
+
+    if(validate.error){
+        console.log('Error in validation');
+        res.status(400).json({
+            'Error': validate.error
+        });
+    }
+    else{
+        console.log('No validation error');
+        next();
+    }
+}
+
 const userschema = joi.object({
 
     userId: joi.string()
@@ -71,4 +106,4 @@ function userValidation(req, res, next) {
     }
 }
 
-module.exports = {userValidation, userLoginValidation};
+module.exports = {userValidation, userLoginValidation, newUserValidation};
