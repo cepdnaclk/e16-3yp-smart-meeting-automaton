@@ -1,5 +1,5 @@
 const {google} = require('googleapis');
-// const moment = require('moment'); 
+const moment = require('moment'); 
 
 const dotenv = require('dotenv').config();
 if (dotenv.error) {
@@ -13,6 +13,7 @@ const auth = new google.auth.GoogleAuth({
 
 const calendar = google.calendar({
     version: 'v3',
+    auth
   });
 
 const isRequired = () => { throw new Error('param is required'); };
@@ -33,7 +34,7 @@ function addEvent({eventData} ) {
     );
 }
 
-function editEvent({eventData = isRequired(), eventId = isRequired()}) {
+function editEvent({eventData, eventId }) {
     return calendar.events.update({
         requestBody:eventData,
         calendarId: process.env.CALENDAR_ID,
@@ -107,13 +108,17 @@ function getEventListToday({startTime = moment().format(), endTime = moment().fo
     );
     
 }
+// = new Date((new Date()).toISOString())
+function getEventListAll({startTime = new Date((new Date()).toISOString()), endTime =  moment().format("YYYY-MM-DDT23:59:00+05:30")}) {
 
-function getEventListAll({startTime = moment().format()}) {
+    // console.log(startTime);
+    // console.log(endTime);
+
     return calendar.events.list({
 
         calendarId: process.env.CALENDAR_ID,
-        timeMin: (startTime),
-        // timeMax: (endTime),
+        timeMin: startTime, //(startTime),
+        timeMax: endTime,
         // maxResults: 10,
         singleEvents: true,
         orderBy: 'startTime',

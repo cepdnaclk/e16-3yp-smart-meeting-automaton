@@ -11,7 +11,7 @@ if (dotenv.error) {
 
 //data base
 const mongoose = require('mongoose');
-const db = mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true ,useUnifiedTopology: true })
+const db = mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true ,useUnifiedTopology: true, useFindAndModify: false })
     .then(() => {
         console.log('Connected to the db...');
 

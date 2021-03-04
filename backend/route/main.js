@@ -54,8 +54,10 @@ const {scheduleValidation, schedulCalendarApiValidation} = require('../validatio
 const {sendMailVerification} = require('../middleware/email');
 
 //calendar api
-const {addEvent, editEvent, deleteEvent} = require('../middleware/calendarApi');
+const {addEvent, editEvent, deleteEvent, getEventListAll} = require('../middleware/calendarApi');
 const { date } = require('@hapi/joi');
+const lecRoom = require('../modules/lecRoom.model');
+
 
 
 // router.post('/adduser/list', authAdmin);
@@ -366,8 +368,8 @@ router.post('/add/calendarapi', authAdmin, schedulCalendarApiValidation, async(r
     
     
 });
-
-router.post('/edit/schedule', authAdmin, async(req, res)=>{
+//authAdmin,
+router.post('/edit/schedule',  async(req, res)=>{
     try {
         scheduleschema.findByIdAndUpdate(req.body._id, req.body, async(err, result)=>{
             try {
@@ -380,16 +382,16 @@ router.post('/edit/schedule', authAdmin, async(req, res)=>{
                     if(result){
         
                         const eventBody = {
-                            id: result._id,
+                            // id: result._id,
                             summary: 'Lecture',
                             location: 'University of peradeniya, sri lanka',
                             description: req.body.subject + 'Lecture in ' + req.body.roomName + ' conduct by '+ req.body.userName,
                             start: {
-                                dateTime: req.body.start,
+                                dateTime: (new Date(req.body.startTime)).toISOString(),
                                 // timeZone: 'Sri Lanka/Sri Jayawardenepura Kotte',
                             },
                             end: {
-                                dateTime: req.body.end,
+                                dateTime: (new Date(req.body.endTime)).toISOString(),
                                 // timeZone: 'UTC/GMT',
                             },
                             reminders: {
@@ -401,14 +403,14 @@ router.post('/edit/schedule', authAdmin, async(req, res)=>{
                             },
                         }
         
-                        const {err, resultCalApi} = await editEvent(eventData = eventBody);
+                        const {err, resultCalApi} = await editEvent({eventData: eventBody, eventId: result._id});
                         if (err) {
                             console.log('There was an error contacting the Calendar service: ' + err);
                             res.status(400).json({
                                 'Error': 'Inserted to database but calendar api error',
                                 'apiError': err
                                 // 'id': result._id
-                            })
+                            });
         
                         }
                         else{
@@ -427,9 +429,9 @@ router.post('/edit/schedule', authAdmin, async(req, res)=>{
                 }
                 
             } catch (error) {
-                console.log('Failed.');
+                console.log('Failed. ', error);
                 res.status(400).json({
-                    'Error': 'failed' + error
+                    'Error': 'failed ' + error
                 });
             }
         });
@@ -502,7 +504,137 @@ router.delete('/delete/schedule/:id', authAdmin, async(req, res)=>{
     }
 });
 
-router.get('/get/schedule', authAdmin, async(req, res)=>{
+router.post('/free/rooms', async(req, res)=>{
+    try {
+        const startT = new Date((new Date(req.body.startTime)).toISOString());
+        const endT = new Date((new Date(req.body.endTime)).toISOString());
+        const resultCalApi = await getEventListAll({startTime: startT, endTime: endT});
+        console.log(resultCalApi.data.items.length);
+
+        try {
+            var lrcRoomList = [];
+            resultCalApi.data.items.forEach(element => {
+                lrcRoomList.push(element.description.split(" ")[3]);
+            });
+
+            lecRoom.find({
+                roomName : {
+                    $nin : lrcRoomList
+                }
+                
+                }, (err, result)=>{
+                    if(err){
+                        res.status(400).json({
+                            'Error': 'Try again'
+                        });
+                    }
+                    else{
+                        res.send(result);
+                    }
+                }
+            );
+
+        } catch (error) {
+            console.log('Error in DB connect');
+            res.status(400).json({
+                'Error': 'Try again'
+            });
+        }
+
+    } catch (error) {
+        console.log('Error in Api connect');
+        res.status(400).json({
+            'Error': 'Try again'
+        });
+    }
+});
+
+router.get('/get/schedule/user/:id', async(req, res)=>{
+    try {
+        scheduleschema.find({
+            userId:  req.params.id
+
+        }).sort({startTime: 1}).exec(function(err, docs) { 
+            if(err){
+                res.status(400).json({
+                    'Error': 'Try again'
+                });
+            }
+            else{
+                res.send(docs);
+            }
+        });
+    } catch (error) {
+        console.log('DB connect faild...', error);
+        res.status(400).json({
+            'Error': 'DB connect faild errror : ' + error
+        });
+    }
+});
+
+//authUser, 
+//get schedul from now all
+router.get('/get/schedule/all', async(req, res)=>{
+    try {
+
+        // if(req.body.startTime != 'undefined'){
+
+        // }
+
+        const resultCalApi = await getEventListAll({});
+        console.log(resultCalApi.data.items.length);
+        if(resultCalApi.data.items.length > 0){
+            try {
+                var idList = [];
+                resultCalApi.data.items.forEach(element => {
+                    idList.push(element.id);
+                    
+                });
+
+                scheduleschema.find({
+                        _id : {
+                            $in : idList
+                        },
+                        userName: req.user
+
+                    }).sort({startTime: 1}).exec(function(err, docs) { 
+                        if(err){
+                            res.status(400).json({
+                                'Error': 'Try again'
+                            });
+                        }
+                        else{
+                            res.send(docs);
+                        }
+                    });
+                
+            } catch (error) {
+                console.log('Db access faild...', error);
+                res.send({
+                    'Error': 'Data base error : ' + error
+                });
+                
+            }
+        
+        }
+        else{
+            console.log('No schedule');
+            res.status(400).json({
+                'Error': 'No schedule : '
+            });
+        }
+       
+    } catch (error) {
+        console.log('Calendar api faild...', error);
+        res.status(400).json({
+            'Error': 'Calenadar api errror : ' + error
+        });
+    }
+
+});
+
+//authAdmin,
+router.get('/get/schedule',  async(req, res)=>{
     try {
         scheduleschema.find({}, (err, result)=>{
             if(err){
@@ -565,8 +697,8 @@ router.post('/add/schedule',  scheduleValidation, async(req, res)=>{
                     const newSchedule = new scheduleschema({
                         roomName: req.body.roomName,
                         subject: req.body.subject,
-                        startTime: req.body.startTime,
-                        endTime: req.body.endTime,
+                        startTime: new Date(req.body.startTime),
+                        endTime: new Date(req.body.endTime),
                         userId: req.body.userId
                 
                     });
