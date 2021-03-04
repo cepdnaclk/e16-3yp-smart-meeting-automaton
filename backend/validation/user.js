@@ -42,8 +42,13 @@ const newUserschema = joi.object({
     email: joi.string()
         .required()
         .email(),
+
+    phone: joi.string()
+        .required()
+        .min(9)
+        .max(10),
     
-    OPT: joi.string()
+    OTP: joi.string()
         .required(),
 
 });
@@ -85,7 +90,7 @@ const userschema = joi.object({
         .required()
         .email(),
     
-    phone: joi.number()
+    phone: joi.string()
         .required()
         .min(9)
         .max(10),

@@ -257,5 +257,5 @@ async function authUser(req, res, next) {
 
 
 module.exports = {
-    authAdmin,authUser, authNewUser
+    authAdmin, authUser, authNewUser
 }

@@ -3,7 +3,7 @@ const express = require('express')
 const router = express.Router();
 
 //auth
-const {userAuth, userFreshAuth} = require('../middleware/auth.js');
+const {authorize} = require('../middleware/auth.js');
 
 //joi schema
 const {userLoginValidation} = require('../validation/user'); 
@@ -15,10 +15,10 @@ const {userLoginValidation} = require('../validation/user');
 // router.post('/admin/fresh', userLoginValidation, adminFreshAuth);
 
 //user
-router.post('/user', userLoginValidation, userAuth);
+router.post('/user', userLoginValidation, authorize);
 
 //user fresh
-router.post('/user/fresh', userLoginValidation, userFreshAuth);
+router.post('/user/fresh', userLoginValidation, authorize);
 
 //404
 router.use((req, res)=>{

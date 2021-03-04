@@ -13,17 +13,16 @@ const auth = new google.auth.GoogleAuth({
 
 const calendar = google.calendar({
     version: 'v3',
-    auth
   });
 
 const isRequired = () => { throw new Error('param is required'); };
 
-function addEvent({eventData = isRequired()}) {
+function addEvent({eventData} ) {
     return calendar.events.insert({
         auth: auth,
         calendarId: process.env.CALENDAR_ID,
         resource: eventData,
-        }
+    }
         // ,function(err, event) {
         //     if (err) {
         //         console.log('There was an error contacting the Calendar service: ' + err);

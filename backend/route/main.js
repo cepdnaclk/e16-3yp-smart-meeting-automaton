@@ -30,7 +30,7 @@ const projectorschema = require('../modules/projectors.model');
 const scheduleschema = require('../modules/schedule.model');
 
 //autheratazation
-const {authAdmin, authAdminFresh} = require('../middleware/authenticate');
+const {authAdmin} = require('../middleware/authenticate');
 
 //validation
 const {newUserValidation} = require('../validation/user'); 
@@ -55,6 +55,7 @@ const {sendMailVerification} = require('../middleware/email');
 
 //calendar api
 const {addEvent, editEvent, deleteEvent} = require('../middleware/calendarApi');
+const { date } = require('@hapi/joi');
 
 
 // router.post('/adduser/list', authAdmin);
@@ -83,8 +84,8 @@ const {addEvent, editEvent, deleteEvent} = require('../middleware/calendarApi');
 //     });
 
 // });
-
-router.post('/adduser', authAdmin, verifyAdmin, newUserValidation, async(req, res)=>{
+//authAdmin, verifyAdmin, 
+router.post('/adduser', newUserValidation, async(req, res)=>{
     try {
         const salt = await bcryptjs.genSalt(10);
         const hashPassword = await bcryptjs.hash(req.body.OTP, salt);
@@ -92,40 +93,35 @@ router.post('/adduser', authAdmin, verifyAdmin, newUserValidation, async(req, re
             userId: req.body.userId,
             OTP: hashPassword,
             userName: req.body.userName,
-            email: req.body.email
+            email: req.body.email,
+            phone: req.body.phone
         });
 
-        const {err, doc} = await newUser.save();
-        if(err){
-            console.log('Saving faild...', error);
+        const doc = await newUser.save();
+        
+        console.log('saved user to the db...');
+        try {
+            const singnUpUrl = 'http://localhost:5000/signup';
+            console.log(singnUpUrl);
+
+            sendMailVerification(doc.email, singnUpUrl).then(() => {
+                res.status(200).json({
+                    'message': 'User added success'
+                });
+            }).catch((err)=>{
+                console.log(err);
+                res.status(400).json({
+                    'Error': err
+                });
+            });
+            
+        } catch (error) {
+            console.log(error);
             res.status(400).json({
-                'error': 'Saving error'
+                'Error': 'Failed sending mail : ' + error
             });
         }
-        else{
-            console.log('saved user to the db...');
-            try {
-                const singnUpUrl = 'http://localhost:3000/signup';
-                console.log(singnUpUrl);
-
-                sendMailVerification(doc.email, singnUpUrl).then(() => {
-                    res.status(200).json({
-                        'message': 'User added success'
-                    });
-                }).catch((err)=>{
-                    console.log(err);
-                    res.status(400).json({
-                        'Error': err
-                    });
-                });
-                
-            } catch (error) {
-                console.log(error);
-                res.status(400).json({
-                    'Error': 'Failed sending mail : ' + error
-                });
-            }
-        }
+        
         
     } catch (error) {
         console.log('Saving faild...', error);
@@ -234,21 +230,22 @@ router.post('/adduser', authAdmin, verifyAdmin, newUserValidation, async(req, re
 // });
 
 
-router.get('/table', authAdmin, async(req, res) => {
-    roomschema.find({}, (err, data) => {
-        if(err)
-        {
-            console.log('Error in get room')
-            res.status(401).send('Cannot find');
+// router.get('/table', authAdmin, async(req, res) => {
+//     roomschema.find({}, (err, data) => {
+//         if(err)
+//         {
+//             console.log('Error in get room')
+//             res.status(401).send('Cannot find');
 
-        }
+//         }
         
-        console.log('Send data');
-        res.send(data);
-    });
-});
+//         console.log('Send data');
+//         res.send(data);
+//     });
+// });
 
-router.post('/add/ac', authAdmin, verifyAdmin, acValidation, async(req, res)=>{
+//verifyAdmin, 
+router.post('/add/ac', authAdmin, acValidation, async(req, res)=>{
     const ac = new acschema({
         controlUnitId: req.body.controlUnitId
 
@@ -527,9 +524,10 @@ router.get('/get/schedule', authAdmin, async(req, res)=>{
     }
 });
 
-router.post('/add/schedule', authAdminFresh, scheduleValidation, async(req, res)=>{
+//authAdmin,
+router.post('/add/schedule',  scheduleValidation, async(req, res)=>{
 
-    scheduleschema.findOne({roomName: req.body.roomName,
+    scheduleschema.find({roomName: req.body.roomName,
             // subject: req.body.subject,
             // startTime: req.body.startTime,
             // endTime: req.body.endTime,
@@ -542,110 +540,114 @@ router.post('/add/schedule', authAdminFresh, scheduleValidation, async(req, res)
                 });
             }
             else{
-                if(result){
-                    result.every(element => {
-                        const dateStart = new Data(element.startTime);
-                        const dateStartNew = new Data(req.body.startTime);
-                        const dateEnd = new Data(element.endTime);
-                        const dateEndNew = new Data(req.body.endTime);
-
-                        if(((dateStartNew > dateStart)&&(dateStartNew < dateEnd))||((dateEndNew > dateStart)&&(dateEndNew < dateEnd))){
-                            res.status(400).json({
-                                'Error': 'alredy have Event',
-                                'schedule': result
-                            });
-                            return false;
-
-                        }
-                        return true;
-
-                        // if(((dateStart > dateStartNew)&&(dateStart < dateEndNew))||((dateStart < dateStartNew)&&(dateEnd > dateEndNew))){
-
-                        // }
-                        
-                    });
-
-
-                    
-                }
-                const newSchedule = new scheduleschema({
-                    roomName: req.body.roomName,
-                    subject: req.body.subject,
-                    startTime: req.body.startTime,
-                    endTime: req.body.endTime,
-                    userId: req.body.userId
-            
-                });
-
-                try{
-                    newSchedule.save(async(err, result)=>{
-                        if(err) {
-                            console.log('Saving faild...', error);
-                            res.status(400).json({
-                                'Error': 'saving feild. try again',
-                            });
-                        }
-                        else{
-                            const eventBody = {
-                                id: result._id,
-                                summary: 'Lecture',
-                                location: 'University of peradeniya, sri lanka',
-                                description: result.subject + 'Lecture in ' + result.roomName + ' conduct by '+ result.userId,
-                                start: {
-                                    dateTime: req.body.start,
-                                    // timeZone: 'Sri Lanka/Sri Jayawardenepura Kotte',
-                                },
-                                end: {
-                                    dateTime: req.body.end,
-                                    // timeZone: 'UTC/GMT',
-                                },
-                                reminders: {
-                                useDefault: false,
-                                overrides: [
-                                    {method: 'email', minutes: 30 * 60},
-                                    {method: 'popup', minutes: 15},
-                                    ],
-                                },
+                try {
+                    if(result.length > 0){
+                        console.log('arry : ',result);
+                        result.forEach(element => {
+                            const dateStart = new Date(element.startTime);
+                            const dateStartNew = new Date((new Date(req.body.startTime)).toISOString());
+                            const dateEnd = new Date(element.endTime);
+                            const dateEndNew = new Date((new Date(req.body.endTime)).toISOString());
+    
+                            if(((dateStartNew >= dateStart)&&(dateStartNew <= dateEnd))||((dateEndNew >= dateStart)&&(dateEndNew <= dateEnd))){
+                                throw new Error("Already exist evint...");
                             }
-
-                            try {
-                                const {err, apiResult} = await addEvent(eventData = eventBody);
-
-                                if(err){
-                                    console.log('There was an error contacting the Calendar service: ' + err);
-                                    res.status(400).json({
-                                        'Error': 'Inserted to database but calendar api error',
-                                        'apiError': err,
-                                        'id': result._id
-                                    })
-                                }
-                                else{
-                                    console.log('Successfully inserted');
-                                    res.status(200).json({
-                                        'Data': apiResult.data
-                                    });
-
-                                }
-                                    
-                            } catch (error) {
-                                console.log('Calendar api insert faild');
-                                    res.status(200).json({
-                                        'Error': error
-                                    });
-                            }
-
-                            // console.log('saved user to the db...');
-                            // res.send(scheduleSaved._id);
-            
-                        }
-                    });
-                }
-                catch(error){
-                    console.log('Saving faild...', error);
-                    res.send({
-                        'Error': 'Saving error'
-                    });
+                            console.log("here");
+    
+                            // if(((dateStart > dateStartNew)&&(dateStart < dateEndNew))||((dateStart < dateStartNew)&&(dateEnd > dateEndNew))){
+    
+                            // }
                             
+                        });
+    
+                    }
+                    console.log('...');
+                    const newSchedule = new scheduleschema({
+                        roomName: req.body.roomName,
+                        subject: req.body.subject,
+                        startTime: req.body.startTime,
+                        endTime: req.body.endTime,
+                        userId: req.body.userId
+                
+                    });
+    
+                    try{
+                        newSchedule.save(async(err, result)=>{
+                            if(err) {
+                                console.log('Saving faild...', error);
+                                res.status(400).json({
+                                    'Error': 'saving feild. try again',
+                                });
+                            }
+                            else{
+                                // const startT = ;
+                                // const endT = ;
+                                const eventBody = {
+                                    id: result._id,
+                                    summary: 'Lecture',
+                                    location: 'University of peradeniya, sri lanka',
+                                    description: result.subject + ' Lecture in ' + result.roomName + ' conduct by '+ result.userName,
+                                    start: {
+                                        dateTime: (new Date(req.body.startTime)).toISOString()
+                                    },
+                                    end: {
+                                        dateTime: (new Date(req.body.endTime)).toISOString()
+                                    },
+                                    reminders: {
+                                    useDefault: false,
+                                    overrides: [
+                                        {method: 'email', minutes: 30 * 60},
+                                        {method: 'popup', minutes: 15},
+                                        ],
+                                    },
+                                }
+                                console.log(eventBody);
+                                try {
+                                    const {err, apiResult} = await addEvent({eventData : eventBody});
+    
+                                    if(err){
+                                        console.log('There was an error contacting the Calendar service: ' + err);
+                                        res.status(400).json({
+                                            'Error': 'Inserted to database but calendar api error',
+                                            'apiError': err,
+                                            'id': result._id
+                                        });
+                                    }
+                                    else{
+                                        console.log('Successfully inserted');
+                                        res.status(200).json({
+                                            'msg': "added",
+                                            'Data': apiResult
+                                        });
+    
+                                    }
+                                        
+                                } catch (error) {
+                                    console.log('Calendar api insert faild ', error);
+                                        res.status(200).json({
+                                            'Error': error
+                                        });
+                                }
+    
+                                // console.log('saved user to the db...');
+                                // res.send(scheduleSaved._id);
+                
+                            }
+                        });
+                    }
+                    catch(error){
+                        console.log('Saving faild...', error);
+                        res.send({
+                            'Error': 'Saving error'
+                        });
+                                
+                    }
+
+                } catch (error) {
+                    console.log('Already exist event...');
+                    res.status(400).json({
+                        'Error': 'Saving error' + error
+                    });
                 }
             }
 
@@ -752,7 +754,7 @@ router.delete('/deleteroom/:id', authAdmin, async(req,res)=>{
 
 });
 
-router.delete('/removeuser/:id', authAdminFresh, async(req,res)=>{
+router.delete('/removeuser/:id', authAdmin, async(req,res)=>{
     try {
         userSchema.findOneAndDelete({userId: req.params.id},(err,data)=>{
             if(err)
