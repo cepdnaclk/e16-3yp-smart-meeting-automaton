@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 const AddDevice = () => {
-  const [devices, setDevices] = useState([]);
+  // const [devices, setDevices] = useState([]);
   const [component, setComponent] = useState({
     componentId: "",
     category: "",
