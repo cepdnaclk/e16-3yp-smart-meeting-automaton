@@ -7,6 +7,7 @@ function AddRoom() {
   const [roomInsert, setRoomInsert] = useState({
     category: "",
     name: "",
+    controllUnitId: "",
   });
   const [wrongstate, setWrongState] = useState(false);
   const [alertstate, setAlertState] = useState(false);
@@ -65,6 +66,16 @@ function AddRoom() {
             type="text"
             name="category"
             value={roomInsert.category}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="category">Control Unit ID</label>
+          <input
+            type="text"
+            name="controllUnitId"
+            value={roomInsert.controllUnitId}
             onChange={handleChange}
             required
           />
