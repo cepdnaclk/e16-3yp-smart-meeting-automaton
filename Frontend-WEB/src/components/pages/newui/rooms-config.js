@@ -10,7 +10,7 @@ const RoomsConfig = () => {
   const [loadingData, setLoadingData] = useState(true);
   const [alldata, setData] = useState({ data: [], noofac: 0, noofprojec: 0 });
   const [selectd, setselectd] = useState("AC");
-  const [callback, setcallback] = useState(false);
+  // const [callback, setcallback] = useState(false);
 
   const callBackdev = () => {
     console.log("callbacking");

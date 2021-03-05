@@ -22,6 +22,7 @@ export default function AddDeviceModal(props) {
     category: "",
     brand: "",
     model: "",
+    roomId: "",
   });
 
   //   useEffect(() => {
@@ -35,10 +36,13 @@ export default function AddDeviceModal(props) {
     setDevice({
       ...device,
       compId: nextcompId,
+      roomId: _id,
       category: cato === "PR" ? "PROJECTER" : cato,
     });
   };
-
+  const handleQuite = () => {
+    setOpen(false);
+  };
   const handleClose = () => {
     setOpen(false);
     axios
@@ -130,7 +134,7 @@ export default function AddDeviceModal(props) {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleQuite} color="primary">
             Cancel
           </Button>
           <Button onClick={handleClose} color="primary">
