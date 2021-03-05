@@ -1,11 +1,6 @@
 const mqtt = require('mqtt');
 
-options={
-    clientId:"mqttjs1",
-    username:"stev",
-    password:"passwrd",
-    clean:true
-};
+var topic_s="testtopic";
 
 const client = mqtt.connect("mqtt://localhost:9999",options);
 console.log("connected flag  "+client.connected);
@@ -13,11 +8,9 @@ client.on("connect",function(){
     console.log("connected  "+client.connected);
 });
 
-var options={
-    retain:true,
-    qos:1
-};
+client.subscribe(topic_s,{qos:2});
 
-if (client.connected==true){
-    client.publish("testtopic", "test message",options);
-    }
+client.on('message',function(topic, message, packet){
+	console.log("message is "+ message);
+	console.log("topic is "+ topic);
+});
