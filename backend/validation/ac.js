@@ -6,7 +6,7 @@ const acschema = joi.object({
     controlUnitId: joi.string()
         .required(),
 
-    isWorking: joi.boolean().required(),
+    isWorking: joi.boolean(),
 
 });
 

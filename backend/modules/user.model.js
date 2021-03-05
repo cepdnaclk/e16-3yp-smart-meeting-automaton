@@ -1,4 +1,4 @@
-const { boolean } = require('@hapi/joi');
+const { number } = require('@hapi/joi');
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
@@ -28,12 +28,14 @@ const userSchema = new Schema({
     phone: {
         type: String,
         unique: true,
+        min: 9,
+        max: 10,
         required: true
     },
 
-    role: {
-        type: Number,
-        default: 0,
+    isAdmin: {
+        type: Boolean,
+        default: false
     },
 
     // verified: {
