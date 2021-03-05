@@ -19,7 +19,7 @@ const scheduleschema = joi.object({
     endTime: joi.date()
         .required(),
 
-    username: joi.string()
+    userId: joi.string()
         .required()
         .min(1)
         .max(1024),
@@ -45,7 +45,7 @@ const schedulCalendarApischema = joi.object({
     endTime: joi.date()
         .required(),
 
-    username: joi.string()
+    userId: joi.string()
         .required()
         .min(1)
         .max(1024),

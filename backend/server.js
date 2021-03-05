@@ -11,7 +11,7 @@ if (dotenv.error) {
 
 //data base
 const mongoose = require('mongoose');
-const db = mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true ,useUnifiedTopology: true })
+const db = mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true ,useUnifiedTopology: true, useFindAndModify: false })
     .then(() => {
         console.log('Connected to the db...');
 
@@ -49,13 +49,13 @@ const login = require('./Route/login');
 app.use('/login', login);
 
 
-//admin route
-const admin = require('./Route/admin');
-app.use('/admin', admin);
+// //admin route
+const main = require('./Route/main');
+app.use('/main', main);
 
-//route user
-const user = require('./Route/user');
-app.use('/user', user);
+// //route user
+// const user = require('./Route/user');
+// app.use('/user', user);
 
 // 404
 app.use((req, res)=>{

@@ -86,7 +86,7 @@ router.get('/verify', authUser, async(req, res)=>{
 });
 
 //get schedul from now all
-router.get('/get/schedule/all', authUser, async(req, res)=>{
+router.get('/get/schedule/all', async(req, res)=>{
     const {error, resultCalApi} = await getEventListAll();
 
     if(error){

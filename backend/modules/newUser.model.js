@@ -1,3 +1,4 @@
+const { string } = require("@hapi/joi");
 const mongoose = require("mongoose");
 
 const newuserSchema = new mongoose.Schema(
@@ -13,6 +14,14 @@ const newuserSchema = new mongoose.Schema(
     OTP: {
       type: String,
       required: true,
+    },
+
+    phone: {
+      type: String,
+      unique: true,
+      min: 9,
+      max: 10,
+      required: true
     },
 
     userName: {
