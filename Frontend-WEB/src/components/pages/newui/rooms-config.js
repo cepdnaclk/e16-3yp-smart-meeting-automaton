@@ -3,52 +3,43 @@ import { useTable, useFilters } from "react-table";
 import { lecRoomData } from "../data";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import AddDeviceModal from "../../layout/AddDeviceModal";
 
 const RoomsConfig = () => {
   const params = useParams();
-  const [data, setData] = useState([]);
-  const [noofac, setnoofac] = useState(0);
-  const [noofprojec, setnoofprojec] = useState(0);
   const [loadingData, setLoadingData] = useState(true);
+  const [alldata, setData] = useState({ data: [], noofac: 0, noofprojec: 0 });
+  const [selectd, setselectd] = useState("AC");
+  // const [callback, setcallback] = useState(false);
+
+  const callBackdev = () => {
+    console.log("callbacking");
+    getDevices();
+  };
+  const { data, noofac, noofprojec } = alldata;
+  // const [user, setUser] = useState({
+  //   workerId: "",
+  //   password: "",
+  // });
+  const getDevices = async () => {
+    const res = await axios.get(`/main/room/${params._id}`, {
+      //  headers: { Authorization: token },
+    });
+    setData({
+      data: [...res.data.ac, ...res.data.projector],
+      noofac: res.data.ac.length,
+      noofprojec: res.data.projector.length,
+    });
+    console.log(res.data);
+    setLoadingData(false);
+
+    console.log("no of ac useefect");
+    console.log(noofac, noofprojec);
+  };
 
   useEffect(() => {
     //   if (params._id) {
-    const getDevices = async () => {
-      const res = await axios.get(`/main/room/${params._id}`, {
-        //  headers: { Authorization: token },
-      });
-      // setData([
-      //   {
-      //     componentId: "AC01",
-      //     category: "Air Conditioner",
-      //     brand: "Hitachi",
-      //     model: "HT02",
-      //   },
-      //   {
-      //     componentId: "PR01",
-      //     category: "Projector",
-      //     brand: "Panasonic",
-      //     model: "P58418278790810",
-      //   },
-      //   {
-      //     componentId: "AC02",
-      //     category: "Air Conditioner",
-      //     brand: "Sony",
-      //     model: "SAC4530",
-      //   },
-      //   {
-      //     componentId: "PR02",
-      //     category: "Projector",
-      //     brand: "Hitachi",
-      //     model: "P5002",
-      //   },
-      // ]);
-      setData([...res.data.ac, ...res.data.projector]);
-      console.log(res.data);
-      setLoadingData(false);
-      setnoofac(res.data.ac.length);
-      setnoofprojec(res.data.projector.length);
-    };
+    console.log("USEEFFECT");
     if (loadingData) getDevices();
 
     //setCallback(false);
@@ -119,6 +110,7 @@ const RoomsConfig = () => {
     }),
     []
   );
+  console.log("no of ac bottom");
   console.log(noofac, noofprojec);
   const {
     getTableProps,
@@ -144,16 +136,18 @@ const RoomsConfig = () => {
     );
   }
 
-  const [selectd, setselectd] = useState("AC");
+  // const [nextid, setnextid] = useState(`AC0${noofac + 1}`);
   function onChange(event) {
     const value = event.target.value;
     setselectd(value);
+    //  setnextid(`${value}0${selectd === "AC" ? noofac + 1 : noofprojec + 1}`);
 
     // setSelected(nodes.find((node) => node.id === value));
   }
 
-  console.log("czczxczxcz");
-  console.log("czczxczxcz" + selectd);
+  console.log("NExt compId");
+  // console.log(nextid);
+  console.log("NExt compId");
   return (
     <>
       <div className="title-room">
@@ -177,7 +171,15 @@ const RoomsConfig = () => {
             <option value="PR">Projector</option>
           </select>
         </div>
-        <button className="button-reserve">Add</button>
+        <AddDeviceModal
+          callBack={callBackdev}
+          cato={selectd}
+          _id={params._id}
+          nextcompId={`${selectd}0${
+            selectd === "AC" ? noofac + 1 : noofprojec + 1
+          }`}
+        />
+        {/* <button className="button-reserve">Add</button> */}
       </section>
 
       <div className="config-devices-table-div">

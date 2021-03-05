@@ -16,6 +16,7 @@ import About from "../components/pages/About";
 import Meetings from "../components/pages/newui/my-meetings";
 import RoomsConfig from "../components/pages/newui/rooms-config";
 import AdminDashBoard from "../components/pages/newui/rooms-dashboard-new";
+import AdminAddmeetings from "../components/pages/newui/admin-add-meeting";
 
 // import UserAddMeetings from "../components/pages/newui/add-meeting";
 import Profile from "../components/pages/userpages/Profile";
@@ -43,6 +44,11 @@ function AppRoutes() {
           path="/configure/room/:_id/:roomName"
           exact
           component={isadmin ? RoomsConfig : NotFound}
+        />
+        <Route
+          path="/addmeeting/room/:_id/:roomName"
+          exact
+          component={isadmin ? AdminAddmeetings : NotFound}
         />
         {/* //============================== */}
 
