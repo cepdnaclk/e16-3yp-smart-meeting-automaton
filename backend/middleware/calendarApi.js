@@ -1,46 +1,49 @@
-const {google} = require('googleapis');
-const moment = require('moment'); 
+const { google } = require("googleapis");
+const moment = require("moment");
 
-const dotenv = require('dotenv').config();
+const dotenv = require("dotenv").config();
 if (dotenv.error) {
-    throw dotenv.error;
+  throw dotenv.error;
 }
 
 const auth = new google.auth.GoogleAuth({
-    keyFile: './group-project-305806-5ebef1e31f0c.json',
-    scopes: ['https://www.googleapis.com/auth/calendar'],
+  keyFile: "./group-project-305806-5ebef1e31f0c.json",
+  scopes: ["https://www.googleapis.com/auth/calendar"],
 });
 
 const calendar = google.calendar({
-    version: 'v3',
-    auth
-  });
+  version: "v3",
+  auth,
+});
 
-const isRequired = () => { throw new Error('param is required'); };
+const isRequired = () => {
+  throw new Error("param is required");
+};
 
-function addEvent({eventData} ) {
-    return calendar.events.insert({
-        auth: auth,
-        calendarId: process.env.CALENDAR_ID,
-        resource: eventData,
+function addEvent({ eventData }) {
+  return calendar.events.insert(
+    {
+      auth: auth,
+      calendarId: process.env.CALENDAR_ID,
+      resource: eventData,
     }
-        // ,function(err, event) {
-        //     if (err) {
-        //         console.log('There was an error contacting the Calendar service: ' + err);
-        //         return;
-        //     }
-        //     console.log('Event created: %s', event);
-        // }
-    );
+    // ,function(err, event) {
+    //     if (err) {
+    //         console.log('There was an error contacting the Calendar service: ' + err);
+    //         return;
+    //     }
+    //     console.log('Event created: %s', event);
+    // }
+  );
 }
 
-function editEvent({eventData, eventId }) {
-    return calendar.events.update({
-        requestBody:eventData,
-        calendarId: process.env.CALENDAR_ID,
-        eventId: eventId,
-
-     }
+function editEvent({ eventData, eventId }) {
+  return calendar.events.update(
+    {
+      requestBody: eventData,
+      calendarId: process.env.CALENDAR_ID,
+      eventId: eventId,
+    }
     //  , function(err, event) {
     //         if (err) {
     //         console.log('There was an error contacting the Calendar service: ' + err);
@@ -48,15 +51,13 @@ function editEvent({eventData, eventId }) {
     //         }
     //         console.log('Event updated: %s', event.data);
     //     }
-    );
-    
+  );
 }
 
-function deleteEvent({eventId = isRequired()}) {
-    
-    return calendar.events.delete({
-        calendarId:  process.env.CALENDAR_ID,
-        eventId: eventId,
+function deleteEvent({ eventId = isRequired() }) {
+  return calendar.events.delete({
+    calendarId: process.env.CALENDAR_ID,
+    eventId: eventId,
     //   },(err, result)=>{
     //       if(err){
     //         console.log('There was an error contacting the Calendar service: ' + err);
@@ -65,80 +66,87 @@ function deleteEvent({eventId = isRequired()}) {
 
     //     console.log('Event deleted : %s', result);
     //     return
-    //  
-        }
-    );
-    
+    //
+  });
 }
 
-function getEventListOnGoing({startTime = moment().format(), endTime = moment().format("YYYY-MM-DDT23:59:00Z")}) {
-    return calendar.events.list({
-
-        calendarId: process.env.CALENDAR_ID,
-        // timeMin: (startTime),
-        timeMax: (endTime),
-        // maxResults: 10,
-        singleEvents: true,
-        orderBy: 'startTime',
-        }
-        // , (err, res) => {
-        // if (err) return console.log('The API returned an error: ' + err);
-        // const events = res.data.items;
-        // console.log(events);
-        //  }
-    );
-    
+function getEventListOnGoing({
+  startTime = moment().format(),
+  endTime = moment().format("YYYY-MM-DDT23:59:00Z"),
+}) {
+  return calendar.events.list(
+    {
+      calendarId: process.env.CALENDAR_ID,
+      // timeMin: (startTime),
+      timeMax: endTime,
+      // maxResults: 10,
+      singleEvents: true,
+      orderBy: "startTime",
+    }
+    // , (err, res) => {
+    // if (err) return console.log('The API returned an error: ' + err);
+    // const events = res.data.items;
+    // console.log(events);
+    //  }
+  );
 }
 
-function getEventListToday({startTime = moment().format(), endTime = moment().format("YYYY-MM-DDT23:59:00Z")}) {
-    return calendar.events.list({
-
-        calendarId: process.env.CALENDAR_ID,
-        timeMin: (startTime),
-        timeMax: (endTime),
-        // maxResults: 10,
-        singleEvents: true,
-        orderBy: 'startTime',
-        }
-        // , (err, res) => {
-        // if (err) return console.log('The API returned an error: ' + err);
-        // const events = res.data.items;
-        // console.log(events);
-        //  }
-    );
-    
+function getEventListToday({
+  startTime = moment().format(),
+  endTime = moment().format("YYYY-MM-DDT23:59:00Z"),
+}) {
+  return calendar.events.list(
+    {
+      calendarId: process.env.CALENDAR_ID,
+      timeMin: startTime,
+      timeMax: endTime,
+      // maxResults: 10,
+      singleEvents: true,
+      orderBy: "startTime",
+    }
+    // , (err, res) => {
+    // if (err) return console.log('The API returned an error: ' + err);
+    // const events = res.data.items;
+    // console.log(events);
+    //  }
+  );
 }
 // = new Date((new Date()).toISOString())
-function getEventListAll({startTime = new Date((new Date()).toISOString()), endTime =  moment().format("YYYY-MM-DDT23:59:00+05:30")}) {
+function getEventListAll({
+  startTime = new Date(new Date().toISOString()),
+  endTime = moment().format("YYYY-MM-DDT23:59:00+05:30"),
+}) {
+  // console.log(startTime);
+  // console.log(endTime);
 
-    // console.log(startTime);
-    // console.log(endTime);
-
-    return calendar.events.list({
-
-        calendarId: process.env.CALENDAR_ID,
-        timeMin: startTime, //(startTime),
-        timeMax: endTime,
-        // maxResults: 10,
-        singleEvents: true,
-        orderBy: 'startTime',
-        }
-        // , (err, res) => {
-        // if (err) return console.log('The API returned an error: ' + err);
-        // const events = res.data.items;
-        // console.log(events);
-        //  }
-    );
-    
+  return calendar.events.list(
+    {
+      calendarId: process.env.CALENDAR_ID,
+      timeMin: startTime, //(startTime),
+      timeMax: endTime,
+      // maxResults: 10,
+      singleEvents: true,
+      orderBy: "startTime",
+    }
+    // , (err, res) => {
+    // if (err) return console.log('The API returned an error: ' + err);
+    // const events = res.data.items;
+    // console.log(events);
+    //  }
+  );
 }
 
-function getEvent(params) {
-    
-}
+function getEvent(params) {}
 
 module.exports = {
-    getEvent, addEvent, editEvent, deleteEvent, getEventListToday, getEventListAll, getEventListOnGoing
-}
+  getEvent,
+  addEvent,
+  editEvent,
+  deleteEvent,
+  getEventListToday,
+  getEventListAll,
+  getEventListOnGoing,
+};
 
 // var event = {
 //     id: '001788',
@@ -167,7 +175,6 @@ module.exports = {
 
 // console.log(calendar);
 
-
 // const beginning = moment().format("YYYY-MM-DDT00:01:00Z")
 // const end = moment().format("YYYY-MM-DDT23:59:00Z")
 
@@ -189,7 +196,6 @@ module.exports = {
 
 // listl();
 
-
 // const res = calendar.calendarList.get({
 //         // Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the &quot;primary&quot; keyword.
 //     calendarId: 'group12.team@gmail.com',
@@ -199,7 +205,6 @@ module.exports = {
 // });
 
 // console.log(res);
-
 
 // const h = calendar.calendarList.list({
 //     auth : auth,
@@ -211,10 +216,7 @@ module.exports = {
 // );
 // calendarList.get();
 
-
 // var jwtClient = new google.auth.JWT(key.client_email, null, key.private_key, scopes, null );
-
-
 
 // jwtClient.authorize(function (err, tokens) {
 //     if (err) {

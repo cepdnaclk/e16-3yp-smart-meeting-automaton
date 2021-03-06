@@ -6,14 +6,15 @@ function AddRoom() {
   //   const alertContext = useContext(AlertContext);
   const [roomInsert, setRoomInsert] = useState({
     category: "",
-    name: "",
-    controllUnitId: "",
+    roomName: "",
+    controlUnitId: "",
   });
   const [wrongstate, setWrongState] = useState(false);
   const [alertstate, setAlertState] = useState(false);
   //   const { setAlert } = alertContext;
 
   const handleChange = (event) => {
+    console.log(roomInsert.controlUnitId);
     setRoomInsert({
       ...roomInsert,
       [event.target.name]: event.target.value,
@@ -22,12 +23,14 @@ function AddRoom() {
   //  setTimeout(() => dispatch({ type: REMOVE_ALERT, payload: id }), timeout);
 
   const handleSubmit = (e) => {
+    console.log(roomInsert.controlUnitId);
     e.preventDefault();
     axios
-      .post("/api/room/", roomInsert)
+      // .post("/api/room/", roomInsert)
+      .post("/main/add/room/", roomInsert)
       .then(function (response) {
         console.log(response);
-        setRoomInsert({ name: "", category: "" });
+        setRoomInsert({ roomName: "", category: "", controlUnitId: "" });
         setAlertState(true);
         // setAlert("Room is Added", "success");
         setTimeout(() => {
@@ -54,8 +57,8 @@ function AddRoom() {
           <label htmlFor="Name">Room Name</label>
           <input
             type="text"
-            name="name"
-            value={roomInsert.name}
+            name="roomName"
+            value={roomInsert.roomName}
             onChange={handleChange}
             required
           />
@@ -74,8 +77,8 @@ function AddRoom() {
           <label htmlFor="category">Control Unit ID</label>
           <input
             type="text"
-            name="controllUnitId"
-            value={roomInsert.controllUnitId}
+            name="controlUnitId"
+            value={roomInsert.controlUnitId}
             onChange={handleChange}
             required
           />
