@@ -256,45 +256,123 @@ router.get("/table", async (req, res) => {
   });
 });
 
-//verifyAdmin,
-router.post("/add/ac", authAdmin, acValidation, async (req, res) => {
-  const ac = new acschema({
-    controlUnitId: req.body.controlUnitId,
-  });
-
+router.post('/update/room', deviceValidation, async(req, res)=>{
   try {
-    const acsaved = await ac.save();
-    console.log("saved user to the db...");
-    res.send(acsaved._id);
-  } catch (error) {
-    console.log("Saving faild...", error);
-    res.send({
-      error: "Saving error",
-    });
-  }
-});
-
-router.post(
-  "/add/projector",
-  authAdmin,
-  projectorValidation,
-  async (req, res) => {
-    const projector = new projectorschema({
-      controlUnitId: req.body.controlUnitId,
-    });
-
-    try {
-      const projectorSaved = await projector.save();
-      console.log("saved user to the db...");
-      res.send(projectorSaved._id);
-    } catch (error) {
-      console.log("Saving faild...", error);
-      res.send({
-        error: "Saving error",
+    if((req.body.category.toLowerCase() === 'ac')||(req.body.category.toLowerCase() === 'projector')){
+      if(req.body.category.toLowerCase() === 'ac'){
+        const ac = new acschema({
+          roomName: req.body.roomName,
+          brand: req.body.brand,
+          model: req.body.model
+    
+        });
+    
+        try {
+          const acsaved = await ac.save();
+          console.log("saved user to the db...");
+          res.send(acsaved._id);
+        } catch (error) {
+          console.log("Saving faild...", error);
+          res.send({
+            error: "Saving error",
+          });
+        }
+      }
+      else{
+        const projector = new projectorschema({
+          roomName: req.body.roomName,
+          brand: req.body.brand,
+          model: req.body.model
+    
+        });
+    
+        try {
+          const projectorsaved = await projector.save();
+          console.log("saved user to the db...");
+          res.send(projectorsaved._id);
+        } catch (error) {
+          console.log("Saving faild...", error);
+          res.status(400).json({
+            error: "Saving error",
+          });
+        }
+      }
+      try {
+        roomschema.updateOne({roomName : req.body.roomName}, { $push: { acId: req.body.compId}}, (err, updteResult)=>{
+          if(err){
+            console.log("update room faild...", error);
+            res.status(400).json({
+              error: "updateRoom error",
+            });
+          }
+          else{
+            console.log("update room seccess...", updteResult);
+            res.status(200).json({
+              'msg': "seccess",
+            });
+          }
+        });
+      } catch (error) {
+        console.log("update room faild...", error);
+        res.status(400).json({
+          error: "updateRoom error",
+        });
+      }
+    }else{
+      console.log("cannot add category...");
+      res.status(400).json({
+        error: "cannot add category",
       });
     }
+    
+  } catch (error) {
+    console.log("Failed server...");
+    res.status(400).json({
+      error: "Failed server",
+    });
   }
-);
+
+});
+
+// //verifyAdmin,
+// router.post("/add/ac", authAdmin, acValidation, async (req, res) => {
+//   const ac = new acschema({
+//     controlUnitId: req.body.controlUnitId,
+//   });
+
+//   try {
+//     const acsaved = await ac.save();
+//     console.log("saved user to the db...");
+//     res.send(acsaved._id);
+//   } catch (error) {
+//     console.log("Saving faild...", error);
+//     res.send({
+//       error: "Saving error",
+//     });
+//   }
+// });
+
+// router.post(
+//   "/add/projector",
+//   authAdmin,
+//   projectorValidation,
+//   async (req, res) => {
+//     const projector = new projectorschema({
+//       controlUnitId: req.body.controlUnitId,
+//     });
+
+//     try {
+//       const projectorSaved = await projector.save();
+//       console.log("saved user to the db...");
+//       res.send(projectorSaved._id);
+//     } catch (error) {
+//       console.log("Saving faild...", error);
+//       res.send({
+//         error: "Saving error",
+//       });
+//     }
+//   }
+// );
 
 router.post(
   "/add/calendarapi",
@@ -379,87 +457,87 @@ router.post(
     }
   }
 );
-//authAdmin,
-router.post("/edit/schedule", async (req, res) => {
-  try {
-    scheduleschema.findByIdAndUpdate(
-      req.body._id,
-      req.body,
-      async (err, result) => {
-        try {
-          if (err) {
-            res.status(400).json({
-              Error: "Try again",
-            });
-          } else {
-            if (result) {
-              const eventBody = {
-                // id: result._id,
-                summary: "Lecture",
-                location: "University of peradeniya, sri lanka",
-                description:
-                  req.body.subject +
-                  "Lecture in " +
-                  req.body.roomName +
-                  " conduct by " +
-                  req.body.userName,
-                start: {
-                  dateTime: new Date(req.body.startTime).toISOString(),
-                  // timeZone: 'Sri Lanka/Sri Jayawardenepura Kotte',
-                },
-                end: {
-                  dateTime: new Date(req.body.endTime).toISOString(),
-                  // timeZone: 'UTC/GMT',
-                },
-                reminders: {
-                  useDefault: false,
-                  overrides: [
-                    { method: "email", minutes: 30 * 60 },
-                    { method: "popup", minutes: 15 },
-                  ],
-                },
-              };
+// //authAdmin,
+// router.post("/edit/schedule", async (req, res) => {
+//   try {
+//     scheduleschema.findByIdAndUpdate(
+//       req.body._id,
+//       req.body,
+//       async (err, result) => {
+//         try {
+//           if (err) {
+//             res.status(400).json({
+//               Error: "Try again",
+//             });
+//           } else {
+//             if (result) {
+//               const eventBody = {
+//                 // id: result._id,
+//                 summary: "Lecture",
+//                 location: "University of peradeniya, sri lanka",
+//                 description:
+//                   req.body.subject +
+//                   "Lecture in " +
+//                   req.body.roomName +
+//                   " conduct by " +
+//                   req.body.userName,
+//                 start: {
+//                   dateTime: new Date(req.body.startTime).toISOString(),
+//                   // timeZone: 'Sri Lanka/Sri Jayawardenepura Kotte',
+//                 },
+//                 end: {
+//                   dateTime: new Date(req.body.endTime).toISOString(),
+//                   // timeZone: 'UTC/GMT',
+//                 },
+//                 reminders: {
+//                   useDefault: false,
+//                   overrides: [
+//                     { method: "email", minutes: 30 * 60 },
+//                     { method: "popup", minutes: 15 },
+//                   ],
+//                 },
+//               };
 
-              const { err, resultCalApi } = await editEvent({
-                eventData: eventBody,
-                eventId: result._id,
-              });
-              if (err) {
-                console.log(
-                  "There was an error contacting the Calendar service: " + err
-                );
-                res.status(400).json({
-                  Error: "Inserted to database but calendar api error",
-                  apiError: err,
-                  // 'id': result._id
-                });
-              } else {
-                console.log("Successfully edited: ", resultCalApi);
-                res.status(200).json({
-                  Data: resultCalApi.data,
-                });
-              }
-            } else {
-              res.status(400).json({
-                Error: "No such schedule",
-              });
-            }
-          }
-        } catch (error) {
-          console.log("Failed. ", error);
-          res.status(400).json({
-            Error: "failed " + error,
-          });
-        }
-      }
-    );
-  } catch (error) {
-    console.log("Failed. Database conct failed");
-    res.status(400).json({
-      Error: " Database conct failed",
-    });
-  }
-});
+//               const { err, resultCalApi } = await editEvent({
+//                 eventData: eventBody,
+//                 eventId: result._id,
+//               });
+//               if (err) {
+//                 console.log(
+//                   "There was an error contacting the Calendar service: " + err
+//                 );
+//                 res.status(400).json({
+//                   Error: "Inserted to database but calendar api error",
+//                   apiError: err,
+//                   // 'id': result._id
+//                 });
+//               } else {
+//                 console.log("Successfully edited: ", resultCalApi);
+//                 res.status(200).json({
+//                   Data: resultCalApi.data,
+//                 });
+//               }
+//             } else {
+//               res.status(400).json({
+//                 Error: "No such schedule",
+//               });
+//             }
+//           }
+//         } catch (error) {
+//           console.log("Failed. ", error);
+//           res.status(400).json({
+//             Error: "failed " + error,
+//           });
+//         }
+//       }
+//     );
+//   } catch (error) {
+//     console.log("Failed. Database conct failed");
+//     res.status(400).json({
+//       Error: " Database conct failed",
+//     });
+//   }
+// });
 
 router.delete("/delete/schedule/:id", authAdmin, async (req, res) => {
   try {
@@ -522,15 +600,18 @@ router.post('/rooms/status', async(req, res)=>{
       console.log(resultCalApi.data.items.length);
 
       try {
-          var lecRoomList = [];
+          const roomStateList = [];
+          const lecRoomList = [];
+          const scheduleListId = [];
           resultCalApi.data.items.forEach(element => {
               lecRoomList.push(element.location);
+              scheduleListId.push(element.id);
           });
 
           lecRoom.find({
-              // roomName : {
-              //     $nin : lrcRoomList
-              // }
+              roomName : {
+                  $nin : lecRoomList
+              }
               
               }, (err, result)=>{
                   if(err){
@@ -540,15 +621,60 @@ router.post('/rooms/status', async(req, res)=>{
                   }
                   else{
                       result.forEach(element => {
-                          if(lecRoomList.includes(element.roomName)){
-                              element.state = true;
-                          }
-                          else{
-                              element.state = false;
-                          }
+
+                        roomStateList.push({
+                          roomName: element.roomName,
+                          state: false
+                        });
+                          // if(lecRoomList.includes(element.roomName)){
+                          //     element.state = true;
+                          // }
+                          // else{
+                          //     element.state = false;
+                          // }
                           
                       });
-                      res.send(result);
+
+                      try {
+                        scheduleschema.find({
+                            _id : {
+                                $in : scheduleListId
+                            }
+                          
+                          }, (err, resultSchedule)=>{
+                            if(err){
+                              console.log('Error in DB connect');
+                              res.status(400).json({
+                                  'Error': 'Try again'
+                              });
+                            }
+                            else{
+                              resultSchedule.forEach(element => {
+                                roomStateList.push({
+                                  roomName: element.roomName,
+                                  state: true,
+                                  startTime: element.startTime,
+                                  endTime: element.endTime,
+                                  userId: element.userId,
+                                  subject: element.subject
+                                });
+                                
+                              });
+                              console.log('success.');
+                              res.status(200).json(roomStateList);
+
+                            }
+
+                          }
+                        );
+                        
+                      }catch (error) {
+                        console.log('Error in DB connect');
+                        res.status(400).json({
+                            'Error': 'Try again'
+                        });
+                      }
+                      
                   }
               }
           );
@@ -570,8 +696,8 @@ router.post('/rooms/status', async(req, res)=>{
 
 router.post("/free/rooms", async (req, res) => {
   try {
-    const startT = new Date(new Date(req.body.startTime).toISOString());
-    const endT = new Date(new Date(req.body.endTime).toISOString());
+    const startT = new Date((new Date(req.body.date + 'T' + req.body.startTime)).toISOString());
+    const endT = new Date((new Date(startT.getTime() + 10*60000)).toISOString());
     const resultCalApi = await getEventListAll({
       startTime: startT,
       endTime: endT,
@@ -581,7 +707,7 @@ router.post("/free/rooms", async (req, res) => {
     try {
       var lrcRoomList = [];
       resultCalApi.data.items.forEach((element) => {
-        lrcRoomList.push(element.description.split(" ")[3]);
+        lrcRoomList.push(element.location);
       });
 
       lecRoom.find(
