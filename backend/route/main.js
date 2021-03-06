@@ -513,6 +513,61 @@ router.delete("/delete/schedule/:id", authAdmin, async (req, res) => {
   }
 });
 
+
+router.post('/rooms/status', async(req, res)=>{
+  try {
+      const startT = new Date((new Date(req.body.date + 'T' + req.body.startTime)).toISOString());
+      const endT = new Date((new Date(startT.getTime() + 10*60000)).toISOString());
+      const resultCalApi = await getEventListAll({startTime: startT, endTime: endT});
+      console.log(resultCalApi.data.items.length);
+
+      try {
+          var lecRoomList = [];
+          resultCalApi.data.items.forEach(element => {
+              lecRoomList.push(element.location);
+          });
+
+          lecRoom.find({
+              // roomName : {
+              //     $nin : lrcRoomList
+              // }
+              
+              }, (err, result)=>{
+                  if(err){
+                      res.status(400).json({
+                          'Error': 'Try again'
+                      });
+                  }
+                  else{
+                      result.forEach(element => {
+                          if(lecRoomList.includes(element.roomName)){
+                              element.state = true;
+                          }
+                          else{
+                              element.state = false;
+                          }
+                          
+                      });
+                      res.send(result);
+                  }
+              }
+          );
+
+      } catch (error) {
+          console.log('Error in DB connect');
+          res.status(400).json({
+              'Error': 'Try again'
+          });
+      }
+
+  } catch (error) {
+      console.log('Error in Api connect');
+      res.status(400).json({
+          'Error': 'Try again'
+      });
+  }
+});
+
 router.post("/free/rooms", async (req, res) => {
   try {
     const startT = new Date(new Date(req.body.startTime).toISOString());
