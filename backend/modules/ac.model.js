@@ -11,12 +11,31 @@ const acSchema = new Schema({
     //     min: 1,
     //     max: 20
     // },
+    compId: {
+        type: String,
+        required: true,
+        unique: true
+    },
 
-    controlUnitId:{
+    roomName:{
         type: String,
         required: true,
         min: 1,
         max: 1024
+    },
+
+    brand: {
+        type: String,
+        min: 1,
+        max: 1024,
+        required: true
+    },
+
+    model: {
+        type: String,
+        min: 1,
+        max: 1024,
+        required: true
     },
 
     isWorking: {
