@@ -58,7 +58,7 @@ const AdminAddMeeting = () => {
   const getMeetings = () => {
     console.log(`GETMEETINGS ${searchDate}`);
     axios
-      .post("/main/get/shedule/", { date: searchDate, roomId: params._id })
+      .post("/main/get/shedule/", { date: searchDate, _id: params._id })
       .then(function (response) {
         console.log(response);
 
@@ -83,9 +83,19 @@ const AdminAddMeeting = () => {
   };
 
   const reservemeeting = () => {
+    // const roomId = params._id;
+    console.log(`params id ${params._id}`);
+    console.log(`xzczxczxczxczxcxz`);
     //  console.log(`GETMEETINGS ${searchDate}`);
     axios
-      .post("/main/add/shedule/", { userId, startTime, endTime, subject })
+      .post("/main/add/shedule/", {
+        userId,
+        date: searchDate,
+        startTime,
+        endTime,
+        subject,
+        _id: params._id,
+      }) //date yawanna
       .then(function (response) {
         console.log(response);
 
