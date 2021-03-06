@@ -55,8 +55,10 @@ function RoomsDashBoardNew() {
   const [rooms, setRooms] = useState([]);
 
   const getallrooms = () => {
-    axios.get("/main/roomall/").then((responce) => {
+    // axios.get("/main/roomall/").then((responce) => {
+    axios.get("/main/table/").then((responce) => {
       const roomss = responce.data;
+      console.log("room array");
       console.log(roomss);
       setRooms(roomss);
     });
