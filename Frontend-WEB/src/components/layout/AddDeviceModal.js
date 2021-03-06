@@ -13,7 +13,7 @@ export default function AddDeviceModal(props) {
   const alertContext = useContext(AlertContext);
   const [open, setOpen] = React.useState(false);
   const { setAlert } = alertContext;
-  const { nextcompId, cato, _id, callBack } = props;
+  const { nextcompId, cato, _id, callBack, roomName2 } = props;
   console.log("i am in modal");
   console.log(nextcompId);
 
@@ -23,18 +23,20 @@ export default function AddDeviceModal(props) {
     brand: "",
     model: "",
     roomId: "",
+    roomName: "",
   });
 
   //   useEffect(() => {
   //     setDevice({ ...device, compId: nextcompId });
   //   }, []);
 
-  const { compId, category, brand, model } = device;
+  const { compId, category, brand, model, roomName } = device;
 
   const handleClickOpen = () => {
     setOpen(true);
     setDevice({
       ...device,
+      roomName: roomName2,
       compId: nextcompId,
       roomId: _id,
       category: cato === "PR" ? "PROJECTER" : cato,

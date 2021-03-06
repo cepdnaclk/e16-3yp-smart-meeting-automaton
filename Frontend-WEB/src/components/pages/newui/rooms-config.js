@@ -172,6 +172,7 @@ const RoomsConfig = () => {
           </select>
         </div>
         <AddDeviceModal
+          roomName2={params.roomName}
           callBack={callBackdev}
           cato={selectd}
           _id={params._id}
