@@ -88,13 +88,13 @@ const AdminAddMeeting = () => {
     console.log(`xzczxczxczxczxcxz`);
     //  console.log(`GETMEETINGS ${searchDate}`);
     axios
-      .post("/main/add/shedule/", {
+      .post("/main/add/schedule/", {
         userId,
         date: searchDate,
         startTime,
         endTime,
         subject,
-        _id: params._id,
+        roomName: params.roomName,
       }) //date yawanna
       .then(function (response) {
         console.log(response);

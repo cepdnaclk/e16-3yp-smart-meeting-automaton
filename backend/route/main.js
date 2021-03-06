@@ -679,17 +679,23 @@ router.post("/add/schedule", scheduleValidation, async (req, res) => {
             result.forEach((element) => {
               const dateStart = new Date(element.startTime);
               const dateStartNew = new Date(
-                new Date(req.body.startTime).toISOString()
+                req.body.date + "T" + req.body.startTime
               );
               const dateEnd = new Date(element.endTime);
               const dateEndNew = new Date(
-                new Date(req.body.endTime).toISOString()
+                req.body.date + "T" + req.body.endTime
               );
 
               if (
                 (dateStartNew >= dateStart && dateStartNew <= dateEnd) ||
-                (dateEndNew >= dateStart && dateEndNew <= dateEnd)
+                (dateEndNew >= dateStart && dateEndNew <= dateEnd) ||
+                dateStartNew > dateEndNew
               ) {
+                console.log(
+                  dateStartNew >= dateStart && dateStartNew <= dateEnd
+                );
+                console.log(dateEndNew >= dateStart && dateEndNew <= dateEnd);
+                console.log(dateStartNew < dateEndNew);
                 throw new Error("Already exist evint...");
               }
               console.log("here");
@@ -703,15 +709,15 @@ router.post("/add/schedule", scheduleValidation, async (req, res) => {
           const newSchedule = new scheduleschema({
             roomName: req.body.roomName,
             subject: req.body.subject,
-            startTime: new Date(req.body.startTime),
-            endTime: new Date(req.body.endTime),
+            startTime: new Date(req.body.date + "T" + req.body.startTime),
+            endTime: new Date(req.body.date + "T" + req.body.endTime),
             userId: req.body.userId,
           });
 
           try {
             newSchedule.save(async (err, result) => {
               if (err) {
-                console.log("Saving faild...", error);
+                console.log("Saving faild...", err);
                 res.status(400).json({
                   Error: "saving feild. try again",
                 });
@@ -729,10 +735,14 @@ router.post("/add/schedule", scheduleValidation, async (req, res) => {
                     " conduct by " +
                     result.userName,
                   start: {
-                    dateTime: new Date(req.body.startTime).toISOString(),
+                    dateTime: new Date(
+                      req.body.date + "T" + req.body.startTime
+                    ).toISOString(),
                   },
                   end: {
-                    dateTime: new Date(req.body.endTime).toISOString(),
+                    dateTime: new Date(
+                      req.body.date + "T" + req.body.endTime
+                    ).toISOString(),
                   },
                   reminders: {
                     useDefault: false,
@@ -778,8 +788,8 @@ router.post("/add/schedule", scheduleValidation, async (req, res) => {
             });
           } catch (error) {
             console.log("Saving faild...", error);
-            res.send({
-              Error: "Saving error",
+            res.status(400).json({
+              Error: "Saving error" + error,
             });
           }
         } catch (error) {
