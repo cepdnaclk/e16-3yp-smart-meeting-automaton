@@ -69,7 +69,7 @@ const AddMeeting = () => {
     console.log(data);
 
     axios
-      .post("/main/chamath", data)
+      .post("/main/free/rooms/custom", data)
       .then(function (response) {
         console.log(response);
         //  setRoomInsert({ name: "", category: "" });
