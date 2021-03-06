@@ -58,7 +58,10 @@ const AdminAddMeeting = () => {
   const getMeetings = () => {
     console.log(`GETMEETINGS ${searchDate}`);
     axios
-      .post("/main/get/shedule/", { date: searchDate, _id: params._id })
+      .post("/main/get/schedule/date", {
+        date: searchDate,
+        roomName: params.roomName,
+      })
       .then(function (response) {
         console.log(response);
 

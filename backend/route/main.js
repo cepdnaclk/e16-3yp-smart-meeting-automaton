@@ -636,6 +636,63 @@ router.get("/get/schedule/all", async (req, res) => {
     });
   }
 });
+//authUser,
+//get schedul by date all
+router.post("/get/schedule/date", async (req, res) => {
+  try {
+    // if(req.body.startTime != 'undefined'){
+
+    // }
+    const startT = new Date(req.body.date + "T" + "00:00:00+05:30");
+    const endT = new Date(req.body.date + "T" + "23:59:00+05:30");
+    const resultCalApi = await getEventListAll({
+      startTime: startT,
+      endTime: endT,
+    });
+    console.log(resultCalApi.data.items.length);
+    if (resultCalApi.data.items.length > 0) {
+      try {
+        var idList = [];
+        resultCalApi.data.items.forEach((element) => {
+          idList.push(element.id);
+        });
+
+        scheduleschema
+          .find({
+            _id: {
+              $in: idList,
+            },
+            roomName: req.body.roomName,
+          })
+          .sort({ startTime: 1 })
+          .exec(function (err, docs) {
+            if (err) {
+              res.status(400).json({
+                Error: "Try again",
+              });
+            } else {
+              res.send(docs);
+            }
+          });
+      } catch (error) {
+        console.log("Db access faild...", error);
+        res.send({
+          Error: "Data base error : " + error,
+        });
+      }
+    } else {
+      console.log("No schedule");
+      res.status(400).json({
+        Error: "No schedule : ",
+      });
+    }
+  } catch (error) {
+    console.log("Calendar api faild...", error);
+    res.status(400).json({
+      Error: "Calenadar api errror : " + error,
+    });
+  }
+});
 
 //authAdmin,
 router.get("/get/schedule", async (req, res) => {
