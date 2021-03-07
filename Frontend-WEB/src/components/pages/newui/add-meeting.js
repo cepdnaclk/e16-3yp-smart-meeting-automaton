@@ -1,12 +1,16 @@
 import React, { useState, useEffect, useContext } from "react";
+import AuthContext from "../../../context/auth/authContext";
 import { lecRoomData } from "../data";
 import "./index.css";
 import axios from "axios";
+import MeetingAddModal from "../../layout/MeetingAddModal";
 
 import AlertContext from "../../../context/alert/alertContext";
 import { ConfirmationNumber } from "@material-ui/icons";
 
 const AddMeeting = () => {
+  const authContext = useContext(AuthContext);
+  const { user } = authContext;
   const alertContext = useContext(AlertContext);
   const { setAlert } = alertContext;
   const data = ["AC01", "PR01", "AC02", "PR02"];
@@ -101,7 +105,7 @@ const AddMeeting = () => {
 
           <input
             type="date"
-            id="start"
+            id="startd"
             name="date"
             min="2018-01-01"
             max="2022-12-31"
@@ -139,13 +143,20 @@ const AddMeeting = () => {
         return (
           <div className="add-meeting-meeting-rooms" key={id}>
             <h4>{roomName}</h4>
-            <button
+            <MeetingAddModal
+              user={user.userId}
+              start={startTime}
+              end={endTime}
+              dateto={date}
+              roomName2={roomName}
+            />
+            {/* <button
               onClick={() => {
                 handelConfirmation({ roomName, startTime, endTime, date });
               }}
             >
               Reserve
-            </button>
+            </button> */}
           </div>
         );
       })}
