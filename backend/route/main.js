@@ -65,7 +65,8 @@ const {
 } = require("../middleware/calendarApi");
 const lecRoom = require("../modules/lecRoom.model");
 
-const {sendMqttNew, sendMqttinit} = require('../controlers/mqtt');
+const { sendMqttNew, sendMqttinit } = require("../controlers/mqtt");
+const { json } = require("express");
 
 //authAdmin, verifyAdmin,
 router.post("/adduser", newUserValidation, async (req, res) => {
@@ -131,6 +132,91 @@ router.get("/table", async (req, res) => {
   }
 });
 
+// router.post("/get/roomCompData", async (req, res) => {
+//   console.log(req.body.roomName);
+//   try {
+//     roomschema.findOne(
+//       { roomName: req.body.roomName },
+//       async (err, resultRoom) => {
+//         console.log(resultRoom);
+//         if (err) {
+//           console.log("Error in get room");
+//           res.status(401).send("Cannot find");
+//         } else {
+//           if (resultRoom) {
+//             try {
+//               console.log(resultRoom.acId);
+//               acschema.find(
+//                 {
+//                   compId: {
+//                     $in: resultRoom.acId,
+//                   },
+//                 },
+//                 async (errac, resultAcList) => {
+//                   if (errac) {
+//                     console.log("Error in get room");
+//                     res.status(401).json({
+//                       error: "Cannot find",
+//                     });
+//                   } else {
+//                     try {
+//                       projectorschema.find(
+//                         {
+//                           compId: {
+//                             $in: resultRoom.projectorId,
+//                           },
+//                         },
+//                         async (errproj, resultProjList) => {
+//                           if (errproj) {
+//                             console.log("Error in get room");
+//                             res.status(401).json({
+//                               error: "Cannot find",
+//                             });
+//                           } else {
+//                             // const sendList = [
+//                             // resultAcList.concat(resultProjList);
+//                             console.log("bye", {
+//                               ac: resultAcList,
+//                               proj: resultProjList,
+//                             });
+//                             res.status(200).json({
+//                               ac: resultAcList,
+//                               proj: resultProjList,
+//                             });
+//                           }
+//                         }
+//                       );
+//                     } catch (error) {
+//                       console.log("Error in db");
+//                       res.status(401).json({
+//                         error: "Error in db",
+//                       });
+//                     }
+//                   }
+//                 }
+//               );
+//             } catch (error) {
+//               console.log("Error in db");
+//               res.status(401).json({
+//                 error: "Error in db",
+//               });
+//             }
+//           } else {
+//             console.log("No room", resultRoom);
+//             res.status(401).json({
+//               error: "No room",
+//             });
+//           }
+//           // console.log("send room data", resultRoom);
+//           // res.status(200).json(resultRoom);
+//         }
+//       }
+//     );
+//   } catch (error) {
+//     console.log("Error in DB");
+//     res.status(401).send("Error in DB");
+//   }
+// });
 router.post("/get/roomCompData", async (req, res) => {
   console.log(req.body.roomName);
   try {
@@ -159,10 +245,10 @@ router.post("/get/roomCompData", async (req, res) => {
                     });
                   } else {
                     try {
-                      acschema.find(
+                      projectorschema.find(
                         {
                           compId: {
-                            $in: resultRoom.acId,
+                            $in: resultRoom.projectorId,
                           },
                         },
                         async (errproj, resultProjList) => {
@@ -220,7 +306,10 @@ router.post("/get/roomCompData", async (req, res) => {
 router.post("/update/room", async (req, res) => {
   //deviceValidation
   try {
-    console.log(req.body.category);
+    console.log(req.body.roomName);
+    console.log(req.body.acId);
+    console.log(req.body.projectorId);
+    console.log(req.body.roomName);
     if (
       req.body.category.toLowerCase() === "ac" ||
       req.body.category.toLowerCase() === "projecter"
@@ -238,6 +327,34 @@ router.post("/update/room", async (req, res) => {
           const acsaved = await ac.save();
           console.log("saved ac to the db...");
           // res.send(acsaved._id);
+          try {
+            roomschema.updateOne(
+              { roomName: req.body.roomName },
+              {
+                $push: {
+                  acId: req.body.roomName + "_" + req.body.compId,
+                },
+              },
+              (err, updteResult) => {
+                if (err) {
+                  console.log("update room faild...", err);
+                  res.status(400).json({
+                    error: "updateRoom error",
+                  });
+                } else {
+                  console.log("update room seccess...", updteResult);
+                  res.status(200).json({
+                    msg: "seccess",
+                  });
+                }
+              }
+            );
+          } catch (error) {
+            console.log("update room faild...", error);
+            res.status(400).json({
+              error: "updateRoom error",
+            });
+          }
         } catch (error) {
           console.log("Saving faild...", error);
           res.send({
@@ -245,17 +362,45 @@ router.post("/update/room", async (req, res) => {
           });
         }
       } else {
-        compType = "projectorId";
+        // compType = "projectorId";
         const projector = new projectorschema({
           roomName: req.body.roomName,
           brand: req.body.brand,
           model: req.body.model,
-          compId: req.body.roomName + req.body.compId,
+          compId: req.body.roomName + "_" + req.body.compId,
         });
 
         try {
           const projectorsaved = await projector.save();
           console.log("saved projector to the db...");
+          try {
+            roomschema.updateOne(
+              { roomName: req.body.roomName },
+              {
+                $push: {
+                  projectorId: req.body.roomName + "_" + req.body.compId,
+                },
+              },
+              (err, updteResult) => {
+                if (err) {
+                  console.log("update room faild...", err);
+                  res.status(400).json({
+                    error: "updateRoom error",
+                  });
+                } else {
+                  console.log("update room seccess...", updteResult);
+                  res.status(200).json({
+                    msg: "seccess",
+                  });
+                }
+              }
+            );
+          } catch (error) {
+            console.log("update room faild...", error);
+            res.status(400).json({
+              error: "updateRoom error",
+            });
+          }
           // res.send(projectorsaved._id);
         } catch (error) {
           console.log("Saving faild...", error);
@@ -264,34 +409,6 @@ router.post("/update/room", async (req, res) => {
           });
         }
       }
-      try {
-        roomschema.updateOne(
-          { roomName: req.body.roomName },
-          {
-            $push: {
-              compType: req.body.roomName + "_" + req.body.compId,
-            },
-          },
-          (err, updteResult) => {
-            if (err) {
-              console.log("update room faild...", err);
-              res.status(400).json({
-                error: "updateRoom error",
-              });
-            } else {
-              console.log("update room seccess...", updteResult);
-              res.status(200).json({
-                msg: "seccess",
-              });
-            }
-          }
-        );
-      } catch (error) {
-        console.log("update room faild...", error);
-        res.status(400).json({
-          error: "updateRoom error",
-        });
-      }
     } else {
       console.log("cannot add category...");
       res.status(400).json({
@@ -299,14 +416,110 @@ router.post("/update/room", async (req, res) => {
       });
     }
   } catch (error) {
-    console.log("Failed server...");
+    console.log("Failed server...", error);
     res.status(400).json({
       error: "Failed server",
     });
   }
 });
 
-router.post("/add/calendarapi", authAdmin, schedulCalendarApiValidation, async (req, res) => {
+// router.post("/update/room", async (req, res) => {
+//   //deviceValidation
+//   try {
+//     console.log(req.body.category);
+//     console.log(req.body.compId);
+//     if (
+//       req.body.category.toLowerCase() === "ac" ||
+//       req.body.category.toLowerCase() === "projecter"
+//     ) {
+//       var compType = "acId";
+//       if (req.body.category.toLowerCase() === "ac") {
+//         const ac = new acschema({
+//           roomName: req.body.roomName,
+//           brand: req.body.brand,
+//           model: req.body.model,
+//           compId: req.body.roomName + "_" + req.body.compId,
+//         });
+
+//         try {
+//           const acsaved = await ac.save();
+//           console.log("saved ac to the db...");
+//           // res.send(acsaved._id);
+//         } catch (error) {
+//           console.log("Saving faild...", error);
+//           res.send({
+//             error: "Saving error",
+//           });
+//         }
+//       } else {
+//         compType = "projectorId";
+//         const projector = new projectorschema({
+//           roomName: req.body.roomName,
+//           brand: req.body.brand,
+//           model: req.body.model,
+//           compId: req.body.roomName + "_" + req.body.compId,
+//         });
+
+//         try {
+//           const projectorsaved = await projector.save();
+//           console.log("saved projector to the db...");
+//           // res.send(projectorsaved._id);
+//         } catch (error) {
+//           console.log("Saving faild...", error);
+//           res.status(400).json({
+//             error: "Saving error",
+//           });
+//         }
+//       }
+//       try {
+//         roomschema.updateOne(
+//           { roomName: req.body.roomName },
+//           {
+//             $push: {
+//               compType: req.body.roomName + "_" + req.body.compId,
+//             },
+//           },
+//           (err, updteResult) => {
+//             if (err) {
+//               console.log("update room faild...", err);
+//               res.status(400).json({
+//                 error: "updateRoom error",
+//               });
+//             } else {
+//               console.log("update room seccess...", updteResult);
+//               res.status(200).json({
+//                 msg: "seccess",
+//               });
+//             }
+//           }
+//         );
+//       } catch (error) {
+//         console.log("update room faild...", error);
+//         res.status(400).json({
+//           error: "updateRoom error",
+//         });
+//       }
+//     } else {
+//       console.log("cannot add category...");
+//       res.status(400).json({
+//         error: "cannot add category",
+//       });
+//     }
+//   } catch (error) {
+//     console.log("Failed server...");
+//     console.log(error);
+//     console.log("Failed server...");
+//     res.status(400).json({
+//       error: "Failed server",
+//     });
+//   }
+// });
+
+router.post(
+  "/add/calendarapi",
+  authAdmin,
+  schedulCalendarApiValidation,
+  async (req, res) => {
     try {
       scheduleschema.findById(req.body.id, async (err, result) => {
         if (err) {
@@ -398,9 +611,16 @@ router.delete("/delete/schedule/:id", async (req, res) => {
           });
         } else {
           if (result) {
-            const mqttData = result._id;
-            const mqttTopic = result.roomName + '/' + 'delete';
-            sendMqttNew({data: mqttData, topic: mqttTopic});
+            try {
+              const mqttData = result._id.toJSON(); //JSON(result._id)
+              const mqttTopic = result.roomName + "/" + "delete";
+              sendMqttNew({ data: mqttData, topic: mqttTopic });
+            } catch (error) {
+              console.log("mqttfail");
+              console.log(error);
+              console.log("mqttfail");
+            }
+
             try {
               const { err, resultCalApi } = await deleteEvent({
                 eventId: req.params.id,
@@ -412,7 +632,6 @@ router.delete("/delete/schedule/:id", async (req, res) => {
                 });
                 return;
               } else {
-                
                 if (resultCalApi) {
                   console.log("deleted", resultCalApi);
                   res.status(200).json({
@@ -439,6 +658,8 @@ router.delete("/delete/schedule/:id", async (req, res) => {
         }
       } catch (error) {
         console.log("Failed.");
+        console.log(error);
+        console.log("Failed.");
         res.status(400).json({
           Error: "failed" + error,
         });
@@ -454,9 +675,8 @@ router.delete("/delete/schedule/:id", async (req, res) => {
 
 router.post("/rooms/status", async (req, res) => {
   try {
-    const startT = new Date(
-      new Date(req.body.date + "T" + req.body.startTime).toISOString()
-    );
+    const startT = new Date();
+
     const endT = new Date(
       new Date(startT.getTime() + 10 * 60000).toISOString()
     );
@@ -932,9 +1152,16 @@ router.post("/add/schedule", scheduleValidation, async (req, res) => {
                   Error: "saving feild. try again",
                 });
               } else {
-                const mqttData = result;
-                const mqttTopic = result.roomName + '/' + 'add';
-                sendMqttNew({data: mqttData, topic: mqttTopic});
+                try {
+                  const mqttData = result.toJSON();
+                  const mqttTopic = result.roomName + "/" + "add";
+                  sendMqttNew({ data: mqttData, topic: mqttTopic });
+                } catch (error) {
+                  console.log("mqtt error");
+                  console.log(error);
+                  console.log("mqtt error");
+                }
+
                 // const startT = ;
                 // const endT = ;
                 const eventBody = {
@@ -1027,12 +1254,19 @@ router.post("/add/room", roomValidation, async (req, res) => {
         if (data) {
           res.send("Already exist...");
         } else {
-          sendMqttinit(req.body.roomName);
+          try {
+            sendMqttinit(req.body.roomName);
+          } catch (error) {
+            console.log("mqtt fail");
+            console.log(error);
+            console.log("mqtt fail");
+          }
+
           const room = new roomschema({
             roomName: req.body.roomName,
             controlUnitId: req.body.controlUnitId,
-            acId: req.body.acId,
-            projectorId: req.body.projectorId,
+            acId: [],
+            projectorId: [],
           });
 
           try {

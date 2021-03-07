@@ -8,6 +8,8 @@ function AddRoom() {
     category: "",
     roomName: "",
     controlUnitId: "",
+    acId: [],
+    projectorId: [],
   });
   const [wrongstate, setWrongState] = useState(false);
   const [alertstate, setAlertState] = useState(false);
@@ -25,6 +27,7 @@ function AddRoom() {
   const handleSubmit = (e) => {
     console.log(roomInsert.controlUnitId);
     e.preventDefault();
+
     axios
       // .post("/api/room/", roomInsert)
       .post("/main/add/room/", roomInsert)
