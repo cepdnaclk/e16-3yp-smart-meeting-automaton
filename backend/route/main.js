@@ -66,44 +66,6 @@ const {
 const { date } = require("@hapi/joi");
 const lecRoom = require("../modules/lecRoom.model");
 
-// //get user details   // add auth middlware *****
-// router.get("/getuser",  async (req, res) => {
-//   try {
-//     const user = await userSchema.findById(req.user.id).select("-password");
-//     res.json({ ...user, workerId: user.userId });
-//     //res.status(200).json({ data: user });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).send("Server Error");
-//   }
-// });
-
-// router.post('/adduser/list', authAdmin);
-
-// router.get('/requests', authAdmin, async(req, res)=>{
-//     requestSchema.find({}, (err, data) => {
-//         if(err)
-//         {
-//             console.log('Error in get room')
-//             req.status(401).send('Cannot find');
-
-//         }
-//         else{
-//             if(data){
-//                 // console.log(data);
-//                 res.status(200).json({
-//                     arry: data
-//                 });
-//             }
-//             else{
-//                 res.status(400).json({
-//                     'Error': 'No request'
-//                 });
-//             }
-//         }
-//     });
-
-// });
 //authAdmin, verifyAdmin,
 router.post("/adduser", newUserValidation, async (req, res) => {
   try {
@@ -149,99 +111,6 @@ router.post("/adduser", newUserValidation, async (req, res) => {
     });
   }
 });
-
-// router.post('/adduser', authAdmin, (req, res)=>{
-//     // requestSchema.findOne({_id: req.params.id}, async(err, data)=>{
-//     requestSchema.findOneAndDelete({_id: req.params.id}, async(err, data)=>{
-//         if(err){
-//             res.status(400).json({
-//                 'Error': 'Try again'
-//             });
-//         }else{
-//             if(data){
-//                 const userNew = new userSchema({
-//                     username: data.username,
-//                     password: data.password,
-//                     email: data.email
-//                 });
-//                 try{
-//                     const usersaved = await userNew.save();
-//                     console.log('saved user to the db...');
-//                     const payload = {
-//                         user: {
-//                           id: usersaved._id
-//                         }
-//                     };
-//                     // const verifUrl = jwt.sign(usersaved._id, process.env.LOGIN_VARIFICATION_TOKEN, {expiresIn: '10m'});
-//                     const verifUrlToken = jwt.sign(payload, process.env.LOGIN_VARIFICATION_TOKEN, {expiresIn: '10m'});
-//                     const verifUrl = `http://localhost:3000/user/verify/${verifUrlToken}`;
-//                     console.log(verifUrl);
-//                     // sendMailVerification(whom=usersaved.email, url=verifUrl).then((data) => {
-//                     sendMailVerification(usersaved.email, verifUrl).then((data) => {
-//                         res.status(200).json({
-//                             'message': 'User added success'
-//                         });
-//                     }).catch((err)=>{
-//                         console.log(err);
-//                         res.status(400).json({
-//                             'Error': err
-//                         });
-//                     });
-
-//                 }catch(error)
-//                 {
-//                     console.log('Saving faild...', error);
-//                     res.status(400).json({
-//                         'error': 'Saving error'
-//                     });
-
-//                 }
-
-//             }else{
-//                 res.status(400).json({
-//                     'Error': 'No such request'
-//                 });
-//             }
-//         }
-//     });
-// });
-
-// router.post('/adduser/hh', authAdmin, userValidation, async(req, res) => {
-
-//     userSchema.findOne({email: req.body.email}, async (err, data)=>{
-//         if(err) res.status('400').send('Try again');
-//         else{
-
-//             if(data) res.status('400').send('email already exist');
-//             else{
-//                 const salt = await bcryptjs.genSalt(10);
-//                 const hashPassword = await bcryptjs.hash(req.body.password, salt);
-//                 console.log(salt);
-//                 console.log(hashPassword);
-//                 const user = new userSchema({
-//                     username: req.body.username,
-//                     password: hashPassword,
-//                     email: req.body.email
-//                 });
-
-//                 try{
-//                     const userloged = await user.save();
-//                     console.log('saved user to the db...');
-//                     res.send(userloged);
-//                 }catch(error)
-//                 {
-//                     console.log('Saving faild...', error);
-//                     res.send({
-//                         'error': 'Saving error'
-//                     });
-
-//                 }
-//             }
-
-//         }
-//     });
-
-// });
 
 router.get("/table", async (req, res) => {
   //authAdmin,
@@ -355,6 +224,7 @@ router.post("/update/room", async (req, res) => {
       req.body.category.toLowerCase() === "ac" ||
       req.body.category.toLowerCase() === "projecter"
     ) {
+      const compType = "acId";
       if (req.body.category.toLowerCase() === "ac") {
         const ac = new acschema({
           roomName: req.body.roomName,
@@ -365,8 +235,8 @@ router.post("/update/room", async (req, res) => {
 
         try {
           const acsaved = await ac.save();
-          console.log("saved user to the db...");
-          res.send(acsaved._id);
+          console.log("saved ac to the db...");
+          // res.send(acsaved._id);
         } catch (error) {
           console.log("Saving faild...", error);
           res.send({
@@ -374,6 +244,7 @@ router.post("/update/room", async (req, res) => {
           });
         }
       } else {
+        compType = "projectorId";
         const projector = new projectorschema({
           roomName: req.body.roomName,
           brand: req.body.brand,
@@ -383,8 +254,8 @@ router.post("/update/room", async (req, res) => {
 
         try {
           const projectorsaved = await projector.save();
-          console.log("saved user to the db...");
-          res.send(projectorsaved._id);
+          console.log("saved projector to the db...");
+          // res.send(projectorsaved._id);
         } catch (error) {
           console.log("Saving faild...", error);
           res.status(400).json({
@@ -397,7 +268,7 @@ router.post("/update/room", async (req, res) => {
           { roomName: req.body.roomName },
           {
             $push: {
-              acId: req.body.roomName + "_" + req.body.compId,
+              compType: req.body.roomName + "_" + req.body.compId,
             },
           },
           (err, updteResult) => {
@@ -434,51 +305,7 @@ router.post("/update/room", async (req, res) => {
   }
 });
 
-// //verifyAdmin,
-// router.post("/add/ac", authAdmin, acValidation, async (req, res) => {
-//   const ac = new acschema({
-//     controlUnitId: req.body.controlUnitId,
-//   });
-
-//   try {
-//     const acsaved = await ac.save();
-//     console.log("saved user to the db...");
-//     res.send(acsaved._id);
-//   } catch (error) {
-//     console.log("Saving faild...", error);
-//     res.send({
-//       error: "Saving error",
-//     });
-//   }
-// });
-
-// router.post(
-//   "/add/projector",
-//   authAdmin,
-//   projectorValidation,
-//   async (req, res) => {
-//     const projector = new projectorschema({
-//       controlUnitId: req.body.controlUnitId,
-//     });
-
-//     try {
-//       const projectorSaved = await projector.save();
-//       console.log("saved user to the db...");
-//       res.send(projectorSaved._id);
-//     } catch (error) {
-//       console.log("Saving faild...", error);
-//       res.send({
-//         error: "Saving error",
-//       });
-//     }
-//   }
-// );
-
-router.post(
-  "/add/calendarapi",
-  authAdmin,
-  schedulCalendarApiValidation,
-  async (req, res) => {
+router.post("/add/calendarapi", authAdmin, schedulCalendarApiValidation, async (req, res) => {
     try {
       scheduleschema.findById(req.body.id, async (err, result) => {
         if (err) {
@@ -557,87 +384,6 @@ router.post(
     }
   }
 );
-// //authAdmin,
-// router.post("/edit/schedule", async (req, res) => {
-//   try {
-//     scheduleschema.findByIdAndUpdate(
-//       req.body._id,
-//       req.body,
-//       async (err, result) => {
-//         try {
-//           if (err) {
-//             res.status(400).json({
-//               Error: "Try again",
-//             });
-//           } else {
-//             if (result) {
-//               const eventBody = {
-//                 // id: result._id,
-//                 summary: "Lecture",
-//                 location: "University of peradeniya, sri lanka",
-//                 description:
-//                   req.body.subject +
-//                   "Lecture in " +
-//                   req.body.roomName +
-//                   " conduct by " +
-//                   req.body.userName,
-//                 start: {
-//                   dateTime: new Date(req.body.startTime).toISOString(),
-//                   // timeZone: 'Sri Lanka/Sri Jayawardenepura Kotte',
-//                 },
-//                 end: {
-//                   dateTime: new Date(req.body.endTime).toISOString(),
-//                   // timeZone: 'UTC/GMT',
-//                 },
-//                 reminders: {
-//                   useDefault: false,
-//                   overrides: [
-//                     { method: "email", minutes: 30 * 60 },
-//                     { method: "popup", minutes: 15 },
-//                   ],
-//                 },
-//               };
-
-//               const { err, resultCalApi } = await editEvent({
-//                 eventData: eventBody,
-//                 eventId: result._id,
-//               });
-//               if (err) {
-//                 console.log(
-//                   "There was an error contacting the Calendar service: " + err
-//                 );
-//                 res.status(400).json({
-//                   Error: "Inserted to database but calendar api error",
-//                   apiError: err,
-//                   // 'id': result._id
-//                 });
-//               } else {
-//                 console.log("Successfully edited: ", resultCalApi);
-//                 res.status(200).json({
-//                   Data: resultCalApi.data,
-//                 });
-//               }
-//             } else {
-//               res.status(400).json({
-//                 Error: "No such schedule",
-//               });
-//             }
-//           }
-//         } catch (error) {
-//           console.log("Failed. ", error);
-//           res.status(400).json({
-//             Error: "failed " + error,
-//           });
-//         }
-//       }
-//     );
-//   } catch (error) {
-//     console.log("Failed. Database conct failed");
-//     res.status(400).json({
-//       Error: " Database conct failed",
-//     });
-//   }
-// });
 
 router.delete("/delete/schedule/:id", async (req, res) => {
   //authAdmin
@@ -1282,7 +1028,7 @@ router.post("/add/room", roomValidation, async (req, res) => {
 
           try {
             const roomsaved = await room.save();
-            console.log("saved user to the db...");
+            console.log("saved room to the db...");
             res.send(roomsaved);
           } catch (error) {
             console.log("Saving faild...", error);
@@ -1375,5 +1121,258 @@ router.use((req, res) => {
   res.status(404).send("404");
   console.log("4040");
 });
+
+// //get user details   // add auth middlware *****
+// router.get("/getuser",  async (req, res) => {
+//   try {
+//     const user = await userSchema.findById(req.user.id).select("-password");
+//     res.json({ ...user, workerId: user.userId });
+//     //res.status(200).json({ data: user });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).send("Server Error");
+//   }
+// });
+
+// router.post('/adduser/list', authAdmin);
+
+// router.get('/requests', authAdmin, async(req, res)=>{
+//     requestSchema.find({}, (err, data) => {
+//         if(err)
+//         {
+//             console.log('Error in get room')
+//             req.status(401).send('Cannot find');
+
+//         }
+//         else{
+//             if(data){
+//                 // console.log(data);
+//                 res.status(200).json({
+//                     arry: data
+//                 });
+//             }
+//             else{
+//                 res.status(400).json({
+//                     'Error': 'No request'
+//                 });
+//             }
+//         }
+//     });
+
+// });
+
+// router.post('/adduser', authAdmin, (req, res)=>{
+//     // requestSchema.findOne({_id: req.params.id}, async(err, data)=>{
+//     requestSchema.findOneAndDelete({_id: req.params.id}, async(err, data)=>{
+//         if(err){
+//             res.status(400).json({
+//                 'Error': 'Try again'
+//             });
+//         }else{
+//             if(data){
+//                 const userNew = new userSchema({
+//                     username: data.username,
+//                     password: data.password,
+//                     email: data.email
+//                 });
+//                 try{
+//                     const usersaved = await userNew.save();
+//                     console.log('saved user to the db...');
+//                     const payload = {
+//                         user: {
+//                           id: usersaved._id
+//                         }
+//                     };
+//                     // const verifUrl = jwt.sign(usersaved._id, process.env.LOGIN_VARIFICATION_TOKEN, {expiresIn: '10m'});
+//                     const verifUrlToken = jwt.sign(payload, process.env.LOGIN_VARIFICATION_TOKEN, {expiresIn: '10m'});
+//                     const verifUrl = `http://localhost:3000/user/verify/${verifUrlToken}`;
+//                     console.log(verifUrl);
+//                     // sendMailVerification(whom=usersaved.email, url=verifUrl).then((data) => {
+//                     sendMailVerification(usersaved.email, verifUrl).then((data) => {
+//                         res.status(200).json({
+//                             'message': 'User added success'
+//                         });
+//                     }).catch((err)=>{
+//                         console.log(err);
+//                         res.status(400).json({
+//                             'Error': err
+//                         });
+//                     });
+
+//                 }catch(error)
+//                 {
+//                     console.log('Saving faild...', error);
+//                     res.status(400).json({
+//                         'error': 'Saving error'
+//                     });
+
+//                 }
+
+//             }else{
+//                 res.status(400).json({
+//                     'Error': 'No such request'
+//                 });
+//             }
+//         }
+//     });
+// });
+
+// router.post('/adduser/hh', authAdmin, userValidation, async(req, res) => {
+
+//     userSchema.findOne({email: req.body.email}, async (err, data)=>{
+//         if(err) res.status('400').send('Try again');
+//         else{
+
+//             if(data) res.status('400').send('email already exist');
+//             else{
+//                 const salt = await bcryptjs.genSalt(10);
+//                 const hashPassword = await bcryptjs.hash(req.body.password, salt);
+//                 console.log(salt);
+//                 console.log(hashPassword);
+//                 const user = new userSchema({
+//                     username: req.body.username,
+//                     password: hashPassword,
+//                     email: req.body.email
+//                 });
+
+//                 try{
+//                     const userloged = await user.save();
+//                     console.log('saved user to the db...');
+//                     res.send(userloged);
+//                 }catch(error)
+//                 {
+//                     console.log('Saving faild...', error);
+//                     res.send({
+//                         'error': 'Saving error'
+//                     });
+
+//                 }
+//             }
+
+//         }
+//     });
+
+// });
+// //verifyAdmin,
+// router.post("/add/ac", authAdmin, acValidation, async (req, res) => {
+//   const ac = new acschema({
+//     controlUnitId: req.body.controlUnitId,
+//   });
+
+//   try {
+//     const acsaved = await ac.save();
+//     console.log("saved user to the db...");
+//     res.send(acsaved._id);
+//   } catch (error) {
+//     console.log("Saving faild...", error);
+//     res.send({
+//       error: "Saving error",
+//     });
+//   }
+// });
+
+// router.post(
+//   "/add/projector",
+//   authAdmin,
+//   projectorValidation,
+//   async (req, res) => {
+//     const projector = new projectorschema({
+//       controlUnitId: req.body.controlUnitId,
+//     });
+
+//     try {
+//       const projectorSaved = await projector.save();
+//       console.log("saved user to the db...");
+//       res.send(projectorSaved._id);
+//     } catch (error) {
+//       console.log("Saving faild...", error);
+//       res.send({
+//         error: "Saving error",
+//       });
+//     }
+//   }
+// );
+
+// //authAdmin,
+// router.post("/edit/schedule", async (req, res) => {
+//   try {
+//     scheduleschema.findByIdAndUpdate(
+//       req.body._id,
+//       req.body,
+//       async (err, result) => {
+//         try {
+//           if (err) {
+//             res.status(400).json({
+//               Error: "Try again",
+//             });
+//           } else {
+//             if (result) {
+//               const eventBody = {
+//                 // id: result._id,
+//                 summary: "Lecture",
+//                 location: "University of peradeniya, sri lanka",
+//                 description:
+//                   req.body.subject +
+//                   "Lecture in " +
+//                   req.body.roomName +
+//                   " conduct by " +
+//                   req.body.userName,
+//                 start: {
+//                   dateTime: new Date(req.body.startTime).toISOString(),
+//                   // timeZone: 'Sri Lanka/Sri Jayawardenepura Kotte',
+//                 },
+//                 end: {
+//                   dateTime: new Date(req.body.endTime).toISOString(),
+//                   // timeZone: 'UTC/GMT',
+//                 },
+//                 reminders: {
+//                   useDefault: false,
+//                   overrides: [
+//                     { method: "email", minutes: 30 * 60 },
+//                     { method: "popup", minutes: 15 },
+//                   ],
+//                 },
+//               };
+
+//               const { err, resultCalApi } = await editEvent({
+//                 eventData: eventBody,
+//                 eventId: result._id,
+//               });
+//               if (err) {
+//                 console.log(
+//                   "There was an error contacting the Calendar service: " + err
+//                 );
+//                 res.status(400).json({
+//                   Error: "Inserted to database but calendar api error",
+//                   apiError: err,
+//                   // 'id': result._id
+//                 });
+//               } else {
+//                 console.log("Successfully edited: ", resultCalApi);
+//                 res.status(200).json({
+//                   Data: resultCalApi.data,
+//                 });
+//               }
+//             } else {
+//               res.status(400).json({
+//                 Error: "No such schedule",
+//               });
+//             }
+//           }
+//         } catch (error) {
+//           console.log("Failed. ", error);
+//           res.status(400).json({
+//             Error: "failed " + error,
+//           });
+//         }
+//       }
+//     );
+//   } catch (error) {
+//     console.log("Failed. Database conct failed");
+//     res.status(400).json({
+//       Error: " Database conct failed",
+//     });
+//   }
+// });
 
 module.exports = router;
