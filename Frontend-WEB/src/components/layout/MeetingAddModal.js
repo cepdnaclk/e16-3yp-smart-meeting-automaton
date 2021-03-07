@@ -165,7 +165,7 @@ export default function MeetingAddModal(props) {
             Cancel
           </Button>
           <Button onClick={handleClose} color="primary">
-            Add Device
+            Add Meeting
           </Button>
         </DialogActions>
       </Dialog>

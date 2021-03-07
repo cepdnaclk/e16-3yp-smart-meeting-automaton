@@ -2,34 +2,6 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import AuthContext from "../../../context/auth/authContext";
 
-const data = [
-  {
-    meetingId: "1",
-    subject: "CO222",
-    roomName: "Lecture Room 1",
-    date: "2021/03/05",
-    startTime: "08.00 AM",
-    endTime: "10.00 AM",
-  },
-
-  {
-    meetingId: "1",
-    subject: "CO225",
-    roomName: "Seminar Room 1",
-    date: "2021/03/10",
-    startTime: "11.00 AM",
-    endTime: "11.55 AM",
-  },
-  {
-    meetingId: "1",
-    subject: "EE385",
-    roomName: "Lecture Room 14",
-    date: "2021/04/12",
-    startTime: "02.00 PM",
-    endTime: "04.00 PM",
-  },
-];
-
 function UserMyMeetings() {
   const authContext = useContext(AuthContext);
   const { isAuthenticated, logout, user, isadmin } = authContext;
@@ -43,10 +15,65 @@ function UserMyMeetings() {
     axios
       .post("/main/get/schedule/user/all/", { userId: userr.userId })
       .then((responce) => {
-        const roomss = responce.data;
-        console.log("room array");
-        console.log(roomss);
-        setMeetings(roomss);
+        const myMeetings = responce.data;
+
+        //    console.log("room array");
+        console.log(myMeetings);
+        myMeetings.map((meeting) => {
+          if (meeting.startTime) {
+            // const dd = new Date(meeting.startTime);
+            // console.log(dd.getTime().toLocaleString());
+            const todate = meeting.startTime;
+            var invdate = new Date(
+              todate.toLocaleString("en-US", {
+                timeZone: "America/Toronto",
+              })
+            );
+            console.log("invdate");
+            console.log(invdate.toISOString().slice(0, 10));
+
+            // console.log(invdate.getHours());
+            // console.log(invdate.getMinutes());
+            var h = invdate.getHours();
+            h = h > 9 ? h : "0" + h;
+            var m = invdate.getMinutes();
+            m = m > 9 ? m : "0" + m;
+
+            //meeting.date = todate.slice(0, 10);
+            meeting.date = invdate.toISOString().slice(0, 10);
+            meeting.startTime = `${h}:${m}`;
+            // meeting.startTime = todate.slice(11, 16);
+          }
+          if (meeting.endTime) {
+            const toend = meeting.endTime;
+            var invdate = new Date(
+              toend.toLocaleString("en-US", {
+                timeZone: "America/Toronto",
+              })
+            );
+            console.log("invdate");
+            console.log(invdate.toISOString().slice(0, 10));
+
+            // console.log(invdate.getHours());
+            // console.log(invdate.getMinutes());
+            var h = invdate.getHours();
+            h = h > 9 ? h : "0" + h;
+            var m = invdate.getMinutes();
+            m = m > 9 ? m : "0" + m;
+
+            //meeting.date = todate.slice(0, 10);
+            // meeting.date = invdate.toISOString().slice(0, 10);
+            meeting.endTime = `${h}:${m}`;
+            // meeting.startTime = todate.slice(11, 16);
+          }
+          //  console.log();
+        });
+
+        const { startTime } = myMeetings;
+
+        console.log(startTime);
+
+        setMeetings(myMeetings);
       });
   };
   const cancelMeeting = (id) => {
@@ -102,7 +129,7 @@ function UserMyMeetings() {
   };
   useEffect(() => {
     getallmeetings({ userId: userId });
-  }, []);
+  }, [userId]);
   return (
     <>
       <div className="title-addDevice">

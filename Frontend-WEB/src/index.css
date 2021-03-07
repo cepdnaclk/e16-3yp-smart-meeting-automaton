@@ -167,6 +167,23 @@ p {
   cursor: pointer;
   transition: var(--transition);
 }
+.btn-red {
+  display: inline-block;
+  width: 100%;
+  background: #a32222;
+  color: var(--clr-white);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius);
+  border-color: transparent;
+  text-transform: capitalize;
+  font-size: 1rem;
+  letter-spacing: var(--spacing);
+  margin-top: 2rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
 .btn:hover {
   background: var(--clr-primary-1);
   color: var(--clr-primary-5);
@@ -571,10 +588,11 @@ p {
   background: var(--clr-white);
   display: flex;
   justify-content: space-between;
-  max-width: 800px;
+  max-width: 85%;
+  width: 85%;
   margin: 2rem auto;
   align-items: center;
-  padding: 1rem 2rem;
+  /* // padding: 1rem 2rem; */
   border-radius: var(--radius);
 }
 
@@ -587,6 +605,11 @@ p {
 
 .date-time-search input {
   margin: 0.4rem 0;
+  width: 100px;
+}
+#startd {
+  width: 155px;
+  font-size: medium;
 }
 .date-time-search button {
   display: inline-block;
@@ -812,22 +835,27 @@ p {
 
 .indent-1 {
   /* float: left; */
-  display: table;
+  display: flex;
   height: 100%;
   width: 100%;
 }
 .dateSorted-meetings-section {
-  display: table-cell;
-  text-align: center;
-  vertical-align: middle;
-  width: 65%;
+  /* padding-top: 5rem; */
+  display: block;
+  padding-left: 10px;
+  margin-left: 100px;
+
+  /* text-align: center; */
+  /* vertical-align: middle; */
+  width: 45%;
   padding: 1rem;
 }
 
 .admin-add-meeting-title {
+  padding-top: 3rem;
   background: none;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   max-width: 800px;
   margin: 2rem auto;
   align-items: center;
@@ -836,13 +864,18 @@ p {
 }
 
 .admin-add-meeting-date {
+  margin-left: 2rem;
+  padding-left: 90px;
   display: flex;
-  justify-content: center;
-  max-width: 800px;
+  justify-content: flex-start;
+  /* //max-width: 700px; */
   margin: 1rem auto;
   align-items: center;
 }
-
+.admin-add-meeting-date input {
+  margin-left: 10px;
+  width: 300px;
+}
 .button-admin-add-meeting-date-search {
   display: inline-block;
   background: hsl(205, 100%, 50%);
@@ -905,10 +938,18 @@ p {
   font-size: large;
 }
 .admin-add-reservation-section {
-  padding-left: 5rem;
+  background-color: #778af1;
+
+  padding-left: 4rem;
+  padding-right: 4rem;
+  padding-bottom: 2rem;
+  border-radius: 15px;
+  margin-left: 5rem;
+  margin-top: 5rem;
 }
 .admin-add-reservation {
-  padding-top: 10rem;
+  padding-top: 4rem;
+  padding-bottom: 1rem;
 }
 
 .lbl-admin-add-reservation {

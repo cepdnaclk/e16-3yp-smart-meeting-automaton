@@ -131,7 +131,7 @@ function AddRoom() {
           />
         </div>
 
-        <div className="form-group-btn">
+        <div className="form-group-btn-gen">
           <button type="button" className="form-btn-success" onClick={genNewid}>
             Generate
           </button>

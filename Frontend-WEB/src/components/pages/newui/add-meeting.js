@@ -105,7 +105,7 @@ const AddMeeting = () => {
 
           <input
             type="date"
-            id="start"
+            id="startd"
             name="date"
             min="2018-01-01"
             max="2022-12-31"

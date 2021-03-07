@@ -8,6 +8,7 @@
 //   KeyboardDatePicker,
 // } from "@material-ui/pickers";
 // //
+
 import React, { useState, useContext } from "react";
 import { lecRoomData } from "../data";
 import { useParams } from "react-router-dom";
@@ -63,10 +64,62 @@ const AdminAddMeeting = () => {
         roomName: params.roomName,
       })
       .then(function (response) {
-        console.log(response);
+        console.log(response.data);
+        const myMeetings = response.data;
 
+        //    console.log("room array");
+        console.log(myMeetings);
+        myMeetings.map((meeting) => {
+          if (meeting.startTime) {
+            // const dd = new Date(meeting.startTime);
+            // console.log(dd.getTime().toLocaleString());
+            const todate = meeting.startTime;
+            var invdate = new Date(
+              todate.toLocaleString("en-US", {
+                timeZone: "America/Toronto",
+              })
+            );
+            console.log("invdate");
+            console.log(invdate.toISOString().slice(0, 10));
+
+            // console.log(invdate.getHours());
+            // console.log(invdate.getMinutes());
+            var h = invdate.getHours();
+            h = h > 9 ? h : "0" + h;
+            var m = invdate.getMinutes();
+            m = m > 9 ? m : "0" + m;
+
+            //meeting.date = todate.slice(0, 10);
+            meeting.date = invdate.toISOString().slice(0, 10);
+            meeting.startTime = `${h}:${m}`;
+            // meeting.startTime = todate.slice(11, 16);
+          }
+          if (meeting.endTime) {
+            const toend = meeting.endTime;
+            var invdate = new Date(
+              toend.toLocaleString("en-US", {
+                timeZone: "America/Toronto",
+              })
+            );
+            console.log("invdate");
+            console.log(invdate.toISOString().slice(0, 10));
+
+            // console.log(invdate.getHours());
+            // console.log(invdate.getMinutes());
+            var h = invdate.getHours();
+            h = h > 9 ? h : "0" + h;
+            var m = invdate.getMinutes();
+            m = m > 9 ? m : "0" + m;
+
+            //meeting.date = todate.slice(0, 10);
+            // meeting.date = invdate.toISOString().slice(0, 10);
+            meeting.endTime = `${h}:${m}`;
+            // meeting.startTime = todate.slice(11, 16);
+          }
+          //  console.log();
+        });
         //  setRoomInsert({ name: "", category: "" });
-        setmeetings(response.data);
+        setmeetings(myMeetings);
         //    setAlertState(true);
         //setAlert("Shedule is Added", "success");
         // setTimeout(() => {
@@ -260,7 +313,7 @@ const AdminAddMeeting = () => {
               // disabled={true}
             />
           </div>
-          <button onClick={reservemeeting} className="btn">
+          <button onClick={reservemeeting} className="btn-red">
             ADD
           </button>
         </section>
