@@ -32,11 +32,12 @@ function AppRoutes() {
     <section>
       <Switch>
         <Route path="/" exact component={Home} />
-        <Route exact path="/register" exact component={Register} />
-        <Route exact path="/about" exact component={About} />
         <Route exact path="/login">
           {isAuthenticated ? <Redirect to="/Redirect" /> : <Login />}
         </Route>
+        <Route exact path="/register" exact component={Register} />
+        <Route exact path="/about" exact component={About} />
+
         {/* //============================== */}
 
         <Route exact path="/Redirect" exact component={Redirectcom} />

@@ -37,7 +37,7 @@ export default function AddDeviceModal(props) {
     setDevice({
       ...device,
       roomName: roomName2,
-      compId: nextcompId,
+      //  compId: nextcompId,
       roomId: _id,
       category: cato === "PR" ? "PROJECTER" : cato,
     });
@@ -47,6 +47,7 @@ export default function AddDeviceModal(props) {
   };
   const handleClose = () => {
     setOpen(false);
+    console.log(device);
     axios
       .post("/main/update/room/", device)
       .then(function (response) {
@@ -89,9 +90,11 @@ export default function AddDeviceModal(props) {
             chamath amarasinghe wishwa diwanga diwanga wishhwa batha
           </DialogContentText>
           <TextField
-            disabled={true}
+            onChange={ontype}
+            // disabled={true}
             value={compId}
             autoFocus
+            name="compId"
             margin="dense"
             id="name0"
             label="Component ID"
