@@ -44,6 +44,7 @@ router.post("/", async (req, res, next) => {
 
     if (exuser) return res.status(400).json({ msg: "User already exists." });
 
+    console.log("test");
     const newuser = new Newuser({
       userId,
       email,
@@ -54,10 +55,13 @@ router.post("/", async (req, res, next) => {
       phone,
       onetimeId,
     });
-    console.log("user added");
+    console.log("test2");
+
     await newuser.save();
+    console.log("test3");
     res.json({ msg: "User Added" });
   } catch (err) {
+    console.log(err);
     return res.status(500).json({ msg: err.message });
   }
 });

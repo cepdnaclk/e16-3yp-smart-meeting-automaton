@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
+import axios from "axios";
+import AuthContext from "../../../context/auth/authContext";
 
 const data = [
   {
@@ -28,26 +30,79 @@ const data = [
   },
 ];
 
-const renderTableData = () => {
-  return data.map((meeting, index) => {
-    const { meetingId, subject, roomName, date, startTime, endTime } = meeting;
-    return (
-      <tr key={meetingId}>
-        <td className="my-meetings-table-data">{subject}</td>
-
-        <td className="my-meetings-table-data">{startTime}</td>
-        <td className="my-meetings-table-data">{endTime}</td>
-        <td className="my-meetings-table-data">{date}</td>
-        <td className="my-meetings-table-data">{roomName}</td>
-        <td className="my-meetings-table-data">
-          <button className="btn-meeting-cancel">Cancel</button>
-        </td>
-      </tr>
-    );
-  });
-};
-
 function UserMyMeetings() {
+  const authContext = useContext(AuthContext);
+  const { isAuthenticated, logout, user, isadmin } = authContext;
+  const userId = user.userId;
+  console.log(user.userId);
+  const [meetings, setMeetings] = useState([]);
+
+  const getallmeetings = (userr) => {
+    console.log(userr.userId);
+    // axios.get("/main/roomall/").then((responce) => {
+    axios
+      .post("/main/get/schedule/user/all/", { userId: userr.userId })
+      .then((responce) => {
+        const roomss = responce.data;
+        console.log("room array");
+        console.log(roomss);
+        setMeetings(roomss);
+      });
+  };
+  const cancelMeeting = (id) => {
+    console.log(id.id);
+
+    axios
+      .delete(`/main/delete/schedule/${id.id}`)
+      .then(function (response) {
+        console.log("diwanga");
+        console.log(response.message);
+        console.log(response);
+        //  setRoomInsert({ name: "", category: "" });
+        //    setAlertState(true);
+        alert("Room is Added", "success");
+        // setTimeout(() => {
+        //   setAlertState(false);
+        // }, 3000);
+        // callBack();
+      })
+      .catch(function (error) {
+        //    setWrongState(true);
+        // setAlert("Room is Added", "success");
+        // setTimeout(() => {
+        //  setWrongState(false);
+        // }, 3000);
+        alert(error);
+      });
+  };
+  const renderTableData = () => {
+    return meetings.map((meeting, index) => {
+      const { _id, subject, roomName, date, startTime, endTime } = meeting;
+      return (
+        <tr key={index}>
+          <td className="my-meetings-table-data">{subject}</td>
+
+          <td className="my-meetings-table-data">{startTime}</td>
+          <td className="my-meetings-table-data">{endTime}</td>
+          <td className="my-meetings-table-data">{date}</td>
+          <td className="my-meetings-table-data">{roomName}</td>
+          <td className="my-meetings-table-data">
+            <button
+              onClick={() => {
+                cancelMeeting({ id: _id });
+              }}
+              className="btn-meeting-cancel"
+            >
+              Cancel
+            </button>
+          </td>
+        </tr>
+      );
+    });
+  };
+  useEffect(() => {
+    getallmeetings({ userId: userId });
+  }, []);
   return (
     <>
       <div className="title-addDevice">
