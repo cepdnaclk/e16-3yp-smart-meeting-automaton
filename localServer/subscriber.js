@@ -1,16 +1,38 @@
 const mqtt = require('mqtt');
+const jwt = require('jsonwebtoken');
 
-var topic_s="testtopic";
+function subscribeClient({roomName}) {
+	var topic_add = roomName + "/add";
+	var topic_delete = roomName + "/delete";
 
-const client = mqtt.connect("mqtt://localhost:9999",options);
-console.log("connected flag  "+client.connected);
-client.on("connect",function(){	
-    console.log("connected  "+client.connected);
-});
+	const options={
+		clientId: roomName,
+		clean: false
+		// username:"stev",
+		// password:"passwrd",
+	};
 
-client.subscribe(topic_s,{qos:2});
+	const client = mqtt.connect("mqtt://test.mosquitto.org",options);
+	// console.log("connected flag  "+client.connected);
+	client.on("connect",function(){	
+		console.log("connected  "+client.connected);
+		client.subscribe([topic_add, topic_delete], {qos:1});
+		console.log("sebscribed your events",roomName);
+		// client.subscribe(topic_s1,{qos:1});
+	});
 
-client.on('message',function(topic, message, packet){
-	console.log("message is "+ message);
-	console.log("topic is "+ topic);
-});
+	function decodemsg(token) {
+		const decoded = jwt.verify(token, '123');
+		return decoded;
+		
+	}
+
+	client.on('message',function(topic, message, packet){
+		// console.log("message  " + message);
+		console.log("message decoded " + decodemsg(message.toString()));
+		console.log("topic is " + topic);
+	});
+	
+}
+
+subscribeClient({roomName:'room0'});
