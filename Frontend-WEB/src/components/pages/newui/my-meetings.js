@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import AuthContext from "../../../context/auth/authContext";
-
+import AlertContext from "../../../context/alert/alertContext";
 function UserMyMeetings() {
+  const alertContext = useContext(AlertContext);
+  const { setAlert } = alertContext;
   const authContext = useContext(AuthContext);
   const { isAuthenticated, logout, user, isadmin } = authContext;
   const userId = user.userId;
   console.log(user.userId);
   const [meetings, setMeetings] = useState([]);
+  const [callback, setcallback] = useState(false);
 
   const getallmeetings = (userr) => {
     console.log(userr.userId);
@@ -87,7 +90,9 @@ function UserMyMeetings() {
         console.log(response);
         //  setRoomInsert({ name: "", category: "" });
         //    setAlertState(true);
-        alert("Room is Added", "success");
+        setAlert("Meeting is Deleted", "success");
+        setcallback(!callback);
+        // getallmeetings();
         // setTimeout(() => {
         //   setAlertState(false);
         // }, 3000);
@@ -127,9 +132,10 @@ function UserMyMeetings() {
       );
     });
   };
+
   useEffect(() => {
     getallmeetings({ userId: userId });
-  }, [userId]);
+  }, [userId, callback]);
   return (
     <>
       <div className="title-addDevice">
