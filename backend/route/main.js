@@ -63,8 +63,9 @@ const {
   deleteEvent,
   getEventListAll,
 } = require("../middleware/calendarApi");
-const { date } = require("@hapi/joi");
 const lecRoom = require("../modules/lecRoom.model");
+
+const {sendMqttNew, sendMqttinit} = require('../controlers/mqtt');
 
 //authAdmin, verifyAdmin,
 router.post("/adduser", newUserValidation, async (req, res) => {
@@ -397,6 +398,9 @@ router.delete("/delete/schedule/:id", async (req, res) => {
           });
         } else {
           if (result) {
+            const mqttData = result._id;
+            const mqttTopic = result.roomName + '/' + 'delete';
+            sendMqttNew({data: mqttData, topic: mqttTopic});
             try {
               const { err, resultCalApi } = await deleteEvent({
                 eventId: req.params.id,
@@ -408,8 +412,9 @@ router.delete("/delete/schedule/:id", async (req, res) => {
                 });
                 return;
               } else {
+                
                 if (resultCalApi) {
-                  console.log("delered");
+                  console.log("deleted", resultCalApi);
                   res.status(200).json({
                     message: "Successfully deleted",
                   });
@@ -927,6 +932,9 @@ router.post("/add/schedule", scheduleValidation, async (req, res) => {
                   Error: "saving feild. try again",
                 });
               } else {
+                const mqttData = result;
+                const mqttTopic = result.roomName + '/' + 'add';
+                sendMqttNew({data: mqttData, topic: mqttTopic});
                 // const startT = ;
                 // const endT = ;
                 const eventBody = {
@@ -1019,6 +1027,7 @@ router.post("/add/room", roomValidation, async (req, res) => {
         if (data) {
           res.send("Already exist...");
         } else {
+          sendMqttinit(req.body.roomName);
           const room = new roomschema({
             roomName: req.body.roomName,
             controlUnitId: req.body.controlUnitId,
@@ -1121,6 +1130,50 @@ router.use((req, res) => {
   res.status(404).send("404");
   console.log("4040");
 });
+
+// router.post("/mqtt/add", async(req, res)=>{
+//   // const dt = {
+//   //   d: 'h'
+//   // }
+//   // sendMqttNew({data:dt, topic: 'cli01/add'});
+//   // res.status(200).json({
+//   //   message: "User added success",
+//   // });
+//   const mqttData = req.body;
+//   const mqttTopic = req.body.roomName + '/' + 'add';
+//   sendMqttNew({data: mqttData, topic: mqttTopic});
+//   res.status(200).json({
+//     message: "success",
+//   });
+// });
+
+// router.post("/mqtt/deleted", async(req, res)=>{
+//   // const dt = {
+//   //   d: 'ht'
+//   // }
+//   // sendMqttNew({data:dt, topic: 'cli01/delete'});
+//   // res.status(200).json({
+//   //   message: "User added success",
+//   // });
+
+//   const mqttData = req.body.id;
+//   const mqttTopic = req.body.roomName + '/' + 'delete';
+//   sendMqttNew({data: mqttData, topic: mqttTopic});
+//   res.status(200).json({
+//     message: "success",
+//   });
+// });
+
+// router.post("/mqtt/new", async(req, res)=>{
+//   // const dt = {
+//   //   d: 'ht'
+//   // }
+//   // sendMqttNew({data:dt, topic: 'cli01/delete'});
+//   sendMqttinit({roomName: req.body.roomName});
+//   res.status(200).json({
+//     message: "User added success",
+//   });
+// });
 
 // //get user details   // add auth middlware *****
 // router.get("/getuser",  async (req, res) => {
