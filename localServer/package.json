@@ -1,7 +1,6 @@
 {
   "name": "localserver",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "nodemon localserver.js"
@@ -12,5 +11,6 @@
     "mosca": "^2.8.3",
     "mqtt": "^4.2.6",
     "nodemon": "^2.0.7"
-  }
+  },
+  "description": ""
 }

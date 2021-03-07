@@ -66,6 +66,11 @@ const {
 const { date } = require("@hapi/joi");
 const lecRoom = require("../modules/lecRoom.model");
 
+const {sendMqttNew} = require('../controlers/mqtt');
+
+router.get("/mqtt", async(req, res)=>{
+  sendMqttNew({data:'001', clientId: 'cli01'});
+});
 //authAdmin, verifyAdmin,
 router.post("/adduser", newUserValidation, async (req, res) => {
   try {
