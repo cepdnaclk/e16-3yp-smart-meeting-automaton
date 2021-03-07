@@ -19,7 +19,7 @@ const newuserSchema = new mongoose.Schema(
 
     phone: {
       type: String,
-      unique: true,
+      //  unique: true,
       min: 9,
       max: 10,
       // required: true,
@@ -35,7 +35,7 @@ const newuserSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
-      unique: true,
+      // unique: true,
       min: 5,
       max: 60,
     },

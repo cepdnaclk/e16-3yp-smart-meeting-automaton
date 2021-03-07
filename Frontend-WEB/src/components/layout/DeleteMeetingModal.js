@@ -9,13 +9,13 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import axios from "axios";
 import AlertContext from "../../context/alert/alertContext";
 
-export default function AddDeviceModal(props) {
+export default function DeleteMeetingModal(props) {
   const alertContext = useContext(AlertContext);
   const [open, setOpen] = React.useState(false);
   const { setAlert } = alertContext;
-  const { nextcompId, cato, _id, callBack, roomName2 } = props;
+  const { cato, _id, callBack } = props;
   console.log("i am in modal");
-  console.log(nextcompId);
+  ///console.log(nextcompId);
 
   const [device, setDevice] = useState({
     compId: "",
@@ -36,8 +36,8 @@ export default function AddDeviceModal(props) {
     setOpen(true);
     setDevice({
       ...device,
-      roomName: roomName2,
-      compId: nextcompId,
+      // roomName: roomName2,
+      // compId: nextcompId,
       roomId: _id,
       category: cato === "PR" ? "PROJECTER" : cato,
     });
@@ -48,7 +48,7 @@ export default function AddDeviceModal(props) {
   const handleClose = () => {
     setOpen(false);
     axios
-      .post("/main/update/room/", device)
+      .post("/main/add/", device)
       .then(function (response) {
         console.log(response);
         //  setRoomInsert({ name: "", category: "" });

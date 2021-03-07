@@ -22,13 +22,14 @@ const RoomsConfig = () => {
   //   password: "",
   // });
   const getDevices = async () => {
-    const res = await axios.get(`/main/room/${params._id}`, {
-      //  headers: { Authorization: token },
+    const res = await axios.post("/main/get/roomCompData/", {
+      roomName: params.roomName,
     });
+    console.log(res.data);
     setData({
-      data: [...res.data.ac, ...res.data.projector],
+      data: [...res.data.ac, ...res.data.proj],
       noofac: res.data.ac.length,
-      noofprojec: res.data.projector.length,
+      noofprojec: res.data.proj.length,
     });
     console.log(res.data);
     setLoadingData(false);
@@ -172,6 +173,7 @@ const RoomsConfig = () => {
           </select>
         </div>
         <AddDeviceModal
+          roomName2={params.roomName}
           callBack={callBackdev}
           cato={selectd}
           _id={params._id}

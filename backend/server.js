@@ -51,6 +51,92 @@ app.use(express.json());
 app.use("/api/auth", require("./route/auth"));
 app.use("/api/newuser", require("./route/newuser"));
 
+// app.post("/main/wishwa/", (req, res) => {
+//   console.log("post shedule");
+//   console.log(req.body.date);
+//   console.log(req.body.startTime);
+//   console.log(req.body.endTime);
+//   //   console.log(req.body);
+//   res.json([
+//     { id: 1, roomName: "Lecture Room 1" },
+//     { id: 2, roomName: "Seminar Room 2" },
+//     { id: 3, roomName: "Lecture 14" },
+//     { id: 4, roomName: "Lecture Room 4" },
+//   ]);
+//   //console.log(req.params._id);
+// });
+// app.post("/main/chamath/", (req, res) => {
+//   console.log("gg shedule");
+//   console.log(req.body.date);
+//   console.log(req.body.startTime);
+//   console.log(req.body.endTime);
+//   console.log(req.body.roomName);
+
+//   //   console.log(req.body);
+//   res.send("rfgg");
+//   //console.log(req.params._id);
+// });
+// app.post("/main/batha/", (req, res) => {
+//   console.log("awasana");
+//   console.log(req.body._id);
+//   // console.log(req.body.startTime);
+//   // console.log(req.body.endTime);
+//   // console.log(req.body.roomName);
+
+//   //   console.log(req.body);
+//   res.send("rfgg");
+//   //console.log(req.params._id);
+// });
+// app.post("/main/diwanga/", (req, res) => {
+//   console.log("gg shedule");
+//   console.log(req.body.userId);
+//   // console.log(req.body.startTime);
+//   // console.log(req.body.endTime);
+//   // console.log(req.body.roomName);
+
+//   //   console.log(req.body);
+//   res.json([
+//     {
+//       _id: 1,
+//       meetingId: "1",
+//       subject: "CO22233",
+//       roomName: "Lecture Room 1",
+//       date: "2021/03/05",
+//       startTime: "08.00 AM",
+//       endTime: "10.00 AM",
+//     },
+//     {
+//       _id: 2,
+//       meetingId: "1",
+//       subject: "CO333",
+//       roomName: "Lecture Room 11",
+//       date: "2021/03/05",
+//       startTime: "08.00 AM",
+//       endTime: "10.00 AM",
+//     },
+
+//     {
+//       _id: 3,
+//       meetingId: "1",
+//       subject: "CO2255555",
+//       roomName: "Seminar Room 1",
+//       date: "2021/03/10",
+//       startTime: "11.00 AM",
+//       endTime: "11.55 AM",
+//     },
+//     {
+//       _id: 4,
+//       meetingId: "1",
+//       subject: "EE385",
+//       roomName: "Lecture Room 14",
+//       date: "2021/04/12",
+//       startTime: "02.00 PM",
+//       endTime: "04.00 PM",
+//     },
+//   ]);
+//   //console.log(req.params._id);
+// });
+
 /////////////////////////////////////////////////
 
 // app.get("/main/room/:_id", (req, res) => {
@@ -90,7 +176,7 @@ app.use("/api/newuser", require("./route/newuser"));
 // });
 // app.post("/main/add/", (req, res) => {
 //   console.log("post room devices");
-//   console.log(req.body.roomId);
+//   console.log(req.body.roomName);
 //   res.send("diwanga");
 //   //console.log(req.params._id);
 // });
