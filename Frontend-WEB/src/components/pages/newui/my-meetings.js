@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import AuthContext from "../../../context/auth/authContext";
 
 const data = [
   {
@@ -30,23 +31,32 @@ const data = [
 ];
 
 function UserMyMeetings() {
+  const authContext = useContext(AuthContext);
+  const { isAuthenticated, logout, user, isadmin } = authContext;
+  const userId = user.userId;
+  console.log(user.userId);
   const [meetings, setMeetings] = useState([]);
 
-  const getallmeetings = () => {
+  const getallmeetings = (userr) => {
+    console.log(userr.userId);
     // axios.get("/main/roomall/").then((responce) => {
-    axios.get("/main/diwanga/").then((responce) => {
-      const roomss = responce.data;
-      console.log("room array");
-      console.log(roomss);
-      setMeetings(roomss);
-    });
+    axios
+      .post("/main/get/schedule/user/all/", { userId: userr.userId })
+      .then((responce) => {
+        const roomss = responce.data;
+        console.log("room array");
+        console.log(roomss);
+        setMeetings(roomss);
+      });
   };
   const cancelMeeting = (id) => {
     console.log(id.id);
 
     axios
-      .post("/main/batha/", { _id: id.id })
+      .delete(`/main/delete/schedule/${id.id}`)
       .then(function (response) {
+        console.log("diwanga");
+        console.log(response.message);
         console.log(response);
         //  setRoomInsert({ name: "", category: "" });
         //    setAlertState(true);
@@ -91,7 +101,7 @@ function UserMyMeetings() {
     });
   };
   useEffect(() => {
-    getallmeetings();
+    getallmeetings({ userId: userId });
   }, []);
   return (
     <>

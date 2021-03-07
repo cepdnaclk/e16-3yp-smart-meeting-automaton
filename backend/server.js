@@ -87,9 +87,9 @@ app.use("/api/newuser", require("./route/newuser"));
 //   res.send("rfgg");
 //   //console.log(req.params._id);
 // });
-// app.get("/main/diwanga/", (req, res) => {
+// app.post("/main/diwanga/", (req, res) => {
 //   console.log("gg shedule");
-//   // console.log(req.body.date);
+//   console.log(req.body.userId);
 //   // console.log(req.body.startTime);
 //   // console.log(req.body.endTime);
 //   // console.log(req.body.roomName);

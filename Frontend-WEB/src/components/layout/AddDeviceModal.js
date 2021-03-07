@@ -48,7 +48,7 @@ export default function AddDeviceModal(props) {
   const handleClose = () => {
     setOpen(false);
     axios
-      .post("/main/add/", device)
+      .post("/main/update/room/", device)
       .then(function (response) {
         console.log(response);
         //  setRoomInsert({ name: "", category: "" });

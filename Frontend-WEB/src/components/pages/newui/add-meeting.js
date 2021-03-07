@@ -33,12 +33,13 @@ const AddMeeting = () => {
     console.log(`xzczxczxczxczxcxz`);
     //  console.log(`GETMEETINGS ${searchDate}`);
     axios
-      .post("/main/wishwa/", {
+      .post("/main/free/rooms/custom", {
         date,
         startTime,
         endTime,
       }) //date yawanna
       .then(function (response) {
+        console.log("CHALI");
         console.log(response);
         setLecRooms(response.data);
 
@@ -69,7 +70,7 @@ const AddMeeting = () => {
     console.log(data);
 
     axios
-      .post("/main/free/rooms/custom", data)
+      .post("/main/add", data)
       .then(function (response) {
         console.log(response);
         //  setRoomInsert({ name: "", category: "" });

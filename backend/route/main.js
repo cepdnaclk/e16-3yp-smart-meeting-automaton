@@ -245,28 +245,124 @@ router.post("/adduser", newUserValidation, async (req, res) => {
 
 router.get("/table", async (req, res) => {
   //authAdmin,
-  roomschema.find({}, (err, data) => {
-    if (err) {
-      console.log("Error in get room");
-      res.status(401).send("Cannot find");
-    }
+  try {
+    roomschema.find({}, (err, data) => {
+      if (err) {
+        console.log("Error in get room");
+        res.status(401).send("Cannot find");
+      }
 
-    console.log("Send data");
-    res.send(data);
-  });
+      console.log("Send data");
+      res.send(data);
+    });
+  } catch (error) {
+    console.log("Error in get room", error);
+    res.status(401).send("Cannot find");
+  }
 });
 
-router.post('/update/room', deviceValidation, async(req, res)=>{
+router.post("/get/roomCompData", async (req, res) => {
+  console.log(req.body.roomName);
   try {
-    if((req.body.category.toLowerCase() === 'ac')||(req.body.category.toLowerCase() === 'projector')){
-      if(req.body.category.toLowerCase() === 'ac'){
+    roomschema.findOne(
+      { roomName: req.body.roomName },
+      async (err, resultRoom) => {
+        console.log(resultRoom);
+        if (err) {
+          console.log("Error in get room");
+          res.status(401).send("Cannot find");
+        } else {
+          if (resultRoom) {
+            try {
+              console.log(resultRoom.acId);
+              acschema.find(
+                {
+                  compId: {
+                    $in: resultRoom.acId,
+                  },
+                },
+                async (errac, resultAcList) => {
+                  if (errac) {
+                    console.log("Error in get room");
+                    res.status(401).json({
+                      error: "Cannot find",
+                    });
+                  } else {
+                    try {
+                      acschema.find(
+                        {
+                          compId: {
+                            $in: resultRoom.acId,
+                          },
+                        },
+                        async (errproj, resultProjList) => {
+                          if (errproj) {
+                            console.log("Error in get room");
+                            res.status(401).json({
+                              error: "Cannot find",
+                            });
+                          } else {
+                            // const sendList = [
+                            // resultAcList.concat(resultProjList);
+                            console.log("bye", {
+                              ac: resultAcList,
+                              proj: resultProjList,
+                            });
+                            res.status(200).json({
+                              ac: resultAcList,
+                              proj: resultProjList,
+                            });
+                          }
+                        }
+                      );
+                    } catch (error) {
+                      console.log("Error in db");
+                      res.status(401).json({
+                        error: "Error in db",
+                      });
+                    }
+                  }
+                }
+              );
+            } catch (error) {
+              console.log("Error in db");
+              res.status(401).json({
+                error: "Error in db",
+              });
+            }
+          } else {
+            console.log("No room", resultRoom);
+            res.status(401).json({
+              error: "No room",
+            });
+          }
+          // console.log("send room data", resultRoom);
+          // res.status(200).json(resultRoom);
+        }
+      }
+    );
+  } catch (error) {
+    console.log("Error in DB");
+    res.status(401).send("Error in DB");
+  }
+});
+
+router.post("/update/room", async (req, res) => {
+  //deviceValidation
+  try {
+    console.log(req.body.category);
+    if (
+      req.body.category.toLowerCase() === "ac" ||
+      req.body.category.toLowerCase() === "projecter"
+    ) {
+      if (req.body.category.toLowerCase() === "ac") {
         const ac = new acschema({
           roomName: req.body.roomName,
           brand: req.body.brand,
-          model: req.body.model
-    
+          model: req.body.model,
+          compId: req.body.roomName + "_" + req.body.compId,
         });
-    
+
         try {
           const acsaved = await ac.save();
           console.log("saved user to the db...");
@@ -277,15 +373,14 @@ router.post('/update/room', deviceValidation, async(req, res)=>{
             error: "Saving error",
           });
         }
-      }
-      else{
+      } else {
         const projector = new projectorschema({
           roomName: req.body.roomName,
           brand: req.body.brand,
-          model: req.body.model
-    
+          model: req.body.model,
+          compId: req.body.roomName + req.body.compId,
         });
-    
+
         try {
           const projectorsaved = await projector.save();
           console.log("saved user to the db...");
@@ -298,40 +393,45 @@ router.post('/update/room', deviceValidation, async(req, res)=>{
         }
       }
       try {
-        roomschema.updateOne({roomName : req.body.roomName}, { $push: { acId: req.body.compId}}, (err, updteResult)=>{
-          if(err){
-            console.log("update room faild...", error);
-            res.status(400).json({
-              error: "updateRoom error",
-            });
+        roomschema.updateOne(
+          { roomName: req.body.roomName },
+          {
+            $push: {
+              acId: req.body.roomName + "_" + req.body.compId,
+            },
+          },
+          (err, updteResult) => {
+            if (err) {
+              console.log("update room faild...", err);
+              res.status(400).json({
+                error: "updateRoom error",
+              });
+            } else {
+              console.log("update room seccess...", updteResult);
+              res.status(200).json({
+                msg: "seccess",
+              });
+            }
           }
-          else{
-            console.log("update room seccess...", updteResult);
-            res.status(200).json({
-              'msg': "seccess",
-            });
-          }
-        });
+        );
       } catch (error) {
         console.log("update room faild...", error);
         res.status(400).json({
           error: "updateRoom error",
         });
       }
-    }else{
+    } else {
       console.log("cannot add category...");
       res.status(400).json({
         error: "cannot add category",
       });
     }
-    
   } catch (error) {
     console.log("Failed server...");
     res.status(400).json({
       error: "Failed server",
     });
   }
-
 });
 
 // //verifyAdmin,
@@ -539,7 +639,9 @@ router.post(
 //   }
 // });
 
-router.delete("/delete/schedule/:id", authAdmin, async (req, res) => {
+router.delete("/delete/schedule/:id", async (req, res) => {
+  //authAdmin
+  console.log(req.params.id);
   try {
     scheduleschema.findByIdAndDelete(req.params.id, async (err, result) => {
       try {
@@ -550,7 +652,9 @@ router.delete("/delete/schedule/:id", authAdmin, async (req, res) => {
         } else {
           if (result) {
             try {
-              const { err, resultCalApi } = await deleteEvent(req.params.id);
+              const { err, resultCalApi } = await deleteEvent({
+                eventId: req.params.id,
+              });
               if (err) {
                 console.log("Alredy deleted : " + err);
                 res.status(400).json({
@@ -559,8 +663,14 @@ router.delete("/delete/schedule/:id", authAdmin, async (req, res) => {
                 return;
               } else {
                 if (resultCalApi) {
+                  console.log("delered");
                   res.status(200).json({
                     message: "Successfully deleted",
+                  });
+                } else {
+                  console.log("deleted ");
+                  res.status(200).json({
+                    message: "Successfully deleted ",
                   });
                 }
               }
@@ -591,113 +701,114 @@ router.delete("/delete/schedule/:id", authAdmin, async (req, res) => {
   }
 });
 
-
-router.post('/rooms/status', async(req, res)=>{
+router.post("/rooms/status", async (req, res) => {
   try {
-      const startT = new Date((new Date(req.body.date + 'T' + req.body.startTime)).toISOString());
-      const endT = new Date((new Date(startT.getTime() + 10*60000)).toISOString());
-      const resultCalApi = await getEventListAll({startTime: startT, endTime: endT});
-      console.log(resultCalApi.data.items.length);
+    const startT = new Date(
+      new Date(req.body.date + "T" + req.body.startTime).toISOString()
+    );
+    const endT = new Date(
+      new Date(startT.getTime() + 10 * 60000).toISOString()
+    );
+    const resultCalApi = await getEventListAll({
+      startTime: startT,
+      endTime: endT,
+    });
+    console.log(resultCalApi.data.items.length);
 
-      try {
-          const roomStateList = [];
-          const lecRoomList = [];
-          const scheduleListId = [];
-          resultCalApi.data.items.forEach(element => {
-              lecRoomList.push(element.location);
-              scheduleListId.push(element.id);
-          });
-
-          lecRoom.find({
-              roomName : {
-                  $nin : lecRoomList
-              }
-              
-              }, (err, result)=>{
-                  if(err){
-                      res.status(400).json({
-                          'Error': 'Try again'
-                      });
-                  }
-                  else{
-                      result.forEach(element => {
-
-                        roomStateList.push({
-                          roomName: element.roomName,
-                          state: false
-                        });
-                          // if(lecRoomList.includes(element.roomName)){
-                          //     element.state = true;
-                          // }
-                          // else{
-                          //     element.state = false;
-                          // }
-                          
-                      });
-
-                      try {
-                        scheduleschema.find({
-                            _id : {
-                                $in : scheduleListId
-                            }
-                          
-                          }, (err, resultSchedule)=>{
-                            if(err){
-                              console.log('Error in DB connect');
-                              res.status(400).json({
-                                  'Error': 'Try again'
-                              });
-                            }
-                            else{
-                              resultSchedule.forEach(element => {
-                                roomStateList.push({
-                                  roomName: element.roomName,
-                                  state: true,
-                                  startTime: element.startTime,
-                                  endTime: element.endTime,
-                                  userId: element.userId,
-                                  subject: element.subject
-                                });
-                                
-                              });
-                              console.log('success.');
-                              res.status(200).json(roomStateList);
-
-                            }
-
-                          }
-                        );
-                        
-                      }catch (error) {
-                        console.log('Error in DB connect');
-                        res.status(400).json({
-                            'Error': 'Try again'
-                        });
-                      }
-                      
-                  }
-              }
-          );
-
-      } catch (error) {
-          console.log('Error in DB connect');
-          res.status(400).json({
-              'Error': 'Try again'
-          });
-      }
-
-  } catch (error) {
-      console.log('Error in Api connect');
-      res.status(400).json({
-          'Error': 'Try again'
+    try {
+      const roomStateList = [];
+      const lecRoomList = [];
+      const scheduleListId = [];
+      resultCalApi.data.items.forEach((element) => {
+        lecRoomList.push(element.location);
+        scheduleListId.push(element.id);
       });
+
+      lecRoom.find(
+        {
+          roomName: {
+            $nin: lecRoomList,
+          },
+        },
+        (err, result) => {
+          if (err) {
+            res.status(400).json({
+              Error: "Try again",
+            });
+          } else {
+            result.forEach((element) => {
+              roomStateList.push({
+                roomName: element.roomName,
+                state: false,
+              });
+              // if(lecRoomList.includes(element.roomName)){
+              //     element.state = true;
+              // }
+              // else{
+              //     element.state = false;
+              // }
+            });
+
+            try {
+              scheduleschema.find(
+                {
+                  _id: {
+                    $in: scheduleListId,
+                  },
+                },
+                (err, resultSchedule) => {
+                  if (err) {
+                    console.log("Error in DB connect");
+                    res.status(400).json({
+                      Error: "Try again",
+                    });
+                  } else {
+                    resultSchedule.forEach((element) => {
+                      roomStateList.push({
+                        roomName: element.roomName,
+                        state: true,
+                        startTime: element.startTime,
+                        endTime: element.endTime,
+                        userId: element.userId,
+                        subject: element.subject,
+                      });
+                    });
+                    console.log("success.");
+                    res.status(200).json(roomStateList);
+                  }
+                }
+              );
+            } catch (error) {
+              console.log("Error in DB connect");
+              res.status(400).json({
+                Error: "Try again",
+              });
+            }
+          }
+        }
+      );
+    } catch (error) {
+      console.log("Error in DB connect");
+      res.status(400).json({
+        Error: "Try again",
+      });
+    }
+  } catch (error) {
+    console.log("Error in Api connect");
+    res.status(400).json({
+      Error: "Try again",
+    });
   }
 });
 
 router.post("/free/rooms/custom", async (req, res) => {
   try {
-    const startT = new Date((new Date(req.body.date + 'T' + req.body.startTime)).toISOString());
-    const endT = new Date((new Date(req.body.date + 'T' + req.body.endTime)).toISOString());
+    const startT = new Date(
+      new Date(req.body.date + "T" + req.body.startTime).toISOString()
+    );
+    const endT = new Date(
+      new Date(req.body.date + "T" + req.body.endTime).toISOString()
+    );
     const resultCalApi = await getEventListAll({
       startTime: startT,
       endTime: endT,
@@ -742,8 +853,12 @@ router.post("/free/rooms/custom", async (req, res) => {
 
 router.post("/free/rooms", async (req, res) => {
   try {
-    const startT = new Date((new Date(req.body.date + 'T' + req.body.startTime)).toISOString());
-    const endT = new Date((new Date(startT.getTime() + 10*60000)).toISOString());
+    const startT = new Date(
+      new Date(req.body.date + "T" + req.body.startTime).toISOString()
+    );
+    const endT = new Date(
+      new Date(startT.getTime() + 10 * 60000).toISOString()
+    );
     const resultCalApi = await getEventListAll({
       startTime: startT,
       endTime: endT,
@@ -786,11 +901,12 @@ router.post("/free/rooms", async (req, res) => {
   }
 });
 
-router.get("/get/schedule/user/:id", async (req, res) => {
+//get all schedule past
+router.post("/get/schedule/user", async (req, res) => {
   try {
     scheduleschema
       .find({
-        userId: req.params.id,
+        userId: req.body.userId,
       })
       .sort({ startTime: 1 })
       .exec(function (err, docs) {
@@ -812,7 +928,7 @@ router.get("/get/schedule/user/:id", async (req, res) => {
 
 //authUser,
 //get schedul from now all
-router.get("/get/schedule/all", async (req, res) => {
+router.post("/get/schedule/all", async (req, res) => {
   try {
     // if(req.body.startTime != 'undefined'){
 
@@ -832,7 +948,7 @@ router.get("/get/schedule/all", async (req, res) => {
             _id: {
               $in: idList,
             },
-            userName: req.user,
+            userId: req.body.userId,
           })
           .sort({ startTime: 1 })
           .exec(function (err, docs) {
@@ -863,6 +979,65 @@ router.get("/get/schedule/all", async (req, res) => {
     });
   }
 });
+
+router.post("/get/schedule/user/all", async (req, res) => {
+  try {
+    // if(req.body.startTime != 'undefined'){
+
+    // }
+    const startT = new Date();
+    const endT = new Date(
+      new Date(startT.getTime() + 300 * 24 * 60 * 60000).toISOString()
+    );
+    const resultCalApi = await getEventListAll({
+      startTime: startT,
+      endTime: endT,
+    });
+    console.log(resultCalApi.data.items.length);
+    if (resultCalApi.data.items.length > 0) {
+      try {
+        var idList = [];
+        resultCalApi.data.items.forEach((element) => {
+          idList.push(element.id);
+        });
+
+        scheduleschema
+          .find({
+            _id: {
+              $in: idList,
+            },
+            userId: req.body.userId,
+          })
+          .sort({ startTime: 1 })
+          .exec(function (err, docs) {
+            if (err) {
+              res.status(400).json({
+                Error: "Try again",
+              });
+            } else {
+              res.send(docs);
+            }
+          });
+      } catch (error) {
+        console.log("Db access faild...", error);
+        res.send({
+          Error: "Data base error : " + error,
+        });
+      }
+    } else {
+      console.log("No schedule");
+      res.status(400).json({
+        Error: "No schedule : ",
+      });
+    }
+  } catch (error) {
+    console.log("Calendar api faild...", error);
+    res.status(400).json({
+      Error: "Calenadar api errror : " + error,
+    });
+  }
+});
+
 //authUser,
 //get schedul by date all
 router.post("/get/schedule/date", async (req, res) => {
@@ -979,7 +1154,7 @@ router.post("/add/schedule", scheduleValidation, async (req, res) => {
                   dateStartNew >= dateStart && dateStartNew <= dateEnd
                 );
                 console.log(dateEndNew >= dateStart && dateEndNew <= dateEnd);
-                console.log(dateStartNew < dateEndNew);
+                console.log(dateStartNew > dateEndNew);
                 throw new Error("Already exist evint...");
               }
               console.log("here");
