@@ -607,6 +607,7 @@ p {
 }
 
 .add-meeting-meeting-rooms {
+  height: 70px;
   background: var(--clr-white);
   display: flex;
   justify-content: space-between;
@@ -619,7 +620,7 @@ p {
 }
 
 .add-meeting-meeting-rooms button {
-  color: #fff !important;
+  color: rgb(20 13 60) !important;
   text-transform: uppercase;
   text-decoration: none;
   background: #ff605d;
@@ -923,4 +924,29 @@ p {
 .inputs-admin-add-reservation {
   display: flex;
   padding-top: 0.5rem;
+}
+
+#duration-modal-spanid {
+  display: block;
+  margin-right: 8px;
+  text-transform: capitalize;
+  font-weight: 700;
+  width: 100px;
+}
+
+#duration-modal-divid {
+  display: flex;
+  flex-direction: column;
+  padding-left: 20px;
+}
+.duration-modal-divcls {
+  width: 60%;
+  margin-bottom: 8px;
+  display: flex;
+
+  flex-direction: row;
+  padding-left: 10px;
+}
+.diwanga {
+  background-color: #509247;
 }
