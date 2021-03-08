@@ -98,7 +98,7 @@ export default function MeetingAddModal(props) {
                 width="25%"
                 avatar={<Avatar>T</Avatar>}
                 label={`${startTime} to ${endTime} `}
-                color="primary"
+                // color="primary"
                 //onDelete={handleDelete}
                 // deleteIcon={<DoneIcon />}
               />
@@ -111,7 +111,7 @@ export default function MeetingAddModal(props) {
                 width="200px"
                 avatar={<Avatar>D</Avatar>}
                 label={`${date}`}
-                color="secondary"
+                //color="secondary"
                 //onDelete={handleDelete}
                 // deleteIcon={<DoneIcon />}
               />
@@ -124,7 +124,7 @@ export default function MeetingAddModal(props) {
               <Chip
                 avatar={<Avatar>R</Avatar>}
                 label={`${roomName}  `}
-                color="primary"
+                // color="primary"
                 //onDelete={handleDelete}
                 // deleteIcon={<DoneIcon />}
               />
@@ -136,7 +136,7 @@ export default function MeetingAddModal(props) {
               <Chip
                 avatar={<Avatar>U</Avatar>}
                 label={`${userId}  `}
-                color="primary"
+                // color="primary"
                 //onDelete={handleDelete}
                 // deleteIcon={<DoneIcon />}
               />

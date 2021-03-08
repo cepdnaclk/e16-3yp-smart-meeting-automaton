@@ -37,15 +37,16 @@ export default function AddDeviceModal(props) {
     setDevice({
       ...device,
       roomName: roomName2,
-      //  compId: nextcompId,
+      compId: nextcompId, //`${roomName2}_${nextcompId}`,
       roomId: _id,
       category: cato === "PR" ? "PROJECTER" : cato,
     });
   };
-  const handleQuite = () => {
+  const handleClose = () => {
     setOpen(false);
   };
-  const handleClose = () => {
+
+  const handleSubmit = () => {
     setOpen(false);
     console.log(device);
     axios
@@ -54,13 +55,15 @@ export default function AddDeviceModal(props) {
         console.log(response);
         //  setRoomInsert({ name: "", category: "" });
         //    setAlertState(true);
-        setAlert("Room is Added", "success");
+        setAlert("Device is Added", "success");
+        setDevice({ ...device, brand: "", model: "" });
         // setTimeout(() => {
         //   setAlertState(false);
         // }, 3000);
         callBack();
       })
       .catch(function (error) {
+        setAlert("Device is not Added", "danger");
         //    setWrongState(true);
         // setAlert("Room is Added", "success");
         // setTimeout(() => {
@@ -84,14 +87,14 @@ export default function AddDeviceModal(props) {
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Add Config Data</DialogTitle>
+        <DialogTitle id="form-dialog-title">Add Device Data</DialogTitle>
         <DialogContent>
           <DialogContentText>
             chamath amarasinghe wishwa diwanga diwanga wishhwa batha
           </DialogContentText>
           <TextField
-            onChange={ontype}
-            // disabled={true}
+            //  onChange={ontype}
+            disabled={true}
             value={compId}
             autoFocus
             name="compId"
@@ -139,10 +142,10 @@ export default function AddDeviceModal(props) {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleQuite} color="primary">
+          <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleSubmit} color="primary">
             Add Device
           </Button>
         </DialogActions>

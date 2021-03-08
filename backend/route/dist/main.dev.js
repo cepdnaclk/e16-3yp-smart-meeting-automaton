@@ -915,7 +915,7 @@ router.post("/rooms/status", function _callee12(req, res) {
 
         case 5:
           resultCalApi = _context12.sent;
-          console.log(resultCalApi.data.items.length);
+          console.log(resultCalApi.data.items);
 
           try {
             roomStateList = [];
@@ -925,6 +925,7 @@ router.post("/rooms/status", function _callee12(req, res) {
               lecRoomList.push(element.location);
               scheduleListId.push(element.id);
             });
+            console.log(lecRoomList, scheduleListId);
             lecRoom.find({
               roomName: {
                 $nin: lecRoomList
@@ -1085,7 +1086,7 @@ router.post("/free/rooms", function _callee14(req, res) {
 
         case 5:
           resultCalApi = _context14.sent;
-          console.log(resultCalApi.data.items.length);
+          console.log(resultCalApi.data.items);
 
           try {
             lrcRoomList = [];
@@ -1505,7 +1506,7 @@ router.post("/add/schedule", scheduleValidation, function _callee22(req, res) {
                                     eventBody = {
                                       id: result._id,
                                       summary: "Lecture",
-                                      location: "University of peradeniya, sri lanka",
+                                      location: result.roomName,
                                       description: result.subject + " Lecture in " + result.roomName + " conduct by " + result.userName,
                                       start: {
                                         dateTime: new Date(req.body.date + "T" + req.body.startTime).toISOString()
