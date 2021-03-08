@@ -92,11 +92,11 @@ const Headermy = ({ title, icon }) => {
           Rooms
         </Link>
       </li>
-      <li>
+      {/* <li>
         <Link onClick={closeIfOpen} to="/configure">
           Configure
         </Link>
-      </li>
+      </li> */}
     </>
   );
 

@@ -1,0 +1,17 @@
+{
+  "name": "localserver",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon subscriber.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jsonwebtoken": "^8.5.1",
+    "mosca": "^2.8.3",
+    "mqtt": "^4.2.6",
+    "nodemon": "^2.0.7"
+  },
+  "description": ""
+}
