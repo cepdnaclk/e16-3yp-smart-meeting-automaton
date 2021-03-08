@@ -2,25 +2,6 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-const data = [
-  {
-    _id: " 011",
-    roomName: "Lecture Room 1",
-    lastConfigDate: "2020/03/05",
-  },
-
-  {
-    _id: " 012",
-    roomName: "Seminar Room 1",
-    lastConfigDate: "2020/03/10",
-  },
-  {
-    _id: " 013",
-    roomName: "Lecture Room 14",
-    lastConfigDate: "2020/04/12",
-  },
-];
-
 // const renderTableData = () => {
 //   return rooms.map((meetingRoom, index) => {
 //     const { _id, roomName, lastConfigDate } = meetingRoom;
@@ -86,7 +67,7 @@ function RoomsDashBoardNew() {
               className="button-config"
               to={`/addmeeting/room/${meetingRoom._id}/${meetingRoom.roomName}`}
             >
-              Update
+              Reserve
             </Link>
           </td>
         </tr>

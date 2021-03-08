@@ -79,18 +79,18 @@ const AddMeeting = () => {
         console.log(response);
         //  setRoomInsert({ name: "", category: "" });
         //    setAlertState(true);
-        setAlert("Room is Added", "success");
+        setAlert("Meeting is Added", "success");
         // setTimeout(() => {
         //   setAlertState(false);
         // }, 3000);
       })
       .catch(function (error) {
         //    setWrongState(true);
-        // setAlert("Room is Added", "success");
+        setAlert("Meeting is not Added", "danger");
         // setTimeout(() => {
         //  setWrongState(false);
         // }, 3000);
-        alert(error);
+        //alert(error);
       });
   };
   return (

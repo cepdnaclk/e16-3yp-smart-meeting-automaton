@@ -33,4 +33,4 @@ function subscribeClient({ roomName }) {
   });
 }
 
-subscribeClient({ roomName: "room10" });
+subscribeClient({ roomName: "LecRoom02" });

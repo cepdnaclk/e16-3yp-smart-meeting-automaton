@@ -4,6 +4,7 @@ import { lecRoomData } from "../data";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import AddDeviceModal from "../../layout/AddDeviceModal";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
 const RoomsConfig = () => {
   const params = useParams();
@@ -26,6 +27,15 @@ const RoomsConfig = () => {
       roomName: params.roomName,
     });
     console.log(res.data);
+    const acs = res.data.ac;
+    const prs = res.data.proj;
+
+    acs.map((ac) => {
+      ac.category = "AC";
+    });
+    prs.map((pr) => {
+      pr.category = "PROJECTOR";
+    });
     setData({
       data: [...res.data.ac, ...res.data.proj],
       noofac: res.data.ac.length,
@@ -85,7 +95,7 @@ const RoomsConfig = () => {
     () => [
       {
         Header: "Component ID",
-        accessor: "componentId",
+        accessor: "compId",
       },
       {
         Header: "Category",
