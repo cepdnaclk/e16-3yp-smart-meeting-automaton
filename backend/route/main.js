@@ -260,7 +260,7 @@ router.post("/get/roomCompData", async (req, res) => {
                           } else {
                             // const sendList = [
                             // resultAcList.concat(resultProjList);
-                            console.log("bye", {
+                            console.log("list", {
                               ac: resultAcList,
                               proj: resultProjList,
                             });
@@ -678,7 +678,7 @@ router.post("/rooms/status", async (req, res) => {
     const startT = new Date();
 
     const endT = new Date(
-      new Date(startT.getTime() + 10 * 60000).toISOString()
+      new Date(startT.getTime() + 1000).toISOString()
     );
     const resultCalApi = await getEventListAll({
       startTime: startT,
