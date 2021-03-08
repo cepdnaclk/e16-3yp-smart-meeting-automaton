@@ -684,7 +684,7 @@ router.post("/rooms/status", async (req, res) => {
       startTime: startT,
       endTime: endT,
     });
-    console.log(resultCalApi.data.items.length);
+    console.log(resultCalApi.data.items);
 
     try {
       const roomStateList = [];
@@ -694,7 +694,7 @@ router.post("/rooms/status", async (req, res) => {
         lecRoomList.push(element.location);
         scheduleListId.push(element.id);
       });
-
+      console.log(lecRoomList, scheduleListId);
       lecRoom.find(
         {
           roomName: {
@@ -834,7 +834,7 @@ router.post("/free/rooms", async (req, res) => {
       startTime: startT,
       endTime: endT,
     });
-    console.log(resultCalApi.data.items.length);
+    console.log(resultCalApi.data.items);
 
     try {
       var lrcRoomList = [];
@@ -1167,7 +1167,7 @@ router.post("/add/schedule", scheduleValidation, async (req, res) => {
                 const eventBody = {
                   id: result._id,
                   summary: "Lecture",
-                  location: "University of peradeniya, sri lanka",
+                  location: result.roomName,
                   description:
                     result.subject +
                     " Lecture in " +
