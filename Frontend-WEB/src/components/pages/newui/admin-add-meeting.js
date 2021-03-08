@@ -170,7 +170,7 @@ const AdminAddMeeting = () => {
         //  setWrongState(false);
         // }, 3000);
         setAlert("Shedule is Not added", "danger");
-        alert(error);
+        //alert(error);
       });
   };
 

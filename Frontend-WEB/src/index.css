@@ -525,11 +525,11 @@ p {
 }
 
 .table-device-header .table-device-header-data:nth-child(1) {
-  width: 20%;
+  width: 25%;
 }
 
 .table-device-header .table-device-header-data:nth-child(2) {
-  width: 30%;
+  width: 25%;
 }
 
 .table-device-header .table-device-header-data:nth-child(3) {
@@ -542,7 +542,7 @@ p {
 
 .table-device-data {
   padding: 0.5rem;
-
+  text-align: center;
   border-bottom: 1px solid black;
 
   font-size: large;
@@ -554,7 +554,7 @@ p {
   color: white;
   font-size: large;
   font-weight: bold;
-
+  text-align: center;
   padding: 0.5rem;
 
   border-top: 1px solid black;
