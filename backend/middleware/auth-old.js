@@ -69,7 +69,9 @@ async function authorize(req, res, next) {
 
             const accessToken = getToken(payload);
             //console.log(accessToken);
-            res.json({ token: accessToken });
+            res.json({ token: accessToken,
+              expire: 60,
+            });
             // next();
           }
         } catch (err) {

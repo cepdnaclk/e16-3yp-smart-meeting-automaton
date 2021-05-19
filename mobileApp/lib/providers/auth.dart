@@ -9,9 +9,20 @@ class Auth with ChangeNotifier {
   DateTime _expireDate;
   String _userId;
 
+  bool get isAuth {
+    return token != null;
+  }
+
+  String get token {
+    if (_expireDate != null &&
+        _expireDate.isAfter(DateTime.now()) &&
+        _token != null) {
+      return _token;
+    }
+    return null;
+  }
+
   Future<void> signup(String userName, String password) async {
-    print(userName);
-    print(password);
     final payLoad = {
       'userId': userName,
       'password': password,
@@ -25,7 +36,16 @@ class Auth with ChangeNotifier {
         },
         body: json.encode(payLoad),
       );
-      print(response.body);
+
+      final responseDate = json.decode(response.body);
+      _token = responseDate['token'];
+      _userId = userName;
+      _expireDate = DateTime.now().add(
+        Duration(
+          minutes: responseDate['expire'],
+        ),
+      );
+      notifyListeners();
     } catch (err) {
       print(err);
       throw err;
