@@ -2,14 +2,14 @@ const express = require("express");
 //init
 const router = express.Router();
 
-//auth
-//const { authorize } = require("../middleware/auth.js");
+// auth
+const { authorize } = require("../middleware/auth-old");
 
 //joi schema
 const { userLoginValidation } = require("../validation/user");
 
-// //admin loggin
-// router.post('/admin', userLoginValidation, adminAuth);
+//admin loggin userLoginValidation,
+router.post('/admin', authorize);
 
 // //admin fresh
 // router.post('/admin/fresh', userLoginValidation, adminFreshAuth);
