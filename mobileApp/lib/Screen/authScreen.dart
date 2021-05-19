@@ -112,8 +112,8 @@ class _AuthCardState extends State<AuthCard> {
     //   // Sign user up
     // }
     try {
-      print(_authData['userName']);
-      print(_authData['password']);
+      // print(_authData['userName']);
+      // print(_authData['password']);
       await Provider.of<Auth>(context, listen: false).signup(
         _authData['userName'],
         _authData['password'],
