@@ -15,19 +15,20 @@ class SMA extends StatelessWidget {
         ChangeNotifierProvider.value(
           value: Auth(),
         ),
-        ChangeNotifierProxyProvider<Auth, TimeTable>(
-          builder: (ctx, auth, ),
-        ),
+        // ChangeNotifierProxyProvider<Auth, TimeTable>(
+        //   builder: (ctx, auth, ),
+        // ),
       ],
       child: Consumer<Auth>(
         builder: (ctx, auth, _) => MaterialApp(
           title: 'SMA',
           theme: ThemeData(
-            primarySwatch: Colors.purple,
-            accentColor: Colors.deepOrange,
+            primarySwatch: Colors.blue,
+            accentColor: Colors.black,
             fontFamily: 'Lato',
           ),
-          home: auth.isAuth ? TimeTable() : AuthScreen(),
+          home: TimeTable(),
+          //auth.isAuth ? TimeTable() : AuthScreen(),
           routes: {},
         ),
       ),
