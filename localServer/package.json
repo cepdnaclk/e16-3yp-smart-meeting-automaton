@@ -1,20 +1,36 @@
 {
-  "name": "localserver",
+  "name": "localServer",
   "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "start": "nodemon subscriber.js"
-  },
-  "author": "",
-  "license": "ISC",
+  "description": "",
+  "main": "broker.js",
   "dependencies": {
+    "anymatch": "^3.1.1",
     "bcryptjs": "^2.4.3",
+    "cacheable-request": "^6.1.0",
+    "clone-response": "^1.0.2",
+    "cron": "^1.8.2",
+    "decompress-response": "^3.3.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
-    "mosca": "^2.8.3",
     "mqtt": "^4.2.6",
-    "nodemon": "^2.0.7"
+    "nodemon": "^2.0.7",
+    "nopt": "^1.0.10",
+    "normalize-path": "^3.0.0",
+    "normalize-url": "^4.5.0",
+    "p-cancelable": "^1.1.0",
+    "picomatch": "^2.2.2",
+    "prepend-http": "^2.0.0",
+    "pupa": "^2.1.1",
+    "readdirp": "^3.5.0",
+    "responselike": "^1.0.2"
   },
-  "description": ""
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon localserver.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

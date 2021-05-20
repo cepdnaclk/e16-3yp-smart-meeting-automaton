@@ -1,7 +1,7 @@
 const http = require("http");
 const fs = require("fs");
 const express = require("express");
-// const cron = require('node-cron');
+const cron = require('node-cron');
 //configer env veriable
 const dotenv = require("dotenv").config();
 
@@ -37,11 +37,12 @@ const ser = http.createServer(app).listen(PORT, "localhost", function () {
   console.log(`Server is listening on port ${PORT}`);
 });
 
-// //need to impl
-// cron.schedule('* * /2 * *', ()=>{
-//     //run background task
+//need to impl
+cron.schedule('* * /2 * *', ()=>{
+    //run background task
+    print('hey');
 
-// });
+});
 
 //middleware
 app.use(express.json());
