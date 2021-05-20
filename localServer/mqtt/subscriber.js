@@ -28,7 +28,7 @@ function subscribeClient({ roomName }) {
 
   client.on("message", function (topic, message, packet) {
     // console.log("message  " + message);
-    console.log("message decoded " + decodemsg(message.toString()));
+    console.log("message decoded " + message.toString());//decodemsg(message.toString()));
     console.log("topic is " + topic);
   });
 }

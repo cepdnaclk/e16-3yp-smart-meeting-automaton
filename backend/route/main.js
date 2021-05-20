@@ -68,6 +68,54 @@ const lecRoom = require("../modules/lecRoom.model");
 const { sendMqttNew, sendMqttinit } = require("../controlers/mqtt");
 const { json } = require("express");
 
+/*
+  temp
+*/
+
+router.post("/timeTable", async(req, res)=>{
+  const tp = [
+    {
+      'userId': 'user01',
+      'room': 'room01',
+      'sub': 'CO222',
+      'time': '2-3',
+    },
+    {
+      'userId': 'user01',
+      'room': 'room01',
+      'sub': 'CO222',
+      'time': '2-3',
+    },{
+      'userId': 'user01',
+      'room': 'room01',
+      'sub': 'CO222',
+      'time': '2-3',
+    },{
+      'userId': 'user01',
+      'room': 'room01',
+      'sub': 'CO222',
+      'time': '2-3',
+    },{
+      'userId': 'user01',
+      'room': 'room01',
+      'sub': 'CO222',
+      'time': '2-3',
+    }
+  ];
+
+  res.status(400).json(
+    tp
+  );
+
+
+
+});
+
+
+/*
+  temp
+*/
+
 //authAdmin, verifyAdmin,
 router.post("/adduser", newUserValidation, async (req, res) => {
   try {
