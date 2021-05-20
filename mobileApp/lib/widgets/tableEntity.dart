@@ -5,7 +5,12 @@ class TableEntity extends StatelessWidget {
   final String sub;
   final String time;
 
-  TableEntity({this.room, this.sub, this.time});
+  TableEntity({
+    this.room,
+    this.sub,
+    this.time,
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

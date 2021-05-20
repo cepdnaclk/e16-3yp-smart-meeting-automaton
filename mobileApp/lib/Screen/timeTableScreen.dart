@@ -135,6 +135,7 @@ class _TimeTableState extends State<TimeTable> {
                     : ListView.builder(
                         itemBuilder: (ctx, index) {
                           return TableEntity(
+                            key: _timeTableData[index]['id'],
                             room: _timeTableData[index]['room'],
                             sub: _timeTableData[index]['sub'],
                             time: _timeTableData[index]['time'],

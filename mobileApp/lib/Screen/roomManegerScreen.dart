@@ -31,6 +31,17 @@ class _RoomManegerState extends State<RoomManeger> {
     super.initState();
   }
 
+  void _chengeState(String id, bool nextState) {
+    print(_componentList);
+    for (var i = 0; i < _componentList.length; i++) {
+      if (_componentList[i]['id'] == id) {
+        _componentList[i]['state'] = nextState;
+        break;
+      }
+    }
+    print(_componentList);
+  }
+
   Future<void> _fetchData() async {
     final String url = 'http://10.0.2.2:5000/main/timeTable';
     try {
@@ -41,10 +52,12 @@ class _RoomManegerState extends State<RoomManeger> {
       // _componentList = json.decode(respose.body);
       _componentList = [
         {
+          'id': 'Ac01',
           'name': 'ac',
           'state': true,
         },
         {
+          'id': 'pro01',
           'name': 'pro',
           'state': true,
         }
@@ -141,6 +154,9 @@ class _RoomManegerState extends State<RoomManeger> {
                         itemCount: _componentList.length,
                         itemBuilder: (ctx, index) {
                           return RoomComponent(
+                            changeState: _chengeState,
+                            id: _componentList[index]['id'],
+                            key: Key(_componentList[index]['id']),
                             name: _componentList[index]['name'],
                             compState: _componentList[index]['state'],
                           );
