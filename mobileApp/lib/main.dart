@@ -28,7 +28,7 @@ class SMA extends StatelessWidget {
             accentColor: Colors.black,
             fontFamily: 'Lato',
           ),
-          home: RoomManeger(),
+          home: auth.isAuth ? TimeTable() : AuthScreen(),
           // RoomManeger(),
           //auth.isAuth ? TimeTable() : AuthScreen(),
           routes: {},
