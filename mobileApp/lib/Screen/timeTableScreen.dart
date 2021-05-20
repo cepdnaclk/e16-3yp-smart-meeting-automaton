@@ -26,11 +26,37 @@ class _TimeTableState extends State<TimeTable> {
   Future<void> _fetchData() async {
     final String url = 'http://10.0.2.2:5000/main/timeTable';
     try {
-      final respose = await http.post(
-        url,
-        body: null,
-      );
-      _timeTableData = json.decode(respose.body);
+      // final respose = await http.post(
+      //   url,
+      //   body: null,
+      // );
+      // _timeTableData = json.decode(respose.body);
+      _timeTableData = [
+        {
+          'id': '001',
+          'room': 'Lec01',
+          'sub': 'CO222',
+          'time': '2-3',
+        },
+        {
+          'id': '001',
+          'room': 'Lec01',
+          'sub': 'CO222',
+          'time': '2-3',
+        },
+        {
+          'id': '001',
+          'room': 'Lec01',
+          'sub': 'CO222',
+          'time': '2-3',
+        },
+        {
+          'id': '001',
+          'room': 'Lec01',
+          'sub': 'CO222',
+          'time': '2-3',
+        },
+      ];
       print(_timeTableData);
     } catch (e) {
       throw (e);
@@ -135,7 +161,7 @@ class _TimeTableState extends State<TimeTable> {
                     : ListView.builder(
                         itemBuilder: (ctx, index) {
                           return TableEntity(
-                            key: _timeTableData[index]['id'],
+                            key: Key(_timeTableData[index]['id']),
                             room: _timeTableData[index]['room'],
                             sub: _timeTableData[index]['sub'],
                             time: _timeTableData[index]['time'],
