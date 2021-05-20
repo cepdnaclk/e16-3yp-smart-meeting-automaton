@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import './Screen/authScreen.dart';
 import './Screen/timeTableScreen.dart';
 import './providers/auth.dart';
+import './Screen/roomManegerScreen.dart';
 
 void main() => runApp(SMA());
 
@@ -27,7 +28,7 @@ class SMA extends StatelessWidget {
             accentColor: Colors.black,
             fontFamily: 'Lato',
           ),
-          home: TimeTable(),
+          home: RoomManeger(),
           //auth.isAuth ? TimeTable() : AuthScreen(),
           routes: {},
         ),

@@ -1,21 +1,29 @@
 import 'dart:convert';
 
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../widgets/tableEntity.dart';
+import '../widgets/roomComp.dart';
 
-class TimeTable extends StatefulWidget {
-  static const String routName = '/time-Table';
-
+class RoomManeger extends StatefulWidget {
   @override
-  _TimeTableState createState() => _TimeTableState();
+  _RoomManegerState createState() => _RoomManegerState();
 }
 
-class _TimeTableState extends State<TimeTable> {
+class _RoomManegerState extends State<RoomManeger> {
+  // final dumy = [
+  //   {
+  //     'name': 'ac',
+  //     'state': true,
+  //   },
+  //   {
+  //     'name': 'pro',
+  //     'state': true,
+  //   }
+  // ];
+
   bool _isInit = false;
   bool _isLoading = false;
-  List _timeTableData;
+  List _componentList;
 
   @override
   void initState() {
@@ -26,46 +34,24 @@ class _TimeTableState extends State<TimeTable> {
   Future<void> _fetchData() async {
     final String url = 'http://10.0.2.2:5000/main/timeTable';
     try {
-      final respose = await http.post(
-        url,
-        body: null,
-      );
-      _timeTableData = json.decode(respose.body);
-      print(_timeTableData);
+      // final respose = await http.post(
+      //   url,
+      //   body: null,
+      // );
+      // _componentList = json.decode(respose.body);
+      _componentList = [
+        {
+          'name': 'ac',
+          'state': true,
+        },
+        {
+          'name': 'pro',
+          'state': true,
+        }
+      ];
+      print(_componentList);
     } catch (e) {
       throw (e);
-    }
-  }
-
-  void _showErrorDialog(String msg) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text('Oopzz'),
-        content: Text(msg),
-        actions: <Widget>[
-          FlatButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text('Okey'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _qrCodeScanner() async {
-    try {
-      final qrCode = await FlutterBarcodeScanner.scanBarcode(
-        '#ff6666',
-        'Cancel',
-        true,
-        ScanMode.QR,
-      );
-      print(qrCode);
-    } catch (e) {
-      print(e);
     }
   }
 
@@ -92,17 +78,35 @@ class _TimeTableState extends State<TimeTable> {
     super.didChangeDependencies();
   }
 
+  void _showErrorDialog(String msg) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Oopzz'),
+        content: Text(msg),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Okey'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Time Table'),
+        title: Text('Room Maneger'),
         actions: [
           IconButton(
             color: Colors.black,
-            icon: Icon(Icons.qr_code_scanner),
-            onPressed: _qrCodeScanner,
+            icon: Icon(Icons.refresh),
+            onPressed: _fetchData,
           ),
         ],
       ),
@@ -124,6 +128,7 @@ class _TimeTableState extends State<TimeTable> {
               // color: Colors.white,
               alignment: Alignment.center,
               child: Container(
+                // color: Colors.white,
                 width: deviceSize.width * 0.8,
                 height: deviceSize.height * 0.8,
                 child: _isLoading
@@ -133,14 +138,13 @@ class _TimeTableState extends State<TimeTable> {
                         ),
                       )
                     : ListView.builder(
+                        itemCount: _componentList.length,
                         itemBuilder: (ctx, index) {
-                          return TableEntity(
-                            room: _timeTableData[index]['room'],
-                            sub: _timeTableData[index]['sub'],
-                            time: _timeTableData[index]['time'],
+                          return RoomComponent(
+                            name: _componentList[index]['name'],
+                            compState: _componentList[index]['state'],
                           );
                         },
-                        itemCount: _timeTableData.length,
                       ),
               ),
             ),
