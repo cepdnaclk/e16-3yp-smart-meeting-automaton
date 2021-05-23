@@ -2,6 +2,8 @@ const express = require("express");
 //init
 const router = express.Router();
 
+const moment = require("moment");
+
 //bcryptjs
 const bcryptjs = require("bcryptjs");
 
@@ -1407,11 +1409,74 @@ router.delete("/removeuser/:id", authAdmin, async (req, res) => {
   }
 });
 
+//for getting shedule to rasberry pi from now till endday.
+router.post("/today", async (req, res) => {
+  console.log('dta',req.body);
+  res.status(200).json({
+    Error: "Try again",
+  });
+  // try {
+  //   const startT = moment().format();
+  //   const endT = moment().format("YYYY-MM-DDT23:59:00Z");
+
+  //   // const startT = new Date.now();
+  //   // const endT = new Date(req.body.date + "T" + "23:59:00+05:30");
+    
+  //   const resultCalApi = await getEventListAll({
+  //     startTime: startT,
+  //     endTime: endT,
+  //   });
+  //   console.log(resultCalApi.data.items.length);
+  //   if (resultCalApi.data.items.length > 0) {
+  //     try {
+  //       var idList = [];
+  //       resultCalApi.data.items.forEach((element) => {
+  //         idList.push(element.id);
+  //       });
+
+  //       scheduleschema
+  //         .find({
+  //           _id: {
+  //             $in: idList,
+  //           },
+  //           roomName: req.body.roomName,
+  //         })
+  //         .sort({ startTime: 1 })
+  //         .exec(function (err, docs) {
+  //           if (err) {
+  //             res.status(400).json({
+  //               Error: "Try again",
+  //             });
+  //           } else {
+  //             res.send(docs);
+  //           }
+  //         });
+  //     } catch (error) {
+  //       console.log("Db access faild...", error);
+  //       res.send({
+  //         Error: "Data base error : " + error,
+  //       });
+  //     }
+  //   } else {
+  //     console.log("No schedule");
+  //     res.status(400).json({
+  //       Error: "No schedule : ",
+  //     });
+  //   }
+  // } catch (error) {
+  //   console.log("Calendar api faild...", error);
+  //   res.status(400).json({
+  //     Error: "Calenadar api errror : " + error,
+  //   });
+  // }
+});
+
 //404
 router.use((req, res) => {
   res.status(404).send("404");
   console.log("4040");
 });
+
 
 // router.post("/mqtt/add", async(req, res)=>{
 //   // const dt = {
