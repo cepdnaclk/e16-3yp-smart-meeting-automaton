@@ -13,27 +13,29 @@ const scheduleschema = joi.object({
   userId: joi.string().required().min(1).max(1024),
 });
 
-function scheduleValidation(req, res, next) {
+function scheduleValidation(data) {
   try {
     const newData = {
-      roomName: req.body.roomName,
-      subject: req.body.subject,
-      startTime: new Date(req.body.date + "T" + req.body.startTime),
-      endTime: new Date(req.body.date + "T" + req.body.endTime),
-      userId: req.body.userId,
+      roomName: data.roomName,
+      subject: data.subject,
+      startTime: new Date(data.date + "T" + data.startTime),
+      endTime: new Date(data.date + "T" + data.endTime),
+      userId: data.userId,
     };
-    console.log(newData);
+    // console.log(newData);
     const validate = scheduleschema.validate(newData);
 
     if (validate.error) {
-      console.log("Error in validation");
-      res.send(validate.error);
+      console.log("Error in validation", validate.error);
+      return false;
+      // res.send(validate.error);
     } else {
-      next();
+      return true;
+
     }
   } catch (error) {
-    console.log(error);
-    res.status(400).json(validate.error);
+    console.log('Error in validater... ',error);
+    return false;
   }
 }
 

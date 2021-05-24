@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-const scheduleSchema = new Schema({
+const schedule = new Schema({
 
     roomName: {
         type: String,
@@ -41,6 +41,6 @@ const scheduleSchema = new Schema({
     timestamps: true
 });
 
-const schedule = mongoose.model('schedule', scheduleSchema);
+const scheduleSchema = mongoose.model('scheduleSchema', schedule);
 
-module.exports = schedule;
+module.exports = scheduleSchema;
