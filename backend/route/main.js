@@ -1306,11 +1306,14 @@ router.post("/add/room", roomValidation, async (req, res) => {
             console.log(error);
             console.log("mqtt fail");
           }
-
+          
+          const salt = await bcryptjs.genSalt(10);
+          const hashPassword = await bcryptjs.hash(req.body.OTP, salt);
           const room = new roomschema({
             roomName: req.body.roomName,
             controlUnitId: req.body.controlUnitId,
             acId: [],
+            password: hashPassword,
             projectorId: [],
           });
 

@@ -61,6 +61,8 @@ const ser = http.createServer(app).listen(PORT, "localhost", function () {
 //middleware
 app.use(express.json());
 
+var token;
+
 async function saveScheduleData(data) {
   const newsh = new scheduleSchema({
     roomName: data.roomName,
@@ -77,7 +79,7 @@ async function saveScheduleData(data) {
   }
 }
 
-var job = new CronJob(
+var getShuduleJob = new CronJob(
   "0,30 * * * * *",
   async function () {
     try {
@@ -109,7 +111,7 @@ var job = new CronJob(
                       console.log("Droped the collection...");
                       try {
                         await saveScheduleData(newData);
-                        console.log('Saving sucsess...');
+                        console.log("Saving sucsess...");
                       } catch (error) {
                         console.log("DataBase saving error...", error);
                       }
@@ -120,7 +122,7 @@ var job = new CronJob(
                 console.log("Now such collection...");
                 try {
                   await saveScheduleData(newData);
-                  console.log('Saving sucsess...');
+                  console.log("Saving sucsess...");
                 } catch (error) {
                   console.log("Database saving error...", error);
                 }
@@ -219,7 +221,30 @@ var job = new CronJob(
   true,
   "Asia/Colombo"
 );
-job.start();
+getShuduleJob.start();
+
+var authJob = new CronJob(
+  "0 0 0,12 * * *",
+  async function () {
+    try {
+      axios
+        .post("http://localhost:5000/login/controlUnit", {
+          roomName: "room01",
+          password: "password",
+        })
+        .then((response) => {
+          token = response.data.token;
+          console.log("Sucessfully loged...");
+        });
+    } catch (error) {
+      console.log("Error in login function...", error);
+    }
+  },
+  null,
+  true,
+  "Asia/Colombo"
+);
+authJob.start();
 
 //shedule route
 const shedule = require("./routes/shedule");
