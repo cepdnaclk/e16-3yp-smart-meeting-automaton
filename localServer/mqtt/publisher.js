@@ -7,17 +7,20 @@ options={
     clean:true
 };
 
-const client = mqtt.connect("mqtt://localhost:9999",options);
+const client = mqtt.connect("mqtt://test.mosquitto.org",options);
 console.log("connected flag  "+client.connected);
 client.on("connect",function(){	
     console.log("connected  "+client.connected);
+    client.publish("LecRoom02/add", "test message",options);
+    console.log('hey');
 });
 
 var options={
-    retain:true,
+    retain:false,
     qos:1
 };
 
 if (client.connected==true){
-    client.publish("testtopic", "test message",options);
+    client.publish("LecRoom02/add", "testttt message",options);
+    console.log('hey');
     }

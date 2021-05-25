@@ -300,5 +300,6 @@ app.use("/main", main);
 
 // 404
 app.use((req, res) => {
+  console.log('in');
   res.status(404).send("404");
 });
