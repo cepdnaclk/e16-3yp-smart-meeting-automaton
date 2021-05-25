@@ -74,45 +74,42 @@ const { json } = require("express");
   temp
 */
 
-router.post("/timeTable", async(req, res)=>{
+router.post("/timeTable", async (req, res) => {
   const tp = [
     {
-      'userId': 'user01',
-      'room': 'room01',
-      'sub': 'CO222',
-      'time': '2-3',
+      userId: "user01",
+      room: "room01",
+      sub: "CO222",
+      time: "2-3",
     },
     {
-      'userId': 'user01',
-      'room': 'room01',
-      'sub': 'CO222',
-      'time': '2-3',
-    },{
-      'userId': 'user01',
-      'room': 'room01',
-      'sub': 'CO222',
-      'time': '2-3',
-    },{
-      'userId': 'user01',
-      'room': 'room01',
-      'sub': 'CO222',
-      'time': '2-3',
-    },{
-      'userId': 'user01',
-      'room': 'room01',
-      'sub': 'CO222',
-      'time': '2-3',
-    }
+      userId: "user01",
+      room: "room01",
+      sub: "CO222",
+      time: "2-3",
+    },
+    {
+      userId: "user01",
+      room: "room01",
+      sub: "CO222",
+      time: "2-3",
+    },
+    {
+      userId: "user01",
+      room: "room01",
+      sub: "CO222",
+      time: "2-3",
+    },
+    {
+      userId: "user01",
+      room: "room01",
+      sub: "CO222",
+      time: "2-3",
+    },
   ];
 
-  res.status(400).json(
-    tp
-  );
-
-
-
+  res.status(400).json(tp);
 });
-
 
 /*
   temp
@@ -727,9 +724,7 @@ router.post("/rooms/status", async (req, res) => {
   try {
     const startT = new Date();
 
-    const endT = new Date(
-      new Date(startT.getTime() + 1000).toISOString()
-    );
+    const endT = new Date(new Date(startT.getTime() + 1000).toISOString());
     const resultCalApi = await getEventListAll({
       startTime: startT,
       endTime: endT,
@@ -1411,7 +1406,7 @@ router.delete("/removeuser/:id", authAdmin, async (req, res) => {
 
 //for getting shedule to rasberry pi from now till endday.
 router.post("/today", async (req, res) => {
-  console.log('dta',req.body);
+  console.log("dta", req.body);
   res.status(200).json({
     Error: "Try again",
   });
@@ -1421,7 +1416,7 @@ router.post("/today", async (req, res) => {
 
   //   // const startT = new Date.now();
   //   // const endT = new Date(req.body.date + "T" + "23:59:00+05:30");
-    
+
   //   const resultCalApi = await getEventListAll({
   //     startTime: startT,
   //     endTime: endT,
@@ -1476,7 +1471,6 @@ router.use((req, res) => {
   res.status(404).send("404");
   console.log("4040");
 });
-
 
 // router.post("/mqtt/add", async(req, res)=>{
 //   // const dt = {

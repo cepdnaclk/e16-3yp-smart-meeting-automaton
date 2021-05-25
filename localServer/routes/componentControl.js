@@ -8,6 +8,7 @@ router.post("/control/ac", async (req, res) => {
     if(req.data){
         //code to on ac
         console.log('Ac on');
+        
         res.status(200).json({
             'state': 'Ac is on'
         });
@@ -15,6 +16,7 @@ router.post("/control/ac", async (req, res) => {
     else{
         //code to stop ac
         console.log('Ac off');
+
         res.status(200).json({
             'state': 'Ac is off'
         });
