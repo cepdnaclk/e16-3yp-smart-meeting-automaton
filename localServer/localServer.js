@@ -224,7 +224,7 @@ var getShuduleJob = new CronJob(
 getShuduleJob.start();
 
 var authJob = new CronJob(
-  "0 0 0,12 * * *",
+  "0 0 7 * * *",
   async function () {
     try {
       axios
@@ -245,6 +245,28 @@ var authJob = new CronJob(
   "Asia/Colombo"
 );
 authJob.start();
+
+var getComponentsJob = new CronJob(
+  "0 0 7 * * *",
+  async function () {
+    try {
+      axios
+        .post("http://localhost:5000/main/get/roomCompData", {
+          roomName: "room01",
+        })
+        .then((response) => {
+          token = response.data.token;
+          console.log("Sucessfully loged...");
+        });
+    } catch (error) {
+      console.log("Error in login function...", error);
+    }
+  },
+  null,
+  true,
+  "Asia/Colombo"
+);
+getComponentsJob.start();
 
 //shedule route
 const shedule = require("./routes/shedule");
