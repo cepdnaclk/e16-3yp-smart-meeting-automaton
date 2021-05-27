@@ -41,6 +41,14 @@ function RoomsDashBoardNew() {
       const roomss = responce.data;
       console.log("room array");
       console.log(roomss);
+
+      roomss.map((room) => {
+        var confdate = room.lastConfigDate;
+        confdate = confdate.slice(0, 10);
+        room.lastConfigDate = confdate;
+        console.log(room.lastConfigDate);
+      });
+
       setRooms(roomss);
     });
   };
