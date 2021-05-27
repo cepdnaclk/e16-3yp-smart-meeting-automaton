@@ -2,6 +2,8 @@ const express = require("express");
 //init
 const router = express.Router();
 
+const moment = require("moment");
+
 //bcryptjs
 const bcryptjs = require("bcryptjs");
 
@@ -68,6 +70,51 @@ const lecRoom = require("../modules/lecRoom.model");
 const { sendMqttNew, sendMqttinit } = require("../controlers/mqtt");
 const { json } = require("express");
 
+/*
+  temp
+*/
+
+router.post("/timeTable", async (req, res) => {
+  const tp = [
+    {
+      userId: "user01",
+      room: "room01",
+      sub: "CO222",
+      time: "2-3",
+    },
+    {
+      userId: "user01",
+      room: "room01",
+      sub: "CO222",
+      time: "2-3",
+    },
+    {
+      userId: "user01",
+      room: "room01",
+      sub: "CO222",
+      time: "2-3",
+    },
+    {
+      userId: "user01",
+      room: "room01",
+      sub: "CO222",
+      time: "2-3",
+    },
+    {
+      userId: "user01",
+      room: "room01",
+      sub: "CO222",
+      time: "2-3",
+    },
+  ];
+
+  res.status(400).json(tp);
+});
+
+/*
+  temp
+*/
+
 //authAdmin, verifyAdmin,
 router.post("/adduser", newUserValidation, async (req, res) => {
   try {
@@ -114,6 +161,7 @@ router.post("/adduser", newUserValidation, async (req, res) => {
   }
 });
 
+//return all rooms.
 router.get("/table", async (req, res) => {
   //authAdmin,
   try {
@@ -122,9 +170,10 @@ router.get("/table", async (req, res) => {
         console.log("Error in get room");
         res.status(401).send("Cannot find");
       }
-
-      console.log("Send data");
-      res.send(data);
+      else{
+        console.log("Send data");
+        res.send(data);
+      }
     });
   } catch (error) {
     console.log("Error in get room", error);
@@ -217,6 +266,8 @@ router.get("/table", async (req, res) => {
 //     res.status(401).send("Error in DB");
 //   }
 // });
+
+//get room components
 router.post("/get/roomCompData", async (req, res) => {
   console.log(req.body.roomName);
   try {
@@ -260,7 +311,7 @@ router.post("/get/roomCompData", async (req, res) => {
                           } else {
                             // const sendList = [
                             // resultAcList.concat(resultProjList);
-                            console.log("bye", {
+                            console.log("list", {
                               ac: resultAcList,
                               proj: resultProjList,
                             });
@@ -677,9 +728,7 @@ router.post("/rooms/status", async (req, res) => {
   try {
     const startT = new Date();
 
-    const endT = new Date(
-      new Date(startT.getTime() + 10 * 60000).toISOString()
-    );
+    const endT = new Date(new Date(startT.getTime() + 1000).toISOString());
     const resultCalApi = await getEventListAll({
       startTime: startT,
       endTime: endT,
@@ -1262,10 +1311,13 @@ router.post("/add/room", roomValidation, async (req, res) => {
             console.log("mqtt fail");
           }
 
+          const salt = await bcryptjs.genSalt(10);
+          const hashPassword = await bcryptjs.hash(req.body.OTP, salt);
           const room = new roomschema({
             roomName: req.body.roomName,
             controlUnitId: req.body.controlUnitId,
             acId: [],
+            password: hashPassword,
             projectorId: [],
           });
 
@@ -1357,6 +1409,68 @@ router.delete("/removeuser/:id", authAdmin, async (req, res) => {
       Error: "DB connect fail...Try again" + error,
     });
   }
+});
+
+//for getting shedule to rasberry pi from now till endday.
+router.post("/today", async (req, res) => {
+  console.log("dta", req.body);
+  res.status(200).json({
+    Error: "Try again",
+  });
+  // try {
+  //   const startT = moment().format();
+  //   const endT = moment().format("YYYY-MM-DDT23:59:00Z");
+
+  //   // const startT = new Date.now();
+  //   // const endT = new Date(req.body.date + "T" + "23:59:00+05:30");
+
+  //   const resultCalApi = await getEventListAll({
+  //     startTime: startT,
+  //     endTime: endT,
+  //   });
+  //   console.log(resultCalApi.data.items.length);
+  //   if (resultCalApi.data.items.length > 0) {
+  //     try {
+  //       var idList = [];
+  //       resultCalApi.data.items.forEach((element) => {
+  //         idList.push(element.id);
+  //       });
+
+  //       scheduleschema
+  //         .find({
+  //           _id: {
+  //             $in: idList,
+  //           },
+  //           roomName: req.body.roomName,
+  //         })
+  //         .sort({ startTime: 1 })
+  //         .exec(function (err, docs) {
+  //           if (err) {
+  //             res.status(400).json({
+  //               Error: "Try again",
+  //             });
+  //           } else {
+  //             res.send(docs);
+  //           }
+  //         });
+  //     } catch (error) {
+  //       console.log("Db access faild...", error);
+  //       res.send({
+  //         Error: "Data base error : " + error,
+  //       });
+  //     }
+  //   } else {
+  //     console.log("No schedule");
+  //     res.status(400).json({
+  //       Error: "No schedule : ",
+  //     });
+  //   }
+  // } catch (error) {
+  //   console.log("Calendar api faild...", error);
+  //   res.status(400).json({
+  //     Error: "Calenadar api errror : " + error,
+  //   });
+  // }
 });
 
 //404

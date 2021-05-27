@@ -12,7 +12,12 @@ const lecRoomSchema = new Schema(
       max: 100,
       unique: true,
     },
-
+    password: {
+      type: String,
+      required: true,
+      min: 6,
+      max: 1024,
+    },
     controlUnitId: {
       type: String,
       required: true,
