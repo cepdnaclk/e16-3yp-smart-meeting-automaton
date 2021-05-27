@@ -136,7 +136,7 @@ async function authorizeCU(req, res, next) {
             const accessToken = getTokenCU(payload);
             //console.log(accessToken);
             res.json({ token: accessToken,
-              expire: 60,
+              expire: 12*60,
             });
             // next();
           }

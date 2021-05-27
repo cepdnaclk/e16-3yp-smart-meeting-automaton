@@ -133,61 +133,125 @@ var getShuduleJob = new CronJob(
         console.log("validation failed...");
       }
 
-      // axios
-      //   .post("http://localhost:5000/main/today", {
-      //     roomName: "room01",
-      //   })
-      //   .then((respon) => {
-      //     console.log(respon.data);
-      //     const newData = {
-      //       roomName: "room01",
-      //       date: "2020-12-02",
-      //       subject: "co222",
-      //       startTime: "03:00:00",
-      //       endTime: "04:00:00",
-      //       userId: "e/12/222",
-      //     };
-      //     if (scheduleValidation(newData)) {
-      //       mongoose.connection.db
-      //         .listCollections({ name: "scheduleschemas" })
-      //         .next(function (err, collinfo) {
-      //           if (err) {
-      //             console.log(err);
-      //           } else {
-      //             if (collinfo) {
-      //               console.log(collinfo);
-      //               mongoose.connection.db.dropCollection(
-      //                 "scheduleschemas",
-      //                 function (err, result) {
-      //                   if (err) {
-      //                     console.log(err);
-      //                   } else {
-      //                     console.log(result);
-      //                     try {
-      //                       saveScheduleData(newData);
-      //                     } catch (error) {
-      //                       console.log(error);
-      //                     }
-      //                   }
-      //                 }
-      //               );
-      //             } else {
-      //               try {
-      //                 saveScheduleData(newData);
-      //               } catch (error) {
-      //                 console.log(error);
-      //               }
-      //             }
-      //           }
-      //         });
-      //     } else {
-      //       console.log("failed");
-      //     }
-      //   }).catch((err)=>{
-      //     console.log('Error in connection...');
-      //   });
+      axios
+        .post("http://localhost:5000/main/today", {
+          roomName: "room01",
+        })
+        .then((respon) => {
+          console.log(respon.data);
+          const newData = {
+            roomName: "room01",
+            date: "2020-12-02",
+            subject: "co222",
+            startTime: "03:00:00",
+            endTime: "04:00:00",
+            userId: "e/12/222",
+          };
+          if (scheduleValidation(newData)) {
+            mongoose.connection.db
+              .listCollections({ name: "scheduleschemas" })
+              .next(function (err, collinfo) {
+                if (err) {
+                  console.log(err);
+                } else {
+                  if (collinfo) {
+                    console.log(collinfo);
+                    mongoose.connection.db.dropCollection(
+                      "scheduleschemas",
+                      function (err, result) {
+                        if (err) {
+                          console.log(err);
+                        } else {
+                          console.log(result);
+                          try {
+                            saveScheduleData(newData);
+                          } catch (error) {
+                            console.log(error);
+                          }
+                        }
+                      }
+                    );
+                  } else {
+                    try {
+                      saveScheduleData(newData);
+                    } catch (error) {
+                      console.log(error);
+                    }
+                  }
+                }
+              });
+          } else {
+            console.log("failed");
+          }
+        }).catch((err)=>{
+          console.log('Error in connection...');
+        });
+    } catch (error) {
+      console.log("Error in function...", error);
+    }
+  },
+  null,
+  true,
+  "Asia/Colombo"
+);
+getShuduleJob.start();
 
-      // var options = {
+var authJob = new CronJob(
+  "0 0 7 * * *",
+  async function () {
+    try {
+      axios
+        .post("http://localhost:5000/login/controlUnit", {
+          roomName: "room01",
+          password: "password",
+        })
+        .then((response) => {
+          token = response.data.token;
+          console.log("Sucessfully loged...");
+        });
+    } catch (error) {
+      console.log("Error in login function...", error);
+    }
+  },
+  null,
+  true,
+  "Asia/Colombo"
+);
+authJob.start();
+
+var getComponentsJob = new CronJob(
+  "0 0 7 * * *",
+  async function () {
+    try {
+      axios
+        .post("http://localhost:5000/main/get/roomCompData", {
+          roomName: "room01",
+        })
+        .then((response) => {
+          token = response.data.token;
+          console.log("Sucessfully loged...");
+        });
+    } catch (error) {
+      console.log("Error in login function...", error);
+    }
+  },
+  null,
+  true,
+  "Asia/Colombo"
+);
+getComponentsJob.start();
+
+//shedule route
+const shedule = require("./routes/shedule");
+
+app.use("/shedule", shedule);
+
+const compControl = require("./routes/componentControl");
+app.use("/components", compControl);
+
+
+//anoter way of http request
+// var options = {
       //   host: 'localhost',
       //   path: 'main/today',
       //   port: '5000',
@@ -213,43 +277,3 @@ var getShuduleJob = new CronJob(
       //   console.error('err',error)
       // })
       // req.end();
-    } catch (error) {
-      console.log("Error in function...", error);
-    }
-  },
-  null,
-  true,
-  "Asia/Colombo"
-);
-getShuduleJob.start();
-
-var authJob = new CronJob(
-  "0 0 0,12 * * *",
-  async function () {
-    try {
-      axios
-        .post("http://localhost:5000/login/controlUnit", {
-          roomName: "room01",
-          password: "password",
-        })
-        .then((response) => {
-          token = response.data.token;
-          console.log("Sucessfully loged...");
-        });
-    } catch (error) {
-      console.log("Error in login function...", error);
-    }
-  },
-  null,
-  true,
-  "Asia/Colombo"
-);
-authJob.start();
-
-//shedule route
-const shedule = require("./routes/shedule");
-
-app.use("/shedule", shedule);
-
-const compControl = require("./routes/componentControl");
-app.use("/components", compControl);

@@ -14,78 +14,6 @@ const { authNewUser } = require("../middleware/authenticate");
 //newuser
 const newUserschema = require("../modules/newUser.model");
 
-//////////////////////////////////////////////
-
-// router.post("/adding", async (req, res) => {
-//   const salt = await bcryptjs.genSalt(10);
-//   const hashPassword = await bcryptjs.hash("q12345", salt);
-//   const newusr = new userSchema({
-//     name: "user",
-//     password: hashPassword,
-//     email: "user@gmail.com",
-//     userId: "user",
-//     phone: "0773234720",
-//     role: 0,
-//   });
-
-//   try {
-//     const saved = await newusr.save();
-//     // console.log(k);
-//     if (err) {
-//       console.log("Requesting saving faild...", error);
-//       res.status(400).json({
-//         Error: "Request Saving error",
-//       });
-//     } else {
-//       console.log("saved user to the db...");
-//       res.status(200).json({
-//         message: "Successfully signin" + err,
-//       });
-//     }
-//   } catch (error) {
-//     console.log("Requesting saving faild...", error);
-//     res.status(400).json({
-//       Error: "Request Saving error",
-//     });
-//   }
-// });
-
-// router.post('/adding', async(req, res)=>{
-//     const salt = await bcryptjs.genSalt(10);
-//     const hashPassword = await bcryptjs.hash(req.body.password, salt);
-//     const newusr = new userSchema({
-//         name: req.body.userName,
-//         password: hashPassword,
-//         email: req.body.email,
-//         userId: req.body.userId,
-//         phone: req.body.phone,
-//         isAdmin: true
-//     });
-
-//     try {
-//         const saved = await newusr.save();
-//         console.log(k);
-//         if(err){
-//             console.log('Requesting saving faild...', error);
-//             res.status(400).json({
-//                 'Error': 'Request Saving error'
-//             });
-//         }
-//         else{
-//             console.log('saved user to the db...');
-//             res.status(200).json({
-//                 'message': 'Successfully signin' + err
-//             });
-//         }
-
-//     } catch (error) {
-//         console.log('Requesting saving faild...', error);
-//         res.status(400).json({
-//             'Error': 'Request Saving error'
-//         });
-//     }
-// });
-
 //authNewUser,
 router.post("/newuser", userValidation, async (req, res) => {
   // console.log(req.body.email);
@@ -180,6 +108,80 @@ router.post("/newuser", userValidation, async (req, res) => {
     });
   }
 });
+
+//////////////////////////////////////////////
+
+// router.post("/adding", async (req, res) => {
+//   const salt = await bcryptjs.genSalt(10);
+//   const hashPassword = await bcryptjs.hash("q12345", salt);
+//   const newusr = new userSchema({
+//     name: "user",
+//     password: hashPassword,
+//     email: "user@gmail.com",
+//     userId: "user",
+//     phone: "0773234720",
+//     role: 0,
+//   });
+
+//   try {
+//     const saved = await newusr.save();
+//     // console.log(k);
+//     if (err) {
+//       console.log("Requesting saving faild...", error);
+//       res.status(400).json({
+//         Error: "Request Saving error",
+//       });
+//     } else {
+//       console.log("saved user to the db...");
+//       res.status(200).json({
+//         message: "Successfully signin" + err,
+//       });
+//     }
+//   } catch (error) {
+//     console.log("Requesting saving faild...", error);
+//     res.status(400).json({
+//       Error: "Request Saving error",
+//     });
+//   }
+// });
+
+// router.post('/adding', async(req, res)=>{
+//     const salt = await bcryptjs.genSalt(10);
+//     const hashPassword = await bcryptjs.hash(req.body.password, salt);
+//     const newusr = new userSchema({
+//         name: req.body.userName,
+//         password: hashPassword,
+//         email: req.body.email,
+//         userId: req.body.userId,
+//         phone: req.body.phone,
+//         isAdmin: true
+//     });
+
+//     try {
+//         const saved = await newusr.save();
+//         console.log(k);
+//         if(err){
+//             console.log('Requesting saving faild...', error);
+//             res.status(400).json({
+//                 'Error': 'Request Saving error'
+//             });
+//         }
+//         else{
+//             console.log('saved user to the db...');
+//             res.status(200).json({
+//                 'message': 'Successfully signin' + err
+//             });
+//         }
+
+//     } catch (error) {
+//         console.log('Requesting saving faild...', error);
+//         res.status(400).json({
+//             'Error': 'Request Saving error'
+//         });
+//     }
+// });
+
+
 
 // router.post('/newuser', userValidation, async(req, res)=>{
 //     console.log(req.body.email);

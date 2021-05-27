@@ -161,6 +161,7 @@ router.post("/adduser", newUserValidation, async (req, res) => {
   }
 });
 
+//return all rooms.
 router.get("/table", async (req, res) => {
   //authAdmin,
   try {
@@ -169,9 +170,10 @@ router.get("/table", async (req, res) => {
         console.log("Error in get room");
         res.status(401).send("Cannot find");
       }
-
-      console.log("Send data");
-      res.send(data);
+      else{
+        console.log("Send data");
+        res.send(data);
+      }
     });
   } catch (error) {
     console.log("Error in get room", error);
@@ -264,6 +266,8 @@ router.get("/table", async (req, res) => {
 //     res.status(401).send("Error in DB");
 //   }
 // });
+
+//get room components
 router.post("/get/roomCompData", async (req, res) => {
   console.log(req.body.roomName);
   try {
@@ -1306,7 +1310,7 @@ router.post("/add/room", roomValidation, async (req, res) => {
             console.log(error);
             console.log("mqtt fail");
           }
-          
+
           const salt = await bcryptjs.genSalt(10);
           const hashPassword = await bcryptjs.hash(req.body.OTP, salt);
           const room = new roomschema({

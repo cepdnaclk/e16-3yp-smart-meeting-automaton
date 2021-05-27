@@ -5,8 +5,13 @@ import 'package:http/http.dart' as http;
 import '../widgets/roomComp.dart';
 
 class RoomManeger extends StatefulWidget {
+  static const routeName = "/Room-maneger";
+  final qrScan;
+
+  RoomManeger({this.qrScan});
+
   @override
-  _RoomManegerState createState() => _RoomManegerState();
+  _RoomManegerState createState() => _RoomManegerState(qrScan: qrScan);
 }
 
 class _RoomManegerState extends State<RoomManeger> {
@@ -24,6 +29,9 @@ class _RoomManegerState extends State<RoomManeger> {
   bool _isInit = false;
   bool _isLoading = false;
   List _componentList;
+  final String qrScan;
+
+  _RoomManegerState({this.qrScan});
 
   @override
   void initState() {
@@ -44,12 +52,14 @@ class _RoomManegerState extends State<RoomManeger> {
 
   Future<void> _fetchData() async {
     final String url = 'http://10.0.2.2:5000/main/timeTable';
+    //url should be qrScan
     try {
       // final respose = await http.post(
       //   url,
       //   body: null,
       // );
       // _componentList = json.decode(respose.body);
+      print(qrScan);
       _componentList = [
         {
           'id': 'Ac01',
@@ -62,6 +72,7 @@ class _RoomManegerState extends State<RoomManeger> {
           'state': true,
         }
       ];
+      print("_componentList");
       print(_componentList);
     } catch (e) {
       throw (e);

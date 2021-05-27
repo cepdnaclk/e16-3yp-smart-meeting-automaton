@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
@@ -39,7 +41,15 @@ class _RoomComponentState extends State<RoomComponent> {
   bool _isLoading = false;
 
   Future<void> _changeCompState(bool nextState, String component) async {
-    final String url = '';
+    String url = "http://10.0.2.2:3000/components/control/";
+    print(component);
+    if (component == "ac") {
+      url += "ac";
+      print(url);
+    } else if (component == 'pro') {
+      url += "pro";
+      print(url);
+    }
     setState(() {
       _isLoading = true;
     });
@@ -48,18 +58,22 @@ class _RoomComponentState extends State<RoomComponent> {
       'id': id,
       'state': nextState,
     };
+    print('payload');
     try {
-      // final respose = await http.post(
-      //   url,
-      //   headers: <String, String>{
-      //     'x-auth': 'token',
-      //   },
-      //   body: payLoad,
-      // );
-      // print(respose);
+      final respose = await http.post(
+        url,
+        headers: <String, String>{
+          'x-auth': 'token',
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: json.encode(payLoad),
+      );
+      print('res');
+      print(respose);
       widget.changeState(id, nextState);
     } catch (e) {
-      throw (e);
+      // throw (e);
+      print(e);
     }
     // resposeData = json.decode(respose.body);
 
