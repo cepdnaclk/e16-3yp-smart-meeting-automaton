@@ -133,86 +133,59 @@ var getShuduleJob = new CronJob(
         console.log("validation failed...");
       }
 
-      // axios
-      //   .post("http://localhost:5000/main/today", {
-      //     roomName: "room01",
-      //   })
-      //   .then((respon) => {
-      //     console.log(respon.data);
-      //     const newData = {
-      //       roomName: "room01",
-      //       date: "2020-12-02",
-      //       subject: "co222",
-      //       startTime: "03:00:00",
-      //       endTime: "04:00:00",
-      //       userId: "e/12/222",
-      //     };
-      //     if (scheduleValidation(newData)) {
-      //       mongoose.connection.db
-      //         .listCollections({ name: "scheduleschemas" })
-      //         .next(function (err, collinfo) {
-      //           if (err) {
-      //             console.log(err);
-      //           } else {
-      //             if (collinfo) {
-      //               console.log(collinfo);
-      //               mongoose.connection.db.dropCollection(
-      //                 "scheduleschemas",
-      //                 function (err, result) {
-      //                   if (err) {
-      //                     console.log(err);
-      //                   } else {
-      //                     console.log(result);
-      //                     try {
-      //                       saveScheduleData(newData);
-      //                     } catch (error) {
-      //                       console.log(error);
-      //                     }
-      //                   }
-      //                 }
-      //               );
-      //             } else {
-      //               try {
-      //                 saveScheduleData(newData);
-      //               } catch (error) {
-      //                 console.log(error);
-      //               }
-      //             }
-      //           }
-      //         });
-      //     } else {
-      //       console.log("failed");
-      //     }
-      //   }).catch((err)=>{
-      //     console.log('Error in connection...');
-      //   });
-
-      // var options = {
-      //   host: 'localhost',
-      //   path: 'main/today',
-      //   port: '5000',
-      //   method: 'POST',
-      //   headers: {'custom': 'Custom Header Demo works'}
-      // };
-      // const data = JSON.stringify({
-      //   'roomName': 'ro01',
-      // });
-      // callback = function(response) {
-      //   var str = ''
-      //   response.on('data', function (chunk) {
-      //     str += chunk;
-      //   });
-
-      //   response.on('end', function () {
-      //     console.log('dt',str);
-      //   });
-      // }
-
-      // var req = http.request(options, callback);
-      // req.on('error', error => {
-      //   console.error('err',error)
-      // })
-      // req.end();
+      axios
+        .post("http://localhost:5000/main/today", {
+          roomName: "room01",
+        })
+        .then((respon) => {
+          console.log(respon.data);
+          const newData = {
+            roomName: "room01",
+            date: "2020-12-02",
+            subject: "co222",
+            startTime: "03:00:00",
+            endTime: "04:00:00",
+            userId: "e/12/222",
+          };
+          if (scheduleValidation(newData)) {
+            mongoose.connection.db
+              .listCollections({ name: "scheduleschemas" })
+              .next(function (err, collinfo) {
+                if (err) {
+                  console.log(err);
+                } else {
+                  if (collinfo) {
+                    console.log(collinfo);
+                    mongoose.connection.db.dropCollection(
+                      "scheduleschemas",
+                      function (err, result) {
+                        if (err) {
+                          console.log(err);
+                        } else {
+                          console.log(result);
+                          try {
+                            saveScheduleData(newData);
+                          } catch (error) {
+                            console.log(error);
+                          }
+                        }
+                      }
+                    );
+                  } else {
+                    try {
+                      saveScheduleData(newData);
+                    } catch (error) {
+                      console.log(error);
+                    }
+                  }
+                }
+              });
+          } else {
+            console.log("failed");
+          }
+        }).catch((err)=>{
+          console.log('Error in connection...');
+        });
     } catch (error) {
       console.log("Error in function...", error);
     }
@@ -275,3 +248,32 @@ app.use("/shedule", shedule);
 
 const compControl = require("./routes/componentControl");
 app.use("/components", compControl);
+
+
+//anoter way of http request
+// var options = {
+      //   host: 'localhost',
+      //   path: 'main/today',
+      //   port: '5000',
+      //   method: 'POST',
+      //   headers: {'custom': 'Custom Header Demo works'}
+      // };
+      // const data = JSON.stringify({
+      //   'roomName': 'ro01',
+      // });
+      // callback = function(response) {
+      //   var str = ''
+      //   response.on('data', function (chunk) {
+      //     str += chunk;
+      //   });
+
+      //   response.on('end', function () {
+      //     console.log('dt',str);
+      //   });
+      // }
+
+      // var req = http.request(options, callback);
+      // req.on('error', error => {
+      //   console.error('err',error)
+      // })
+      // req.end();
