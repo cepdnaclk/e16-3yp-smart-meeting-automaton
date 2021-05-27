@@ -45,10 +45,10 @@ export default function MeetingAddModal(props) {
       date: dateto,
     });
   };
-  const handleQuite = () => {
+  const handleClose = () => {
     setOpen(false);
   };
-  const handleClose = () => {
+  const handelSubmit = () => {
     console.log(meetingData);
     setOpen(false);
     axios
@@ -142,10 +142,10 @@ export default function MeetingAddModal(props) {
               />
             </div>
           </div>
-          <DialogContentText>
-            chamath amarasinghe wishwa diwanga diwanga wishhwa batha
-          </DialogContentText>
-          <DialogContentText>csdsdc</DialogContentText>
+
+          {/* <DialogContentText>
+            csdsdc tj yutyjj rtyjty rjr hj f j jryt rhj hj yj y{" "}
+          </DialogContentText> */}
 
           <TextField
             onChange={ontype}
@@ -161,10 +161,11 @@ export default function MeetingAddModal(props) {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleQuite} color="primary">
+          <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleClose} color="primary">
+
+          <Button onClick={handelSubmit} color="primary">
             Add Meeting
           </Button>
         </DialogActions>

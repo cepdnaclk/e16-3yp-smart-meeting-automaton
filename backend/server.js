@@ -29,11 +29,11 @@ const db = mongoose
 const app = express();
 
 //port
-const PORT = process.env.PORT || 3000;
+// const PORT = process.env.PORT || 3000;
 
 //server initiating
-const ser = http.createServer(app).listen(PORT, "localhost", function () {
-  console.log(`Server is listening on port ${PORT}`);
+const ser = http.createServer(app).listen(process.env.PORT || 5000, "localhost", function () {
+  console.log(`Server is listening on port ${process.env.PORT || 5000}`);
 });
 
 // //need to impl
