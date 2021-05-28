@@ -1292,6 +1292,7 @@ router.post("/add/schedule", scheduleValidation, async (req, res) => {
   );
 });
 
+//adding rooms
 router.post("/add/room", roomValidation, async (req, res) => {
   //authAdmin,
   console.log("add room");
@@ -1312,7 +1313,7 @@ router.post("/add/room", roomValidation, async (req, res) => {
           }
 
           const salt = await bcryptjs.genSalt(10);
-          const hashPassword = await bcryptjs.hash(req.body.OTP, salt);
+          const hashPassword = await bcryptjs.hash(req.body.password, salt);
           const room = new roomschema({
             roomName: req.body.roomName,
             controlUnitId: req.body.controlUnitId,

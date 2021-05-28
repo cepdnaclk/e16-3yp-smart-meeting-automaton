@@ -28,6 +28,7 @@ function roomValidation(req, res, next) {
   const validate = roomschema.validate({
     roomName: req.body.roomName,
     controlUnitId: req.body.controlUnitId,
+    password: req.body.password
   });
   console.log(req.body);
   if (validate.error) {
