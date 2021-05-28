@@ -42,7 +42,7 @@ function getFreshToken(data) {
 function getTokenCU(data) {
   //console.log('token');
   try {
-    const token = jwt.sign(data, process.env.LOGIN_FRESH_TOKEN, {
+    const token = jwt.sign(data, process.env.LOGIN_CU_TOKEN, {
       expiresIn: "12h",
     });
     // console.log(token);

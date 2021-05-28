@@ -10,8 +10,14 @@ const mongoose = require("mongoose");
 
 // const bcrypt = require("bcryptjs");
 
+//ac model
+const acschema = require("./models/ac.model");
+//pro model
+const projectorschema = require("./models/projector.model");
+
 const scheduleSchema = require("./models/schedule.model");
 const { scheduleValidation } = require("./validation/shedule");
+const {acStateOperation, proStateOperation} = require("./controler/componentsControler");
 
 var CronJob = require("cron").CronJob;
 
@@ -27,9 +33,41 @@ const db = mongoose
   })
   .then(() => {
     console.log("Connected to the db...");
+    acschema.find({}, (err, resultAcs)=>{
+      if(err){
+        console.log("Error in finding...");
+      }else{
+        if(resultAcs){
+          console.log("There is Acs...");
+          resultAcs.forEach(element => {
+              acStateOperation(false, element._id);
+              // console.log(element._id); 
+          });
+        }
+        else{
+          console.log("There is no Acs...");
+        }
+      }
+    });
+    projectorschema.find({}, (err, resultProjs)=>{
+      if(err){
+        console.log("Error in finding...");
+      }else{
+        if(resultProjs){
+          console.log("There is Projectors...");
+          resultProjs.forEach(element => {
+              proStateOperation(false, element._id); 
+          });
+        }
+        else{
+          console.log("There is no Projectors...");
+        }
+      }
+    });
   })
   .catch((error) => {
     console.log("Failed to connect db...", error);
+
   });
 
 // const Db = mongoose.connection
@@ -61,7 +99,7 @@ const ser = http.createServer(app).listen(PORT, "localhost", function () {
 //middleware
 app.use(express.json());
 
-var token;
+var token = null;
 
 async function saveScheduleData(data) {
   const newsh = new scheduleSchema({
@@ -80,112 +118,98 @@ async function saveScheduleData(data) {
 }
 
 var getShuduleJob = new CronJob(
-  "0,30 * * * * *",
+  "0 0 19 * * *",
   async function () {
     try {
-      console.log("You will see this message every second");
+      if(token){
+        console.log("You will see this message every 30 second");
 
-      const newData = {
-        roomName: "room01",
-        date: "2020-12-02",
-        subject: "co222",
-        startTime: "03:00:00",
-        endTime: "04:00:00",
-        userId: "e/12/222",
-      };
-      if (scheduleValidation(newData)) {
-        mongoose.connection.db
-          .listCollections({ name: "scheduleschemas" })
-          .next(async function (err, collinfo) {
-            if (err) {
-              console.log("Error in checking collection name...", err);
+      // const newData = {
+      //   roomName: "room01",
+      //   date: "2020-12-02",
+      //   subject: "co222",
+      //   startTime: "03:00:00",
+      //   endTime: "04:00:00",
+      //   userId: "e/12/222",
+      // };
+
+      axios
+        .post("http://localhost:5000/controlUnit/room/get/schedule", {
+          roomName: process.env.ROOM_NAME,
+        },{
+          headers: {
+            "x-auth-token": token,
+          },
+        })
+        .then((respon) => {
+          console.log(respon.data);
+
+          var responseData;
+
+          if (respon.data) {
+            if (respon.data.length > 0) {
+              responseData = respon.data[0];
             } else {
-              if (collinfo) {
-                console.log("There is a collection...");
-                mongoose.connection.db.dropCollection(
-                  "scheduleschemas",
-                  async function (err, result) {
-                    if (err) {
-                      console.log("Collection dropping error...", err);
+              responseData = respon.data;
+            }
+            const newData = {
+              roomName: responseData.roomName,
+              date: responseData.data,
+              subject: responseData.subject,
+              startTime: responseData.startTime,
+              endTime: responseData.endTime,
+              userId: responseData.userId,
+            };
+            if (scheduleValidation(newData)) {
+              mongoose.connection.db
+                .listCollections({ name: "scheduleschemas" })
+                .next(async function (err, collinfo) {
+                  if (err) {
+                    console.log("Error in checking collection name...", err);
+                  } else {
+                    if (collinfo) {
+                      console.log("There is a collection...");
+                      mongoose.connection.db.dropCollection(
+                        "scheduleschemas",
+                        async function (err, result) {
+                          if (err) {
+                            console.log("Collection dropping error...", err);
+                          } else {
+                            console.log("Droped the collection...");
+                            try {
+                              await saveScheduleData(newData);
+                              console.log("Saving sucsess...");
+                            } catch (error) {
+                              console.log("DataBase saving error...", error);
+                            }
+                          }
+                        }
+                      );
                     } else {
-                      console.log("Droped the collection...");
+                      console.log("Now such collection to drop ...");
                       try {
                         await saveScheduleData(newData);
                         console.log("Saving sucsess...");
                       } catch (error) {
-                        console.log("DataBase saving error...", error);
+                        console.log("Database saving error...", error);
                       }
                     }
                   }
-                );
-              } else {
-                console.log("Now such collection...");
-                try {
-                  await saveScheduleData(newData);
-                  console.log("Saving sucsess...");
-                } catch (error) {
-                  console.log("Database saving error...", error);
-                }
-              }
+                });
+            } else {
+              console.log("validation failed...");
             }
-          });
-      } else {
-        console.log("validation failed...");
-      }
-
-      axios
-        .post("http://localhost:5000/main/today", {
-          roomName: "room01",
-        })
-        .then((respon) => {
-          console.log(respon.data);
-          const newData = {
-            roomName: "room01",
-            date: "2020-12-02",
-            subject: "co222",
-            startTime: "03:00:00",
-            endTime: "04:00:00",
-            userId: "e/12/222",
-          };
-          if (scheduleValidation(newData)) {
-            mongoose.connection.db
-              .listCollections({ name: "scheduleschemas" })
-              .next(function (err, collinfo) {
-                if (err) {
-                  console.log(err);
-                } else {
-                  if (collinfo) {
-                    console.log(collinfo);
-                    mongoose.connection.db.dropCollection(
-                      "scheduleschemas",
-                      function (err, result) {
-                        if (err) {
-                          console.log(err);
-                        } else {
-                          console.log(result);
-                          try {
-                            saveScheduleData(newData);
-                          } catch (error) {
-                            console.log(error);
-                          }
-                        }
-                      }
-                    );
-                  } else {
-                    try {
-                      saveScheduleData(newData);
-                    } catch (error) {
-                      console.log(error);
-                    }
-                  }
-                }
-              });
           } else {
-            console.log("failed");
+            console.log("There is no data...");
           }
-        }).catch((err)=>{
-          console.log('Error in connection...');
+        })
+        .catch((err) => {
+          console.log("Error in connection...");
         });
+      }
+      else{
+        console.log("Need to loging first...");
+      }
     } catch (error) {
       console.log("Error in function...", error);
     }
@@ -202,8 +226,8 @@ var authJob = new CronJob(
     try {
       axios
         .post("http://localhost:5000/login/controlUnit", {
-          roomName: "room01",
-          password: "password",
+          roomName: process.env.ROOM_NAME,
+          password: process.env.PASSWORD,
         })
         .then((response) => {
           token = response.data.token;
@@ -219,20 +243,77 @@ var authJob = new CronJob(
 );
 authJob.start();
 
+var isFetch = false;
 var getComponentsJob = new CronJob(
-  "0 0 7 * * *",
+  "0,30 * * * * *",
   async function () {
+    if(isFetch){
+      isFetch = true;
     try {
-      axios
-        .post("http://localhost:5000/main/get/roomCompData", {
-          roomName: "room01",
-        })
+      if(!token){
+        axios
+        .post(
+          "http://localhost:5000/controlUnit/get/roomCompData",
+          {
+            roomName: process.env.ROOM_NAME,
+          },
+          {
+            headers: {
+              "x-auth-token": token,
+            },
+          }
+        )
         .then((response) => {
-          token = response.data.token;
-          console.log("Sucessfully loged...");
+          // console.log(response.data);
+          //response.data
+          if (response.data) {
+            if (response.data.ac) {
+              console.log("There are Acs...");
+              try {
+                acschema.insertMany(response.data.ac, (err, resultSavedAcs) => {
+                  if (err) {
+                    console.log("There is an error in insert many...");
+                  } else {
+                    console.log("Saved Acs");
+                  }
+                });
+              } catch (error) {
+                console.log("Error in saving ac list...");
+              }
+              
+              if(response.data.proj){
+                console.log("There is projectors...");
+                try {
+                  projectorschema.insertMany(
+                    response.data.proj,
+                    (err, resultSavedProj) => {
+                      if (err) {
+                        console.log("There is an error in insert many...");
+                      } else {
+                        console.log("Saved Projectors");
+                      }
+                    }
+                  );
+                } catch (error) {
+                  console.log("Error in saving projector list...");
+                }
+              }
+              else{
+                console.log("There is no projectors...");
+              }
+            } else {
+              console.log("No acs");
+            }
+          } else {
+            console.log("No data...");
+          }
         });
+      }else{
+        console.log("Need to loging first...");
+      }
     } catch (error) {
       console.log("Error in login function...", error);
+    }
     }
   },
   null,
@@ -249,31 +330,36 @@ app.use("/shedule", shedule);
 const compControl = require("./routes/componentControl");
 app.use("/components", compControl);
 
+//404
+app.use((req, res) => {
+  res.status(404).send("404");
+});
+
 
 //anoter way of http request
 // var options = {
-      //   host: 'localhost',
-      //   path: 'main/today',
-      //   port: '5000',
-      //   method: 'POST',
-      //   headers: {'custom': 'Custom Header Demo works'}
-      // };
-      // const data = JSON.stringify({
-      //   'roomName': 'ro01',
-      // });
-      // callback = function(response) {
-      //   var str = ''
-      //   response.on('data', function (chunk) {
-      //     str += chunk;
-      //   });
+//   host: 'localhost',
+//   path: 'main/today',
+//   port: '5000',
+//   method: 'POST',
+//   headers: {'custom': 'Custom Header Demo works'}
+// };
+// const data = JSON.stringify({
+//   'roomName': 'ro01',
+// });
+// callback = function(response) {
+//   var str = ''
+//   response.on('data', function (chunk) {
+//     str += chunk;
+//   });
 
-      //   response.on('end', function () {
-      //     console.log('dt',str);
-      //   });
-      // }
+//   response.on('end', function () {
+//     console.log('dt',str);
+//   });
+// }
 
-      // var req = http.request(options, callback);
-      // req.on('error', error => {
-      //   console.error('err',error)
-      // })
-      // req.end();
+// var req = http.request(options, callback);
+// req.on('error', error => {
+//   console.error('err',error)
+// })
+// req.end();

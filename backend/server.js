@@ -46,16 +46,20 @@ app.use("/api/auth", require("./route/auth"));
 app.use("/api/newuser", require("./route/newuser"));
 
 //user signup route
-const signup = require("./Route/signup");
+const signup = require("./route/signup");
 app.use("/signup", signup);
 
 //admin//user login route
-const login = require("./Route/login");
+const login = require("./route/login");
 app.use("/login", login);
 
 // //admin route
-const main = require("./Route/main");
+const main = require("./route/main");
 app.use("/main", main);
+
+//for control unit
+const CU = require("./route/controlUnit");
+app.use("/controlUnit", CU);
 
 // 404
 app.use((req, res) => {
