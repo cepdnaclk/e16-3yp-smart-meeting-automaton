@@ -54,7 +54,7 @@ const db = mongoose
         console.log("Error in finding...");
       }else{
         if(resultProjs){
-          console.log("There is Projectors...");
+          // console.log("There is Projectors...",resultProjs);
           resultProjs.forEach(element => {
               proStateOperation(false, element._id); 
           });
@@ -118,7 +118,7 @@ async function saveScheduleData(data) {
 }
 
 var getShuduleJob = new CronJob(
-  "0 0 19 * * *",
+  "0,30 * * * * *",
   async function () {
     try {
       if(token){
@@ -146,8 +146,9 @@ var getShuduleJob = new CronJob(
 
           var responseData;
 
-          if (respon.data) {
-            if (respon.data.length > 0) {
+          if (respon.data && respon.data.length > 0) {
+            console.log(respon.data.length);
+            if (respon.data.length > 1) {
               responseData = respon.data[0];
             } else {
               responseData = respon.data;
@@ -221,7 +222,7 @@ var getShuduleJob = new CronJob(
 getShuduleJob.start();
 
 var authJob = new CronJob(
-  "0 0 7 * * *",
+  "25 20 * * * *",
   async function () {
     try {
       axios
@@ -231,7 +232,7 @@ var authJob = new CronJob(
         })
         .then((response) => {
           token = response.data.token;
-          console.log("Sucessfully loged...");
+          console.log("Sucessfully loged...", token);
         });
     } catch (error) {
       console.log("Error in login function...", error);
@@ -242,6 +243,38 @@ var authJob = new CronJob(
   "Asia/Colombo"
 );
 authJob.start();
+
+var runScheduleJob = new CronJob(
+  "0 50 * * * *",
+  async function () {
+    try {
+      scheduleSchema.find({},(err, schedul)=>{
+        if(err){
+          console.log("Error in serching...");
+        }else{
+          if(schedul){
+            const startT = new Date(schedul.startTime);
+            const endT = new Date(schedul.endTime);
+            // setTimeout(myFunc, 1500, ());
+            acStateOperation(true, 'idAC');
+            proStateOperation(true, 'idPro');
+            setTimeout(acStateOperation, (endT-startT), true, 'idAC');
+          }
+          else{
+            console.log("No schedule...");
+          }
+        }
+      });
+      
+    } catch (error) {
+      console.log("Error in getting schedules...", error);
+    }
+  },
+  null,
+  true,
+  "Asia/Colombo"
+);
+runScheduleJob.start();
 
 var isFetch = false;
 var getComponentsJob = new CronJob(
