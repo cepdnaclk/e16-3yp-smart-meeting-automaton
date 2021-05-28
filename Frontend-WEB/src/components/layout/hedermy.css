@@ -21,7 +21,7 @@ Variables
   /* darkest grey - used for headings */
   --clr-grey-1: hsl(236, 90%, 21%);
   --clr-grey-2: hsl(211, 39%, 23%);
-  --clr-grey-3: hsl(210, 21%, 74%);
+  --clr-grey-3: hsl(0, 0%, 100%);
   --clr-grey-4: hsl(209, 28%, 39%);
   /* grey used for paragraphs */
   --clr-dblue: hsl(239, 82%, 15%);
@@ -149,6 +149,17 @@ nav {
   padding: 0.5rem 2rem;
   /* padding-right: 2rem; */
 }
+#headerandicon {
+  color: rgb(184, 252, 252);
+  transition: var(--transition);
+}
+#headerandicon:hover {
+  /* background: var(--clr-primary-8); */
+  color: var(--clr-primary-5);
+}
+/* .nav h3 {
+  color: #fff !important;
+} */
 .nav-toggle {
   font-size: 1.5rem;
   color: var(--clr-primary-5);
@@ -165,7 +176,7 @@ nav {
   height: 40px;
 }
 .links a {
-  color: var(--clr-grey-3);
+  color: #fff;
   font-size: 1rem;
   text-transform: capitalize;
   letter-spacing: var(--spacing);

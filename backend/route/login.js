@@ -3,13 +3,17 @@ const express = require("express");
 const router = express.Router();
 
 // auth
-const { authorize } = require("../middleware/auth-old");
+const { authorize, authorizeCU } = require("../middleware/auth-old");
 
 //joi schema
 const { userLoginValidation } = require("../validation/user");
+const {CULoginValidation} = require("../validation/controlUnit");
 
 //admin loggin userLoginValidation,
 router.post('/admin', authorize);
+
+//control unit login
+router.post('/controlUnit', CULoginValidation, authorizeCU);
 
 // //admin fresh
 // router.post('/admin/fresh', userLoginValidation, adminFreshAuth);

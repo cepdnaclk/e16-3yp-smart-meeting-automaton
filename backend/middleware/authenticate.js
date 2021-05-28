@@ -13,6 +13,9 @@ const bcryptjs = require("bcryptjs");
 //module
 const user = require("../modules/user.model");
 
+//room model
+const room = require("../modules/lecRoom.model");
+
 async function authNewUser(req, res, next) {
   try {
     newUser.findOne({ userId: req.body.userId }, async (err, doc) => {
@@ -144,6 +147,48 @@ async function authUser(req, res, next) {
   }
 }
 
+async function authCU(req, res, next) {
+  try {
+    const authHeader = req.headers["x-auth-token"];
+    const token = authHeader; //&& authHeader.split(' ')[1];
+    if (token == null)
+      res.status(401).json({
+        Error: "does not have token. authorization denied",
+      });
+    else {
+      jwt.verify(token, process.env.LOGIN_CU_TOKEN, (err, roomByToken) => {
+        if (err)
+          res.status(401).json({
+            Error: "Token not valid",
+          });
+        else {
+          room.findById(roomByToken.room.id, async (err, data) => {
+            if (err)
+              res.json({
+                Error: "Try again...",
+              });
+            else {
+              if (data) {
+                // console.log('Grand accsess...');
+                req.user = data.roomName;
+                next();
+              } else {
+                res.status(400).json({
+                  Error: "Unauthorized",
+                });
+              }
+            }
+          });
+        }
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      Error: "Error",
+    });
+  }
+}
+
 // async function authAdminFresh(req, res, next) {
 //     try{
 //         const authHeader = req.headers['x-auth-token'];
@@ -237,4 +282,5 @@ module.exports = {
   authAdmin,
   authUser,
   authNewUser,
+  authCU,
 };

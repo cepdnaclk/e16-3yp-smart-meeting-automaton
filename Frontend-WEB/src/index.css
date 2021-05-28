@@ -797,11 +797,11 @@ p {
   height: 100%;
 }
 .config-divices-table-header:nth-child(1) {
-  width: 35%;
+  width: 30%;
 }
 
 .config-divices-table-header:nth-child(2) {
-  width: 25%;
+  width: 30%;
 }
 
 .config-divices-table-header:nth-child(3) {
@@ -828,6 +828,7 @@ p {
 }
 
 .config-divices-table-data {
+  text-align: center;
   padding: 0.5rem;
   border-bottom: 1px solid black;
   font-size: large;

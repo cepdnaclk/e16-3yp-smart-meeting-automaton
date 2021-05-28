@@ -31,7 +31,12 @@ class SMA extends StatelessWidget {
           home: auth.isAuth ? TimeTable() : AuthScreen(),
           // RoomManeger(),
           //auth.isAuth ? TimeTable() : AuthScreen(),
-          routes: {},
+          routes: {
+            RoomManeger.routeName: auth.isAuth
+                ? (ctx) => RoomManeger(
+                    qrScan: ModalRoute.of(ctx).settings.arguments as String)
+                : (ctx) => AuthScreen(),
+          },
         ),
       ),
     );

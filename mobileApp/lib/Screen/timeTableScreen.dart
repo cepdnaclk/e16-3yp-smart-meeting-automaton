@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
+import './roomManegerScreen.dart';
 import '../widgets/tableEntity.dart';
 
 class TimeTable extends StatefulWidget {
@@ -26,37 +28,37 @@ class _TimeTableState extends State<TimeTable> {
   Future<void> _fetchData() async {
     final String url = 'http://10.0.2.2:5000/main/timeTable';
     try {
-      // final respose = await http.post(
-      //   url,
-      //   body: null,
-      // );
-      // _timeTableData = json.decode(respose.body);
-      _timeTableData = [
-        {
-          'id': '001',
-          'room': 'Lec01',
-          'sub': 'CO222',
-          'time': '2-3',
-        },
-        {
-          'id': '001',
-          'room': 'Lec01',
-          'sub': 'CO222',
-          'time': '2-3',
-        },
-        {
-          'id': '001',
-          'room': 'Lec01',
-          'sub': 'CO222',
-          'time': '2-3',
-        },
-        {
-          'id': '001',
-          'room': 'Lec01',
-          'sub': 'CO222',
-          'time': '2-3',
-        },
-      ];
+      final respose = await http.post(
+        url,
+        body: null,
+      );
+      _timeTableData = json.decode(respose.body);
+      // _timeTableData = [
+      //   {
+      //     'id': '001',
+      //     'room': 'Lec01',
+      //     'sub': 'CO222',
+      //     'time': '2-3',
+      //   },
+      //   {
+      //     'id': '001',
+      //     'room': 'Lec01',
+      //     'sub': 'CO222',
+      //     'time': '2-3',
+      //   },
+      //   {
+      //     'id': '001',
+      //     'room': 'Lec01',
+      //     'sub': 'CO222',
+      //     'time': '2-3',
+      //   },
+      //   {
+      //     'id': '001',
+      //     'room': 'Lec01',
+      //     'sub': 'CO222',
+      //     'time': '2-3',
+      //   },
+      // ];
       print(_timeTableData);
     } catch (e) {
       throw (e);
@@ -89,7 +91,13 @@ class _TimeTableState extends State<TimeTable> {
         true,
         ScanMode.QR,
       );
+      print("printing qrScan");
       print(qrCode);
+      final qrCodetemp = "Hellow";
+      Navigator.of(context).pushNamed(
+        RoomManeger.routeName,
+        arguments: qrCodetemp,
+      );
     } catch (e) {
       print(e);
     }

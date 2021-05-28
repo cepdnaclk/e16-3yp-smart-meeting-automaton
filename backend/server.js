@@ -29,18 +29,12 @@ const db = mongoose
 const app = express();
 
 //port
-const PORT = process.env.PORT || 3000;
+// const PORT = process.env.PORT || 3000;
 
 //server initiating
-const ser = http.createServer(app).listen(PORT, "localhost", function () {
-  console.log(`Server is listening on port ${PORT}`);
+const ser = http.createServer(app).listen(process.env.PORT || 5000, "localhost", function () {
+  console.log(`Server is listening on port ${process.env.PORT || 5000}`);
 });
-
-// //need to impl
-// cron.schedule('* * /2 * *', ()=>{
-//     //run background task
-
-// });
 
 //middleware
 app.use(express.json());
@@ -50,6 +44,28 @@ app.use(express.json());
 // AUTH ROUTES
 app.use("/api/auth", require("./route/auth"));
 app.use("/api/newuser", require("./route/newuser"));
+
+//user signup route
+const signup = require("./route/signup");
+app.use("/signup", signup);
+
+//admin//user login route
+const login = require("./route/login");
+app.use("/login", login);
+
+// //admin route
+const main = require("./route/main");
+app.use("/main", main);
+
+//for control unit
+const CU = require("./route/controlUnit");
+app.use("/controlUnit", CU);
+
+// 404
+app.use((req, res) => {
+  console.log('in');
+  res.status(404).send("404");
+});
 
 // app.post("/main/wishwa/", (req, res) => {
 //   console.log("post shedule");
@@ -282,24 +298,9 @@ app.use("/api/newuser", require("./route/newuser"));
 //   }
 // });
 
-//user signup route
-const signup = require("./Route/signup");
-app.use("/signup", signup);
 
-//admin//user login route
-const login = require("./Route/login");
-app.use("/login", login);
-
-// //admin route
-const main = require("./Route/main");
-app.use("/main", main);
 
 // //route user
 // const user = require('./Route/user');
 // app.use('/user', user);
 
-// 404
-app.use((req, res) => {
-  console.log('in');
-  res.status(404).send("404");
-});

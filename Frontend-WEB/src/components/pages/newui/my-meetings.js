@@ -77,6 +77,14 @@ function UserMyMeetings() {
         console.log(startTime);
 
         setMeetings(myMeetings);
+      })
+      .catch(function (error) {
+        //    setWrongState(true);
+        setAlert("Server Error. Please Retry", "success");
+        // setTimeout(() => {
+        //  setWrongState(false);
+        // }, 3000);
+        // alert(error);
       });
   };
   const cancelMeeting = (id) => {
@@ -90,7 +98,7 @@ function UserMyMeetings() {
         console.log(response);
         //  setRoomInsert({ name: "", category: "" });
         //    setAlertState(true);
-        setAlert("Meeting is Deleted", "success");
+        setAlert("Meeting is Canceled", "success");
         setcallback(!callback);
         // getallmeetings();
         // setTimeout(() => {
@@ -100,7 +108,7 @@ function UserMyMeetings() {
       })
       .catch(function (error) {
         //    setWrongState(true);
-        // setAlert("Room is Added", "success");
+        setAlert("Meeting is Not Deleted", "success");
         // setTimeout(() => {
         //  setWrongState(false);
         // }, 3000);

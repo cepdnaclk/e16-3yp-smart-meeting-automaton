@@ -10,6 +10,8 @@ const jwt = require("jsonwebtoken");
 //module user
 const user = require("../modules/user.model");
 
+const roomschema = require("../modules/lecRoom.model");
+
 // //autherazzation
 // const autheratazation = require('./autherazation');
 
@@ -29,6 +31,19 @@ function getFreshToken(data) {
   try {
     const token = jwt.sign(data, process.env.LOGIN_FRESH_TOKEN, {
       expiresIn: "30h",
+    });
+    // console.log(token);
+    return token;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+function getTokenCU(data) {
+  //console.log('token');
+  try {
+    const token = jwt.sign(data, process.env.LOGIN_CU_TOKEN, {
+      expiresIn: "12h",
     });
     // console.log(token);
     return token;
@@ -71,6 +86,57 @@ async function authorize(req, res, next) {
             //console.log(accessToken);
             res.json({ token: accessToken,
               expire: 60,
+            });
+            // next();
+          }
+        } catch (err) {
+          //console.log('Errrrr');
+          res.status(401).json({
+            Error: "Error",
+          });
+        }
+      } else {
+        res.status(400).json({
+          Error: "Unauthorized",
+        });
+      }
+    }
+  });
+}
+
+async function authorizeCU(req, res, next) {
+  const roomName = req.body.roomName;
+  const password = req.body.password;
+  roomschema.findOne({ roomName: roomName }, async (err, roomData) => {
+    if (err)
+      res.status(500).json({
+        Error: "DB Server faild",
+      });
+    else {
+      if (roomData) {
+        try {
+          // console.log('err');
+          const passwordValid = await bcryptjs.compare(
+            password,
+            roomData.password
+          );
+          //console.log(passwordValid);
+          if (!passwordValid) {
+            // console.log(!passwordValid);
+            res.status(400).json({
+              Error: "Email or password wrong",
+            });
+          } else {
+            const payload = {
+              room: {
+                id: roomData._id,
+              },
+            };
+
+            const accessToken = getTokenCU(payload);
+            //console.log(accessToken);
+            res.json({ token: accessToken,
+              expire: 12*60,
             });
             // next();
           }
@@ -228,4 +294,5 @@ async function authorize(req, res, next) {
 
 module.exports = {
   authorize,
+  authorizeCU,
 };

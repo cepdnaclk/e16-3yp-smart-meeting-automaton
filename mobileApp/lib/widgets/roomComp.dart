@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
@@ -8,10 +10,12 @@ class RoomComponent extends StatefulWidget {
   final bool compState;
   final String id;
   final changeState;
+  final compId;
 
   RoomComponent({
     this.changeState,
     this.name,
+    this.compId,
     this.compState,
     Key key,
     this.id,
@@ -22,6 +26,7 @@ class RoomComponent extends StatefulWidget {
         name: name,
         compState: compState,
         id: id,
+        compId: compId,
       );
 }
 
@@ -29,17 +34,27 @@ class _RoomComponentState extends State<RoomComponent> {
   bool compState;
   final String name;
   final String id;
+  final compId;
 
   _RoomComponentState({
     this.name,
     this.compState,
     this.id,
+    this.compId,
   });
 
   bool _isLoading = false;
 
   Future<void> _changeCompState(bool nextState, String component) async {
-    final String url = '';
+    String url = "http://10.0.2.2:3000/components/control/";
+    print(component);
+    if (component == "ac") {
+      url += "ac";
+      print(url);
+    } else if (component == 'pro') {
+      url += "pro";
+      print(url);
+    }
     setState(() {
       _isLoading = true;
     });
@@ -48,18 +63,22 @@ class _RoomComponentState extends State<RoomComponent> {
       'id': id,
       'state': nextState,
     };
+    print('payload');
     try {
-      // final respose = await http.post(
-      //   url,
-      //   headers: <String, String>{
-      //     'x-auth': 'token',
-      //   },
-      //   body: payLoad,
-      // );
-      // print(respose);
+      final respose = await http.post(
+        url,
+        headers: <String, String>{
+          'x-auth': 'token',
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: json.encode(payLoad),
+      );
+      print('res');
+      print(respose);
       widget.changeState(id, nextState);
     } catch (e) {
-      throw (e);
+      // throw (e);
+      print(e);
     }
     // resposeData = json.decode(respose.body);
 
@@ -71,8 +90,9 @@ class _RoomComponentState extends State<RoomComponent> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Card(
       color: Colors.white,
+      elevation: 5,
       child: _isLoading
           ? Center(
               child: CircularProgressIndicator(
@@ -82,7 +102,7 @@ class _RoomComponentState extends State<RoomComponent> {
           : SwitchListTile(
               activeColor: Colors.black,
               title: Text(
-                name,
+                compId,
                 style: TextStyle(
                   fontSize: 20,
                   color: Colors.black,

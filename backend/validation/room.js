@@ -6,6 +6,8 @@ const roomschema = joi.object({
 
   controlUnitId: joi.string().required(),
 
+  password: joi.string().min(6).max(1024).required(),
+  
   acId: joi.array().items(String),
 
   projectorId: joi.array().items(String),
@@ -26,6 +28,7 @@ function roomValidation(req, res, next) {
   const validate = roomschema.validate({
     roomName: req.body.roomName,
     controlUnitId: req.body.controlUnitId,
+    password: req.body.password
   });
   console.log(req.body);
   if (validate.error) {

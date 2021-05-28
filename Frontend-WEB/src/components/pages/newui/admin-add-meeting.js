@@ -133,7 +133,7 @@ const AdminAddMeeting = () => {
         // setTimeout(() => {
         //  setWrongState(false);
         // }, 3000);
-        setAlert("Shedule is Not added", "danger");
+        setAlert("Please Retry", "danger");
         alert(error);
       });
   };
@@ -157,7 +157,7 @@ const AdminAddMeeting = () => {
 
         //  setRoomInsert({ name: "", category: "" });
         //    setAlertState(true);
-        setAlert("Shedule is Added", "success");
+        setAlert("Meeting is Added", "success");
         // setTimeout(() => {
         //   setAlertState(false);
         // }, 3000);
@@ -169,7 +169,7 @@ const AdminAddMeeting = () => {
         // setTimeout(() => {
         //  setWrongState(false);
         // }, 3000);
-        setAlert("Shedule is Not added", "danger");
+        setAlert("Meeting is Not Added", "danger");
         //alert(error);
       });
   };
