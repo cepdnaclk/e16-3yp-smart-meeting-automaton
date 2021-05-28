@@ -10,10 +10,12 @@ class RoomComponent extends StatefulWidget {
   final bool compState;
   final String id;
   final changeState;
+  final compId;
 
   RoomComponent({
     this.changeState,
     this.name,
+    this.compId,
     this.compState,
     Key key,
     this.id,
@@ -24,6 +26,7 @@ class RoomComponent extends StatefulWidget {
         name: name,
         compState: compState,
         id: id,
+        compId: compId,
       );
 }
 
@@ -31,11 +34,13 @@ class _RoomComponentState extends State<RoomComponent> {
   bool compState;
   final String name;
   final String id;
+  final compId;
 
   _RoomComponentState({
     this.name,
     this.compState,
     this.id,
+    this.compId,
   });
 
   bool _isLoading = false;
@@ -85,8 +90,9 @@ class _RoomComponentState extends State<RoomComponent> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Card(
       color: Colors.white,
+      elevation: 5,
       child: _isLoading
           ? Center(
               child: CircularProgressIndicator(
@@ -96,7 +102,7 @@ class _RoomComponentState extends State<RoomComponent> {
           : SwitchListTile(
               activeColor: Colors.black,
               title: Text(
-                name,
+                compId,
                 style: TextStyle(
                   fontSize: 20,
                   color: Colors.black,

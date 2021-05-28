@@ -51,30 +51,39 @@ class _RoomManegerState extends State<RoomManeger> {
   }
 
   Future<void> _fetchData() async {
-    final String url = 'http://10.0.2.2:5000/main/timeTable';
+    final String url = 'http://10.0.2.2:3000/components/all';
     //url should be qrScan
     try {
-      // final respose = await http.post(
-      //   url,
-      //   body: null,
-      // );
-      // _componentList = json.decode(respose.body);
-      print(qrScan);
-      _componentList = [
-        {
-          'id': 'Ac01',
-          'name': 'ac',
-          'state': true,
-        },
-        {
-          'id': 'pro01',
-          'name': 'pro',
-          'state': true,
-        }
-      ];
+      setState(() {
+        _isLoading = true;
+      });
+      final respose = await http.get(
+        url,
+      );
+      var respondData = json.decode(respose.body);
+      setState(() {
+        _componentList = [...respondData['acList'], ...respondData['proList']];
+        _isLoading = false;
+      });
+      // _componentList = _componentList.concat(respondData.proList);
+
+      // print(_);
+      // _componentList = [
+      //   {
+      //     'id': 'Ac01',
+      //     'name': 'ac',
+      //     'state': true,
+      //   },
+      //   {
+      //     'id': 'pro01',
+      //     'name': 'pro',
+      //     'state': true,
+      //   }
+      // ];
       print("_componentList");
       print(_componentList);
     } catch (e) {
+      print(e);
       throw (e);
     }
   }
@@ -82,15 +91,15 @@ class _RoomManegerState extends State<RoomManeger> {
   @override
   void didChangeDependencies() {
     if (_isInit) {
-      setState(() {
-        _isLoading = true;
-      });
+      // setState(() {
+      //   _isLoading = true;
+      // });
 
       try {
         _fetchData().then((value) {
-          setState(() {
-            _isLoading = false;
-          });
+          // setState(() {
+          //   _isLoading = false;
+          // });
         }).catchError((e) {
           _showErrorDialog('Data fetch failed.');
         });
@@ -161,18 +170,33 @@ class _RoomManegerState extends State<RoomManeger> {
                           backgroundColor: Colors.white,
                         ),
                       )
-                    : ListView.builder(
-                        itemCount: _componentList.length,
-                        itemBuilder: (ctx, index) {
-                          return RoomComponent(
-                            changeState: _chengeState,
-                            id: _componentList[index]['id'],
-                            key: Key(_componentList[index]['id']),
-                            name: _componentList[index]['name'],
-                            compState: _componentList[index]['state'],
-                          );
-                        },
-                      ),
+                    : _componentList == null
+                        ? Container(
+                            alignment: Alignment.topCenter,
+                            child: Text(
+                              "No Components",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 26,
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            // color: Colors.white,
+                          )
+                        : ListView.builder(
+                            itemCount: _componentList.length,
+                            itemBuilder: (ctx, index) {
+                              return RoomComponent(
+                                changeState: _chengeState,
+                                id: _componentList[index]['id'],
+                                key: Key(_componentList[index]['id']),
+                                name: _componentList[index]['name'],
+                                compId: _componentList[index]['compId'],
+                                compState: _componentList[index]['state'],
+                              );
+                            },
+                          ),
               ),
             ),
           ],
