@@ -11,10 +11,20 @@ const acschema = require("../modules/ac.model");
 //model projector
 const projectorschema = require("../modules/projectors.model");
 
+//model schedule
+const scheduleschema = require("../modules/schedule.model");
+
+//calendar api
+const {
+  addEvent,
+  editEvent,
+  deleteEvent,
+  getEventListAll,
+} = require("../middleware/calendarApi");
 //authentication
 const { authCU } = require("../middleware/authenticate");
 
-//get room components 
+//get room components
 // authCU,
 router.post("/get/roomCompData", async (req, res) => {
   console.log(req.body.roomName);
@@ -103,11 +113,14 @@ router.post("/get/roomCompData", async (req, res) => {
 });
 
 //authCU
-router.post("/room/get/schedule", async (req, res) => {
+router.post("/room/get/schedule", authCU, async (req, res) => {
   try {
-    // if(req.body.startTime != 'undefined'){
+    // console.log(req.body.roomName);
+    // console.log(req.header("x-auth-token"));
+    // res.status(200).json({
+    //   Error: "No schedule : ",
+    // });
 
-    // }
     const startT = new Date();
     const endT = new Date(
       new Date(startT.getTime() + 60 * 60000).toISOString()
@@ -116,7 +129,7 @@ router.post("/room/get/schedule", async (req, res) => {
       startTime: startT,
       endTime: endT,
     });
-    console.log(resultCalApi.data.items.length);
+    console.log(resultCalApi.data.items);
     if (resultCalApi.data.items.length > 0) {
       try {
         var idList = [];
@@ -138,6 +151,7 @@ router.post("/room/get/schedule", async (req, res) => {
                 Error: "Try again",
               });
             } else {
+              console.log(docs);
               res.send(docs);
             }
           });

@@ -169,6 +169,7 @@ async function authCU(req, res, next) {
               });
             else {
               if (data) {
+                // console.log('Grand accsess...');
                 req.user = data.roomName;
                 next();
               } else {

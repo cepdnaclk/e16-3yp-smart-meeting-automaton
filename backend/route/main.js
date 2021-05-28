@@ -70,50 +70,95 @@ const lecRoom = require("../modules/lecRoom.model");
 const { sendMqttNew, sendMqttinit } = require("../controlers/mqtt");
 const { json } = require("express");
 
-/*
-  temp
-*/
+
 
 router.post("/timeTable", async (req, res) => {
-  const tp = [
-    {
-      userId: "user01",
-      room: "room01",
-      sub: "CO222",
-      time: "2-3",
-    },
-    {
-      userId: "user01",
-      room: "room01",
-      sub: "CO222",
-      time: "2-3",
-    },
-    {
-      userId: "user01",
-      room: "room01",
-      sub: "CO222",
-      time: "2-3",
-    },
-    {
-      userId: "user01",
-      room: "room01",
-      sub: "CO222",
-      time: "2-3",
-    },
-    {
-      userId: "user01",
-      room: "room01",
-      sub: "CO222",
-      time: "2-3",
-    },
-  ];
+  // const tp = [
+  //   {
+  //     userId: "user01",
+  //     room: "room01",
+  //     sub: "CO222",
+  //     time: "2-3",
+  //   },
+  //   {
+  //     userId: "user01",
+  //     room: "room01",
+  //     sub: "CO222",
+  //     time: "2-3",
+  //   },
+  //   {
+  //     userId: "user01",
+  //     room: "room01",
+  //     sub: "CO222",
+  //     time: "2-3",
+  //   },
+  //   {
+  //     userId: "user01",
+  //     room: "room01",
+  //     sub: "CO222",
+  //     time: "2-3",
+  //   },
+  //   {
+  //     userId: "user01",
+  //     room: "room01",
+  //     sub: "CO222",
+  //     time: "2-3",
+  //   },
+  // ];
+  try {
+    const startT = new Date();
+    const endT = new Date(
+      new Date(startT.getTime() + 24 * 60 * 60000).toISOString()
+    );
+    const resultCalApi = await getEventListAll({
+      startTime: startT,
+      endTime: endT,
+    });
+    console.log(resultCalApi.data.items.length);
+    if (resultCalApi.data.items.length > 0) {
+      try {
+        var idList = [];
+        resultCalApi.data.items.forEach((element) => {
+          idList.push(element.id);
+        });
 
-  res.status(400).json(tp);
+        scheduleschema
+          .find({
+            _id: {
+              $in: idList,
+            },
+            userId: req.body.userId,
+          })
+          .sort({ startTime: 1 })
+          .exec(function (err, docs) {
+            if (err) {
+              res.status(400).json({
+                Error: "Try again",
+              });
+            } else {
+              res.send(docs);
+            }
+          });
+      } catch (error) {
+        console.log("Db access faild...", error);
+        res.send({
+          Error: "Data base error : " + error,
+        });
+      }
+    } else {
+      console.log("No schedule");
+      res.status(400).json({
+        Error: "No schedule : ",
+      });
+    }
+  } catch (error) {
+    console.log("Calendar api faild...", error);
+    res.status(400).json({
+      Error: "Calenadar api errror : " + error,
+    });
+  }
 });
 
-/*
-  temp
-*/
 
 //authAdmin, verifyAdmin,
 router.post("/adduser", newUserValidation, async (req, res) => {
