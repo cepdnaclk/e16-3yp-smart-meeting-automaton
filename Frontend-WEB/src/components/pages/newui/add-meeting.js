@@ -49,7 +49,7 @@ const AddMeeting = () => {
 
         //  setRoomInsert({ name: "", category: "" });
         //    setAlertState(true);
-        setAlert("meetings come", "success");
+        //  setAlert("meetings come", "success");
         // setTimeout(() => {
         //   setAlertState(false);
         // }, 3000);
@@ -61,8 +61,8 @@ const AddMeeting = () => {
         // setTimeout(() => {
         //  setWrongState(false);
         // }, 3000);
-        setAlert("meetings not come", "danger");
-        alert(error);
+        setAlert("Please Fill All fields", "danger");
+        // alert(error);
       });
   };
 

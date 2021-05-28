@@ -50,14 +50,17 @@ router.post(
         return res.status(400).json({ msg: "Invalid Credentials" });
       }
 
-      const isMatch = await bcrypt.compare(password, user.password);
-      //let isMatch = false;
+     const isMatch = await bcrypt.compare(password, user.password);
+      
+      // let isMatch = false;
       // if (password === user.password) {
       //   isMatch = true;
       // }
-      console.log(user.password);
-      console.log("sdfsdfsdfsdf");
-      console.log(password);
+      // console.log(user)
+      // console.log("asdasdasd")
+      // console.log(user.password);
+      // console.log("sdfsdfsdfsdf");
+      // console.log(password);
 
       if (!isMatch) {
         //!isMatch

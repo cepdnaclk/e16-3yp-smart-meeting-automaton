@@ -7,7 +7,8 @@ import AddUser from "../components/pages/AddUser";
 import Configure from "../components/pages/Configure";
 import Rooms from "../components/pages/Rooms";
 import Register from "../components/auth/Register";
-import Login from "../components/auth/Login";
+//import Login from "../components/auth/Login";
+import Login from "../components/auth/LoginNew";
 import NotFound from "../components/pages/NotFound";
 import AuthContext from "../context/auth/authContext";
 import About from "../components/pages/About";
@@ -22,7 +23,7 @@ import AdminAddmeetings from "../components/pages/newui/admin-add-meeting";
 import Profile from "../components/pages/userpages/Profile";
 import Addmeeting from "../components/pages/newui/add-meeting";
 import AdminRoute from "./AdminRoute";
-import PrivateRoute from "./PrivateRoute";
+// import PrivateRoute from "./PrivateRoute";
 
 function AppRoutes() {
   const authContext = useContext(AuthContext);
@@ -36,6 +37,7 @@ function AppRoutes() {
           {isAuthenticated ? <Redirect to="/Redirect" /> : <Login />}
         </Route>
         <Route exact path="/register" exact component={Register} />
+        {/* <Route exact path="/newlogin" exact component={LoginNew} /> */}
         <Route exact path="/about" exact component={About} />
 
         {/* //============================== */}

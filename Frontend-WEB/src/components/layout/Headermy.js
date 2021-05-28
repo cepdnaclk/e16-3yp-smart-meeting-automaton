@@ -125,7 +125,7 @@ const Headermy = ({ title, icon }) => {
       <div className="nav-center">
         <div className="nav-header">
           {/* <img src={logo} alt="logo" /> */}
-          <h3>
+          <h3 id="headerandicon">
             <i className={icon} /> {title}
           </h3>
           <button onClick={toggleLinks} className="nav-toggle">

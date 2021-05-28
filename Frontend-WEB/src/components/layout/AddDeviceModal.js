@@ -69,7 +69,7 @@ export default function AddDeviceModal(props) {
         // setTimeout(() => {
         //  setWrongState(false);
         // }, 3000);
-        alert(error);
+        //  alert(error);
       });
   };
 
@@ -89,9 +89,7 @@ export default function AddDeviceModal(props) {
       >
         <DialogTitle id="form-dialog-title">Add Device Data</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            chamath amarasinghe wishwa diwanga diwanga wishhwa batha
-          </DialogContentText>
+          <DialogContentText></DialogContentText>
           <TextField
             //  onChange={ontype}
             disabled={true}
