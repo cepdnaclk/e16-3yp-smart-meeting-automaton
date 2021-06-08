@@ -1,0 +1,41 @@
+{
+  "title": "Smart Meeting Automaton",
+  "team": [
+    {
+      "name": "Amarasinghe D.L.C.",
+      "email": "e16022@eng.pdn.ac.lk",
+      "eNumber": "E/16/022",
+      "github_profile": "https://github.com/chamathamarasinghe96",
+      "linkedin_profile": "https://www.linkedin.com/in/chamath-amarasinghe-8b2b631ba/"
+    },
+    {
+      "name": "Amasith K.T.D.",
+      "email": "e16025@eng.pdn.ac.lk",
+      "eNumber": "E/16/025",
+      "github_profile": "https://github.com/Diwanga",
+      "linkedin_profile": "https://www.linkedin.com/in/diwanga-amasith-15950019a/"
+    },
+    {
+      "name": "Madushanka S.D.W.",
+      "email": "e16222@eng.pdn.ac.lk",
+      "eNumber": "E/16/222",
+      "github_profile": "https://github.com/wishvamadushanka",
+      "linkedin_profile": "#"
+    }
+  ],
+  "supervisors": [
+    {
+      "name": "Dr. Isuru Nawinne",
+      "email": "isurunawinne@eng.pdn.ac.lk",
+      "linkedin_profile": "https://www.linkedin.com/in/isuru-nawinne-73302833/",
+      "researchgate_profile": "https://www.researchgate.net/profile/Isuru-Nawinne"
+    },
+    {
+      "name": "Dr. Ziyan Marikkar",
+      "email": "ziyanm@eng.pdn.ac.lk",
+      "linkedin_profile": "#",
+      "researchgate_profile": "#"
+    }
+  ],
+  "tags": ["Web", "Embedded Systems"]
+}
