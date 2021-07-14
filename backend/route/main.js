@@ -7,17 +7,11 @@ const moment = require("moment");
 //bcryptjs
 const bcryptjs = require("bcryptjs");
 
-// //module administrator
-// const Administrator = require('../modules/administrator.model');
-
 //module user
 const userSchema = require("../modules/user.model");
 
 //newuser model
 const newUserschema = require("../modules/newUser.model");
-
-// //module request
-// const requestSchema = require('../modules/userRequest.model');
 
 //module room
 const roomschema = require("../modules/lecRoom.model");
@@ -52,113 +46,11 @@ const {
   schedulCalendarApiValidation,
 } = require("../validation/schedule");
 
-// //auth
-// const { userFreshAuth } = require('../middleware/auth');
-
 //email
 const { sendMailVerification } = require("../middleware/email");
 
-//calendar api
-const {
-  addEvent,
-  editEvent,
-  deleteEvent,
-  getEventListAll,
-} = require("../middleware/calendarApi");
-const lecRoom = require("../modules/lecRoom.model");
-
 const { sendMqttNew, sendMqttinit } = require("../controlers/mqtt");
 const { json } = require("express");
-
-
-
-router.post("/timeTable", async (req, res) => {
-  // const tp = [
-  //   {
-  //     userId: "user01",
-  //     room: "room01",
-  //     sub: "CO222",
-  //     time: "2-3",
-  //   },
-  //   {
-  //     userId: "user01",
-  //     room: "room01",
-  //     sub: "CO222",
-  //     time: "2-3",
-  //   },
-  //   {
-  //     userId: "user01",
-  //     room: "room01",
-  //     sub: "CO222",
-  //     time: "2-3",
-  //   },
-  //   {
-  //     userId: "user01",
-  //     room: "room01",
-  //     sub: "CO222",
-  //     time: "2-3",
-  //   },
-  //   {
-  //     userId: "user01",
-  //     room: "room01",
-  //     sub: "CO222",
-  //     time: "2-3",
-  //   },
-  // ];
-  try {
-    const startT = new Date();
-    const endT = new Date(
-      new Date(startT.getTime() + 24 * 60 * 60000).toISOString()
-    );
-    const resultCalApi = await getEventListAll({
-      startTime: startT,
-      endTime: endT,
-    });
-    console.log(resultCalApi.data.items.length);
-    if (resultCalApi.data.items.length > 0) {
-      try {
-        var idList = [];
-        resultCalApi.data.items.forEach((element) => {
-          idList.push(element.id);
-        });
-
-        scheduleschema
-          .find({
-            _id: {
-              $in: idList,
-            },
-            userId: req.body.userId,
-          })
-          .sort({ startTime: 1 })
-          .exec(function (err, docs) {
-            if (err) {
-              res.status(400).json({
-                Error: "Try again",
-              });
-            } else {
-              res.send(docs);
-            }
-          });
-      } catch (error) {
-        console.log("Db access faild...", error);
-        res.send({
-          Error: "Data base error : " + error,
-        });
-      }
-    } else {
-      console.log("No schedule");
-      res.status(400).json({
-        Error: "No schedule : ",
-      });
-    }
-  } catch (error) {
-    console.log("Calendar api faild...", error);
-    res.status(400).json({
-      Error: "Calenadar api errror : " + error,
-    });
-  }
-});
-
 
 //authAdmin, verifyAdmin,
 router.post("/adduser", newUserValidation, async (req, res) => {
@@ -226,91 +118,6 @@ router.get("/table", async (req, res) => {
   }
 });
 
-// router.post("/get/roomCompData", async (req, res) => {
-//   console.log(req.body.roomName);
-//   try {
-//     roomschema.findOne(
-//       { roomName: req.body.roomName },
-//       async (err, resultRoom) => {
-//         console.log(resultRoom);
-//         if (err) {
-//           console.log("Error in get room");
-//           res.status(401).send("Cannot find");
-//         } else {
-//           if (resultRoom) {
-//             try {
-//               console.log(resultRoom.acId);
-//               acschema.find(
-//                 {
-//                   compId: {
-//                     $in: resultRoom.acId,
-//                   },
-//                 },
-//                 async (errac, resultAcList) => {
-//                   if (errac) {
-//                     console.log("Error in get room");
-//                     res.status(401).json({
-//                       error: "Cannot find",
-//                     });
-//                   } else {
-//                     try {
-//                       projectorschema.find(
-//                         {
-//                           compId: {
-//                             $in: resultRoom.projectorId,
-//                           },
-//                         },
-//                         async (errproj, resultProjList) => {
-//                           if (errproj) {
-//                             console.log("Error in get room");
-//                             res.status(401).json({
-//                               error: "Cannot find",
-//                             });
-//                           } else {
-//                             // const sendList = [
-//                             // resultAcList.concat(resultProjList);
-//                             console.log("bye", {
-//                               ac: resultAcList,
-//                               proj: resultProjList,
-//                             });
-//                             res.status(200).json({
-//                               ac: resultAcList,
-//                               proj: resultProjList,
-//                             });
-//                           }
-//                         }
-//                       );
-//                     } catch (error) {
-//                       console.log("Error in db");
-//                       res.status(401).json({
-//                         error: "Error in db",
-//                       });
-//                     }
-//                   }
-//                 }
-//               );
-//             } catch (error) {
-//               console.log("Error in db");
-//               res.status(401).json({
-//                 error: "Error in db",
-//               });
-//             }
-//           } else {
-//             console.log("No room", resultRoom);
-//             res.status(401).json({
-//               error: "No room",
-//             });
-//           }
-//           // console.log("send room data", resultRoom);
-//           // res.status(200).json(resultRoom);
-//         }
-//       }
-//     );
-//   } catch (error) {
-//     console.log("Error in DB");
-//     res.status(401).send("Error in DB");
-//   }
-// });
 
 //get room components
 router.post("/get/roomCompData", async (req, res) => {
@@ -518,98 +325,6 @@ router.post("/update/room", async (req, res) => {
     });
   }
 });
-
-// router.post("/update/room", async (req, res) => {
-//   //deviceValidation
-//   try {
-//     console.log(req.body.category);
-//     console.log(req.body.compId);
-//     if (
-//       req.body.category.toLowerCase() === "ac" ||
-//       req.body.category.toLowerCase() === "projecter"
-//     ) {
-//       var compType = "acId";
-//       if (req.body.category.toLowerCase() === "ac") {
-//         const ac = new acschema({
-//           roomName: req.body.roomName,
-//           brand: req.body.brand,
-//           model: req.body.model,
-//           compId: req.body.roomName + "_" + req.body.compId,
-//         });
-
-//         try {
-//           const acsaved = await ac.save();
-//           console.log("saved ac to the db...");
-//           // res.send(acsaved._id);
-//         } catch (error) {
-//           console.log("Saving faild...", error);
-//           res.send({
-//             error: "Saving error",
-//           });
-//         }
-//       } else {
-//         compType = "projectorId";
-//         const projector = new projectorschema({
-//           roomName: req.body.roomName,
-//           brand: req.body.brand,
-//           model: req.body.model,
-//           compId: req.body.roomName + "_" + req.body.compId,
-//         });
-
-//         try {
-//           const projectorsaved = await projector.save();
-//           console.log("saved projector to the db...");
-//           // res.send(projectorsaved._id);
-//         } catch (error) {
-//           console.log("Saving faild...", error);
-//           res.status(400).json({
-//             error: "Saving error",
-//           });
-//         }
-//       }
-//       try {
-//         roomschema.updateOne(
-//           { roomName: req.body.roomName },
-//           {
-//             $push: {
-//               compType: req.body.roomName + "_" + req.body.compId,
-//             },
-//           },
-//           (err, updteResult) => {
-//             if (err) {
-//               console.log("update room faild...", err);
-//               res.status(400).json({
-//                 error: "updateRoom error",
-//               });
-//             } else {
-//               console.log("update room seccess...", updteResult);
-//               res.status(200).json({
-//                 msg: "seccess",
-//               });
-//             }
-//           }
-//         );
-//       } catch (error) {
-//         console.log("update room faild...", error);
-//         res.status(400).json({
-//           error: "updateRoom error",
-//         });
-//       }
-//     } else {
-//       console.log("cannot add category...");
-//       res.status(400).json({
-//         error: "cannot add category",
-//       });
-//     }
-//   } catch (error) {
-//     console.log("Failed server...");
-//     console.log(error);
-//     console.log("Failed server...");
-//     res.status(400).json({
-//       error: "Failed server",
-//     });
-//   }
-// });
 
 router.post(
   "/add/calendarapi",
@@ -1457,73 +1172,359 @@ router.delete("/removeuser/:id", authAdmin, async (req, res) => {
   }
 });
 
-//for getting shedule to rasberry pi from now till endday.
-router.post("/today", async (req, res) => {
-  console.log("dta", req.body);
-  res.status(200).json({
-    Error: "Try again",
-  });
-  // try {
-  //   const startT = moment().format();
-  //   const endT = moment().format("YYYY-MM-DDT23:59:00Z");
-
-  //   // const startT = new Date.now();
-  //   // const endT = new Date(req.body.date + "T" + "23:59:00+05:30");
-
-  //   const resultCalApi = await getEventListAll({
-  //     startTime: startT,
-  //     endTime: endT,
-  //   });
-  //   console.log(resultCalApi.data.items.length);
-  //   if (resultCalApi.data.items.length > 0) {
-  //     try {
-  //       var idList = [];
-  //       resultCalApi.data.items.forEach((element) => {
-  //         idList.push(element.id);
-  //       });
-
-  //       scheduleschema
-  //         .find({
-  //           _id: {
-  //             $in: idList,
-  //           },
-  //           roomName: req.body.roomName,
-  //         })
-  //         .sort({ startTime: 1 })
-  //         .exec(function (err, docs) {
-  //           if (err) {
-  //             res.status(400).json({
-  //               Error: "Try again",
-  //             });
-  //           } else {
-  //             res.send(docs);
-  //           }
-  //         });
-  //     } catch (error) {
-  //       console.log("Db access faild...", error);
-  //       res.send({
-  //         Error: "Data base error : " + error,
-  //       });
-  //     }
-  //   } else {
-  //     console.log("No schedule");
-  //     res.status(400).json({
-  //       Error: "No schedule : ",
-  //     });
-  //   }
-  // } catch (error) {
-  //   console.log("Calendar api faild...", error);
-  //   res.status(400).json({
-  //     Error: "Calenadar api errror : " + error,
-  //   });
-  // }
-});
-
 //404
 router.use((req, res) => {
   res.status(404).send("404");
   console.log("4040");
 });
+
+
+
+
+
+
+// by using below we can add features more
+
+
+
+// //for getting shedule to rasberry pi from now till endday.
+// router.post("/today", async (req, res) => {
+//   console.log("dta", req.body);
+//   res.status(200).json({
+//     Error: "Try again",
+//   });
+//   // try {
+//   //   const startT = moment().format();
+//   //   const endT = moment().format("YYYY-MM-DDT23:59:00Z");
+
+//   //   // const startT = new Date.now();
+//   //   // const endT = new Date(req.body.date + "T" + "23:59:00+05:30");
+
+//   //   const resultCalApi = await getEventListAll({
+//   //     startTime: startT,
+//   //     endTime: endT,
+//   //   });
+//   //   console.log(resultCalApi.data.items.length);
+//   //   if (resultCalApi.data.items.length > 0) {
+//   //     try {
+//   //       var idList = [];
+//   //       resultCalApi.data.items.forEach((element) => {
+//   //         idList.push(element.id);
+//   //       });
+
+//   //       scheduleschema
+//   //         .find({
+//   //           _id: {
+//   //             $in: idList,
+//   //           },
+//   //           roomName: req.body.roomName,
+//   //         })
+//   //         .sort({ startTime: 1 })
+//   //         .exec(function (err, docs) {
+//   //           if (err) {
+//   //             res.status(400).json({
+//   //               Error: "Try again",
+//   //             });
+//   //           } else {
+//   //             res.send(docs);
+//   //           }
+//   //         });
+//   //     } catch (error) {
+//   //       console.log("Db access faild...", error);
+//   //       res.send({
+//   //         Error: "Data base error : " + error,
+//   //       });
+//   //     }
+//   //   } else {
+//   //     console.log("No schedule");
+//   //     res.status(400).json({
+//   //       Error: "No schedule : ",
+//   //     });
+//   //   }
+//   // } catch (error) {
+//   //   console.log("Calendar api faild...", error);
+//   //   res.status(400).json({
+//   //     Error: "Calenadar api errror : " + error,
+//   //   });
+//   // }
+// });
+
+
+// router.post("/update/room", async (req, res) => {
+//   //deviceValidation
+//   try {
+//     console.log(req.body.category);
+//     console.log(req.body.compId);
+//     if (
+//       req.body.category.toLowerCase() === "ac" ||
+//       req.body.category.toLowerCase() === "projecter"
+//     ) {
+//       var compType = "acId";
+//       if (req.body.category.toLowerCase() === "ac") {
+//         const ac = new acschema({
+//           roomName: req.body.roomName,
+//           brand: req.body.brand,
+//           model: req.body.model,
+//           compId: req.body.roomName + "_" + req.body.compId,
+//         });
+
+//         try {
+//           const acsaved = await ac.save();
+//           console.log("saved ac to the db...");
+//           // res.send(acsaved._id);
+//         } catch (error) {
+//           console.log("Saving faild...", error);
+//           res.send({
+//             error: "Saving error",
+//           });
+//         }
+//       } else {
+//         compType = "projectorId";
+//         const projector = new projectorschema({
+//           roomName: req.body.roomName,
+//           brand: req.body.brand,
+//           model: req.body.model,
+//           compId: req.body.roomName + "_" + req.body.compId,
+//         });
+
+//         try {
+//           const projectorsaved = await projector.save();
+//           console.log("saved projector to the db...");
+//           // res.send(projectorsaved._id);
+//         } catch (error) {
+//           console.log("Saving faild...", error);
+//           res.status(400).json({
+//             error: "Saving error",
+//           });
+//         }
+//       }
+//       try {
+//         roomschema.updateOne(
+//           { roomName: req.body.roomName },
+//           {
+//             $push: {
+//               compType: req.body.roomName + "_" + req.body.compId,
+//             },
+//           },
+//           (err, updteResult) => {
+//             if (err) {
+//               console.log("update room faild...", err);
+//               res.status(400).json({
+//                 error: "updateRoom error",
+//               });
+//             } else {
+//               console.log("update room seccess...", updteResult);
+//               res.status(200).json({
+//                 msg: "seccess",
+//               });
+//             }
+//           }
+//         );
+//       } catch (error) {
+//         console.log("update room faild...", error);
+//         res.status(400).json({
+//           error: "updateRoom error",
+//         });
+//       }
+//     } else {
+//       console.log("cannot add category...");
+//       res.status(400).json({
+//         error: "cannot add category",
+//       });
+//     }
+//   } catch (error) {
+//     console.log("Failed server...");
+//     console.log(error);
+//     console.log("Failed server...");
+//     res.status(400).json({
+//       error: "Failed server",
+//     });
+//   }
+// });
+
+// router.post("/get/roomCompData", async (req, res) => {
+//   console.log(req.body.roomName);
+//   try {
+//     roomschema.findOne(
+//       { roomName: req.body.roomName },
+//       async (err, resultRoom) => {
+//         console.log(resultRoom);
+//         if (err) {
+//           console.log("Error in get room");
+//           res.status(401).send("Cannot find");
+//         } else {
+//           if (resultRoom) {
+//             try {
+//               console.log(resultRoom.acId);
+//               acschema.find(
+//                 {
+//                   compId: {
+//                     $in: resultRoom.acId,
+//                   },
+//                 },
+//                 async (errac, resultAcList) => {
+//                   if (errac) {
+//                     console.log("Error in get room");
+//                     res.status(401).json({
+//                       error: "Cannot find",
+//                     });
+//                   } else {
+//                     try {
+//                       projectorschema.find(
+//                         {
+//                           compId: {
+//                             $in: resultRoom.projectorId,
+//                           },
+//                         },
+//                         async (errproj, resultProjList) => {
+//                           if (errproj) {
+//                             console.log("Error in get room");
+//                             res.status(401).json({
+//                               error: "Cannot find",
+//                             });
+//                           } else {
+//                             // const sendList = [
+//                             // resultAcList.concat(resultProjList);
+//                             console.log("bye", {
+//                               ac: resultAcList,
+//                               proj: resultProjList,
+//                             });
+//                             res.status(200).json({
+//                               ac: resultAcList,
+//                               proj: resultProjList,
+//                             });
+//                           }
+//                         }
+//                       );
+//                     } catch (error) {
+//                       console.log("Error in db");
+//                       res.status(401).json({
+//                         error: "Error in db",
+//                       });
+//                     }
+//                   }
+//                 }
+//               );
+//             } catch (error) {
+//               console.log("Error in db");
+//               res.status(401).json({
+//                 error: "Error in db",
+//               });
+//             }
+//           } else {
+//             console.log("No room", resultRoom);
+//             res.status(401).json({
+//               error: "No room",
+//             });
+//           }
+//           // console.log("send room data", resultRoom);
+//           // res.status(200).json(resultRoom);
+//         }
+//       }
+//     );
+//   } catch (error) {
+//     console.log("Error in DB");
+//     res.status(401).send("Error in DB");
+//   }
+// });
+
+
+// router.post("/timeTable", async (req, res) => {
+//   // const tp = [
+//   //   {
+//   //     userId: "user01",
+//   //     room: "room01",
+//   //     sub: "CO222",
+//   //     time: "2-3",
+//   //   },
+//   //   {
+//   //     userId: "user01",
+//   //     room: "room01",
+//   //     sub: "CO222",
+//   //     time: "2-3",
+//   //   },
+//   //   {
+//   //     userId: "user01",
+//   //     room: "room01",
+//   //     sub: "CO222",
+//   //     time: "2-3",
+//   //   },
+//   //   {
+//   //     userId: "user01",
+//   //     room: "room01",
+//   //     sub: "CO222",
+//   //     time: "2-3",
+//   //   },
+//   //   {
+//   //     userId: "user01",
+//   //     room: "room01",
+//   //     sub: "CO222",
+//   //     time: "2-3",
+//   //   },
+//   // ];
+//   try {
+//     const startT = new Date();
+//     const endT = new Date(
+//       new Date(startT.getTime() + 24 * 60 * 60000).toISOString()
+//     );
+//     const resultCalApi = await getEventListAll({
+//       startTime: startT,
+//       endTime: endT,
+//     });
+//     console.log(resultCalApi.data.items.length);
+//     if (resultCalApi.data.items.length > 0) {
+//       try {
+//         var idList = [];
+//         resultCalApi.data.items.forEach((element) => {
+//           idList.push(element.id);
+//         });
+
+//         scheduleschema
+//           .find({
+//             _id: {
+//               $in: idList,
+//             },
+//             userId: req.body.userId,
+//           })
+//           .sort({ startTime: 1 })
+//           .exec(function (err, docs) {
+//             if (err) {
+//               res.status(400).json({
+//                 Error: "Try again",
+//               });
+//             } else {
+//               res.send(docs);
+//             }
+//           });
+//       } catch (error) {
+//         console.log("Db access faild...", error);
+//         res.send({
+//           Error: "Data base error : " + error,
+//         });
+//       }
+//     } else {
+//       console.log("No schedule");
+//       res.status(400).json({
+//         Error: "No schedule : ",
+//       });
+//     }
+//   } catch (error) {
+//     console.log("Calendar api faild...", error);
+//     res.status(400).json({
+//       Error: "Calenadar api errror : " + error,
+//     });
+//   }
+// });
+
+
+// //calendar api
+// const {
+//   addEvent,
+//   editEvent,
+//   deleteEvent,
+//   getEventListAll,
+// } = require("../middleware/calendarApi");
+// const lecRoom = require("../modules/lecRoom.model");
 
 // router.post("/mqtt/add", async(req, res)=>{
 //   // const dt = {
